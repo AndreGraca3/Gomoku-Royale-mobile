@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import pt.isel.gomoku.ui.screens.board.GameScreen
 import pt.isel.gomoku.ui.screens.home.HomeScreen
 import pt.isel.gomoku.ui.theme.GomokuTheme
 
@@ -27,6 +28,7 @@ class MainActivity : ComponentActivity() {
                         contentAlignment = Alignment.Center
                     ) {
                         HomeScreen(this@MainActivity)
+                        //GameScreen()
                     }
                 }
             }
