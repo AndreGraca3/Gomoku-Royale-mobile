@@ -16,7 +16,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import pt.isel.gomoku.model.BOARD_DIM
 
 @Preview
 @Composable
@@ -28,11 +27,10 @@ fun Cross() {
 @Composable
 fun VerticalLine() {
     Canvas(
-        modifier = Modifier
-            .size(24.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         drawLine(
-            color = Color.Black,
+            color = Color.White,
             start = Offset(x = size.width / 2F, y = size.height),
             end = Offset(x = size.width / 2F, y = 0F),
             strokeWidth = 2F
@@ -40,14 +38,14 @@ fun VerticalLine() {
     }
 }
 
+// fit parent
 @Composable
 fun HorizontalLine() {
     Canvas(
-        modifier = Modifier
-            .size(24.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         drawLine(
-            color = Color.Black,
+            color = Color.White,
             start = Offset(x = 0F, y = size.height / 2F),
             end = Offset(x = size.width, y = size.height / 2F),
             strokeWidth = 2F
