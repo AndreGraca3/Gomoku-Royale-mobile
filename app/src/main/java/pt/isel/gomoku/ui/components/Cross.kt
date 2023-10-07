@@ -1,27 +1,32 @@
 package pt.isel.gomoku.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import pt.isel.gomoku.ui.screens.board.gridColor
 
 @Preview
 @Composable
 fun Cross() {
     VerticalLine()
+    CenterDot()
     HorizontalLine()
+}
+
+@Composable
+fun CenterDot() {
+    Canvas(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        drawCircle(
+            color = gridColor,
+            radius = 4F,
+            center = Offset(x = size.width / 2F, y = size.height / 2F)
+        )
+    }
 }
 
 @Composable
@@ -30,10 +35,10 @@ fun VerticalLine() {
         modifier = Modifier.fillMaxSize()
     ) {
         drawLine(
-            color = Color.White,
+            color = gridColor,
             start = Offset(x = size.width / 2F, y = size.height),
             end = Offset(x = size.width / 2F, y = 0F),
-            strokeWidth = 2F
+            strokeWidth = 4F
         )
     }
 }
@@ -45,10 +50,10 @@ fun HorizontalLine() {
         modifier = Modifier.fillMaxSize()
     ) {
         drawLine(
-            color = Color.White,
+            color = gridColor,
             start = Offset(x = 0F, y = size.height / 2F),
             end = Offset(x = size.width, y = size.height / 2F),
-            strokeWidth = 2F
+            strokeWidth = 4F
         )
     }
 }
