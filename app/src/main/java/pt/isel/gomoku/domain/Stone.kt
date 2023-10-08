@@ -1,4 +1,4 @@
-package pt.isel.gomoku.domain.game
+package pt.isel.gomoku.domain
 
 data class Stone(val player: Player, val dot: Dot) {
 

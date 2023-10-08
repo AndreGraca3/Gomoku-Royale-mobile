@@ -1,9 +1,9 @@
 package pt.isel.gomoku.domain.board
 
-import pt.isel.gomoku.domain.game.Dot
-import pt.isel.gomoku.domain.game.Player
-import pt.isel.gomoku.domain.game.Stone
-import pt.isel.gomoku.domain.game.toPlayer
+import pt.isel.gomoku.domain.Dot
+import pt.isel.gomoku.domain.Player
+import pt.isel.gomoku.domain.Stone
+import pt.isel.gomoku.domain.toPlayer
 
 abstract class Board(val size: Int, val stones: List<Stone>, val turn: Player) {
 

@@ -1,4 +1,4 @@
-package pt.isel.gomoku.domain.game
+package pt.isel.gomoku.domain
 
 class Column private constructor(val symbol: Char) {
 

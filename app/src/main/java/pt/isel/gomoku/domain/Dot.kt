@@ -1,4 +1,8 @@
-package pt.isel.gomoku.domain.game
+package pt.isel.gomoku.domain
+
+import pt.isel.gomoku.domain.game.Row
+import pt.isel.gomoku.domain.game.indexToRow
+import pt.isel.gomoku.domain.game.toRow
 
 class Dot private constructor(rowNum: Int, columnSymbol: Char) {
 

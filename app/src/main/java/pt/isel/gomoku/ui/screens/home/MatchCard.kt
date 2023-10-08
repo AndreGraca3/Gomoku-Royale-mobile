@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 fun MatchCard(id: Int, onClick: () -> Unit) {
     Image(
         painter = painterResource(id),
-        contentDescription = null,
+        contentDescription = "Match type card",
         contentScale = ContentScale.Fit,
         modifier = Modifier
             .size(160.dp)
