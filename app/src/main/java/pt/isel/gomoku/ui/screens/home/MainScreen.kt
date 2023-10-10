@@ -1,7 +1,5 @@
 package pt.isel.gomoku.ui.screens.home
 
-import android.app.Activity
-import android.content.Context
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -14,9 +12,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
@@ -25,12 +20,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextMotion
 import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.components.RoundButton
+import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
 @Composable
-fun HomeScreen(ctx: Context) {
-    val activity = (LocalContext.current as? Activity) /** Está correto? **/
+fun MainScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = {}) {
 
+    val ctx = LocalContext.current
 
     val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
     val scale by infiniteTransition.animateFloat(
@@ -40,60 +36,61 @@ fun HomeScreen(ctx: Context) {
         label = "scale"
     )
 
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Gomoku",
-            modifier = Modifier
-                .graphicsLayer {
-                    scaleX = scale
-                    scaleY = scale
-                    transformOrigin = TransformOrigin.Center
-                },
-            // Text composable does not take TextMotion as a parameter.
-            // Provide it via style argument but make sure that we are copying from current theme
-            style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
-        )
-
-
-        Row(
-            horizontalArrangement = Arrangement.Center
+    GomokuTheme {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MatchCard(id = R.drawable.multiplayer_match) {
-                playSound(ctx, R.raw.click)
-            }
-        }
+            Text(
+                text = "Gomoku",
+                modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        transformOrigin = TransformOrigin.Center
+                    },
+                // Text composable does not take TextMotion as a parameter.
+                // Provide it via style argument but make sure that we are copying from current theme
+                style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
+            )
 
-        Row(
-            horizontalArrangement = Arrangement.Center
-        ) {
-            MatchCard(id = R.drawable.private_match) {
-                playSound(ctx, R.raw.click)
-            }
-        }
 
-        Row(
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            RoundButton(
-                onClick = {},
+            Row(
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text("Settings")
-            }
-
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            RoundButton(
-                onClick = {
-                    activity?.finish()
+                MatchCard(id = R.drawable.multiplayer_match) {
+                    playSound(ctx, R.raw.click)
                 }
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text("Exit")
+                MatchCard(id = R.drawable.private_match) {
+                    playSound(ctx, R.raw.click)
+                    onMatchRequested()
+                }
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                RoundButton(
+                    onClick = {},
+                ) {
+                    Text("Settings")
+                }
+
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                RoundButton(
+                    onClick = { onBackRequested }
+                ) {
+                    Text("Exit")
+                }
             }
         }
     }

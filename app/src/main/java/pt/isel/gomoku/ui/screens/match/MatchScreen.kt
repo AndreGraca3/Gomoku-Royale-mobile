@@ -22,12 +22,14 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.Match
 import pt.isel.gomoku.domain.User
 import pt.isel.gomoku.domain.board.BoardRun
+import pt.isel.gomoku.ui.components.AnimatedImageButton
 import pt.isel.gomoku.ui.screens.match.board.BoardView
 import pt.isel.gomoku.ui.screens.match.player.PlayerPlankRow
+import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
 @Composable
-fun MatchScreen() { // TODO: this will receive match object with view model
+fun MatchScreen(onBackRequested: () -> Unit = {}) { // TODO: this will receive match object with view model
 
     val ctx = LocalContext.current
 
@@ -54,37 +56,42 @@ fun MatchScreen() { // TODO: this will receive match object with view model
         playSound(ctx, R.raw.background_music) // music stops after plays, why?
     }*/
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.floor_background),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "Floor background"
-        )
-
-        // TODO: move to MatchView.kt?
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(22.dp),
-            modifier = Modifier.padding(10.dp)
+    GomokuTheme {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
 
-            PlayerPlankRow(users, internalMatch.board.turn)
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = R.drawable.floor_background),
+                contentScale = ContentScale.FillBounds,
+                contentDescription = "Floor background"
+            )
 
-            BoardView(internalMatch.board) { dot ->
+            // TODO: move to MatchView.kt?
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(22.dp),
+                modifier = Modifier.padding(10.dp)
+            ) {
 
-                internalMatch = internalMatch.play(dot, internalMatch.board.turn)
+                PlayerPlankRow(users, internalMatch.board.turn)
 
-                if (internalMatch.board !is BoardRun) {
-                    playSound(ctx, R.raw.place_piece_winner)
-                    return@BoardView
+                BoardView(internalMatch.board) { dot ->
+
+                    internalMatch = internalMatch.play(dot, internalMatch.board.turn)
+
+                    if (internalMatch.board !is BoardRun) {
+                        playSound(ctx, R.raw.place_piece_winner)
+                        return@BoardView
+                    }
+                    val sound =
+                        if (Math.random() < 0.5) R.raw.place_piece_1 else R.raw.place_piece_2
+                    playSound(ctx, sound)
                 }
-                val sound = if (Math.random() < 0.5) R.raw.place_piece_1 else R.raw.place_piece_2
-                playSound(ctx, sound)
+
+                AnimatedImageButton(R.drawable.home_button, 60.dp, onBackRequested)
             }
         }
     }
