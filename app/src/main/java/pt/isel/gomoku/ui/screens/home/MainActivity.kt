@@ -29,10 +29,11 @@ class MainActivity : ComponentActivity() {
             }
         }
         setContent {
-            MainScreen(
+            /*MainScreen(
                 onBackRequested = { finish() },
                 onMatchRequested = { MatchActivity.navigateTo(this) }
-            )
+            )*/
+            MatchScreen()
         }
     }
 }

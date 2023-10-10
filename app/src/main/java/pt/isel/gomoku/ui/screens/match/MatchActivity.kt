@@ -7,8 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.isel.gomoku.R
-import pt.isel.gomoku.ui.screens.home.MainActivity
-import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 import pt.isel.gomoku.utils.viewModelInit
 
@@ -32,10 +30,7 @@ class MatchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MatchScreen(onBackRequested = {
-                playSound(this, R.raw.click)
-                finish()
-            })
+            MatchScreen(onBackRequested = { finish() })
         }
     }
 }

@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -73,8 +75,16 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) { // TODO: this will receive m
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(22.dp),
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(8.dp)
             ) {
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    AnimatedImageButton(R.drawable.home_button, 60.dp, onBackRequested)
+                    AnimatedImageButton(R.drawable.settings_button, 60.dp)
+                }
 
                 PlayerPlankRow(users, internalMatch.board.turn)
 
@@ -90,8 +100,6 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) { // TODO: this will receive m
                         if (Math.random() < 0.5) R.raw.place_piece_1 else R.raw.place_piece_2
                     playSound(ctx, sound)
                 }
-
-                AnimatedImageButton(R.drawable.home_button, 60.dp, onBackRequested)
             }
         }
     }

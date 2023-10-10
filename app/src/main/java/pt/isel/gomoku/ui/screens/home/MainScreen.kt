@@ -59,7 +59,7 @@ fun MainScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = 
                 horizontalArrangement = Arrangement.Center
             ) {
                 MatchCard(id = R.drawable.multiplayer_match) {
-                    playSound(ctx, R.raw.click)
+                    playSound(ctx, R.raw.metal_click_1)
                 }
             }
 
@@ -67,7 +67,7 @@ fun MainScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = 
                 horizontalArrangement = Arrangement.Center
             ) {
                 MatchCard(id = R.drawable.private_match) {
-                    playSound(ctx, R.raw.click)
+                    playSound(ctx, R.raw.metal_click_1)
                     onMatchRequested()
                 }
             }

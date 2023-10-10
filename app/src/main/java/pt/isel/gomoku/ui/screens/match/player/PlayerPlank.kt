@@ -37,7 +37,7 @@ import pt.isel.gomoku.ui.components.ElipsedText
 import pt.isel.gomoku.ui.theme.driftWoodFamily
 
 @Composable
-fun RowScope.PlayerPlank(user: User, isSelected: Boolean) {
+fun RowScope.PlayerPlank(user: User) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -49,14 +49,7 @@ fun RowScope.PlayerPlank(user: User, isSelected: Boolean) {
             painter = painterResource(id = R.drawable.wooden_plank),
             contentScale = ContentScale.FillBounds,
             contentDescription = "Wooden plank",
-            modifier = Modifier
-                .fillMaxSize()
-                .border(
-                    2.dp,
-                    if (isSelected) Color.Cyan
-                    else Color.Transparent,
-                    RoundedCornerShape(8.dp)
-                )
+            modifier = Modifier.fillMaxSize()
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
