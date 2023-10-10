@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.components
+package pt.isel.gomoku.ui.components.buttons
 
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable

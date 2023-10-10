@@ -24,18 +24,18 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.Match
 import pt.isel.gomoku.domain.User
 import pt.isel.gomoku.domain.board.BoardRun
-import pt.isel.gomoku.ui.components.AnimatedImageButton
+import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.screens.match.board.BoardView
 import pt.isel.gomoku.ui.screens.match.player.PlayerPlankRow
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
 @Composable
-fun MatchScreen(onBackRequested: () -> Unit = {}) { // TODO: this will receive match object with view model
+fun MatchScreen(onBackRequested: () -> Unit = {}) {
 
     val ctx = LocalContext.current
 
-    // this will be moved to view model
+    // TODO: this will all be moved to activity, inside view model
     val users = listOf(
         User("Andre dos Graças", null, "Grand Champion"),
         User("Diogo Maça Pereira dos Santos", null, "Silver"),
@@ -54,10 +54,6 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) { // TODO: this will receive m
         )
     }
 
-    /*LaunchedEffect(key1 = Unit) {
-        playSound(ctx, R.raw.background_music) // music stops after plays, why?
-    }*/
-
     GomokuTheme {
         Box(
             contentAlignment = Alignment.Center,
@@ -71,36 +67,18 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) { // TODO: this will receive m
                 contentDescription = "Floor background"
             )
 
-            // TODO: move to MatchView.kt?
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(22.dp),
-                modifier = Modifier.padding(8.dp)
-            ) {
+            MatchView(users, internalMatch, onBackRequested = onBackRequested, onCellClick = { dot ->
 
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    AnimatedImageButton(R.drawable.home_button, 60.dp, onBackRequested)
-                    AnimatedImageButton(R.drawable.settings_button, 60.dp)
+                internalMatch = internalMatch.play(dot, internalMatch.board.turn)
+
+                if (internalMatch.board !is BoardRun) {
+                    playSound(ctx, R.raw.place_piece_winner)
+                    return@MatchView
                 }
-
-                PlayerPlankRow(users, internalMatch.board.turn)
-
-                BoardView(internalMatch.board) { dot ->
-
-                    internalMatch = internalMatch.play(dot, internalMatch.board.turn)
-
-                    if (internalMatch.board !is BoardRun) {
-                        playSound(ctx, R.raw.place_piece_winner)
-                        return@BoardView
-                    }
-                    val sound =
-                        if (Math.random() < 0.5) R.raw.place_piece_1 else R.raw.place_piece_2
-                    playSound(ctx, sound)
-                }
-            }
+                val sound =
+                    if (Math.random() < 0.5) R.raw.place_piece_1 else R.raw.place_piece_2
+                playSound(ctx, sound)
+            })
         }
     }
 }

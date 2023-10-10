@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.components
+package pt.isel.gomoku.ui.components.buttons
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

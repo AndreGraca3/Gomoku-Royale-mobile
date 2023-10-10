@@ -3,7 +3,6 @@ package pt.isel.gomoku.ui.screens.match.board
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,7 +25,7 @@ import pt.isel.gomoku.ui.screens.match.board.grid.GridView
 import pt.isel.gomoku.utils.playSound
 
 @Composable
-fun BoardView(board: Board, onDotClick: (Dot) -> Unit) {
+fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
 
     val ctx = LocalContext.current
     var selector by remember { mutableStateOf<Dot?>(null) }
@@ -54,7 +53,7 @@ fun BoardView(board: Board, onDotClick: (Dot) -> Unit) {
                 playSound(ctx, R.raw.selector)
                 return@GridView
             }
-            onDotClick(dot)
+            onCellClick(dot)
             selector = null
         }
     }
@@ -65,6 +64,6 @@ fun BoardView(board: Board, onDotClick: (Dot) -> Unit) {
 fun BoardViewPreview() {
     BoardView(
         board = BoardRun(15),
-        onDotClick = {}
+        onCellClick = {}
     )
 }

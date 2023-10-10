@@ -6,8 +6,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import pt.isel.gomoku.R
-import pt.isel.gomoku.utils.playSound
 import pt.isel.gomoku.utils.viewModelInit
 
 class MatchActivity : ComponentActivity() {

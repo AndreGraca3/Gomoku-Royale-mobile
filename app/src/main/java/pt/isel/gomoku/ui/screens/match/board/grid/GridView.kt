@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -18,7 +17,7 @@ import pt.isel.gomoku.domain.board.Board
 import pt.isel.gomoku.domain.Dot
 
 @Composable
-fun GridView(board: Board, selector: Dot?, onDotClick: (Dot) -> Unit) {
+fun GridView(board: Board, selector: Dot?, onCellClick: (Dot) -> Unit) {
 
     val shape = RoundedCornerShape(10.dp)
 
@@ -38,7 +37,7 @@ fun GridView(board: Board, selector: Dot?, onDotClick: (Dot) -> Unit) {
                     idx % board.size
                 )
                 val stone = board.getStoneOrNull(dot)
-                Cell(stone, isSelected = selector == dot) { onDotClick(dot) }
+                Cell(stone, isSelected = selector == dot) { onCellClick(dot) }
             }
         }
     )

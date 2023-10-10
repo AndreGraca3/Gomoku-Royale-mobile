@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextMotion
 import pt.isel.gomoku.R
-import pt.isel.gomoku.ui.components.RoundButton
+import pt.isel.gomoku.ui.components.buttons.RoundButton
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
@@ -27,6 +27,10 @@ import pt.isel.gomoku.utils.playSound
 fun MainScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = {}) {
 
     val ctx = LocalContext.current
+
+    /*LaunchedEffect(key1 = Unit) {
+    playSound(ctx, R.raw.background_music) // music stops after plays, why?
+    }*/
 
     val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
     val scale by infiniteTransition.animateFloat(
