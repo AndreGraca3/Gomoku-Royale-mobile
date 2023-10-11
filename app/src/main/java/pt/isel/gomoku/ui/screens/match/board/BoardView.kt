@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +28,8 @@ import pt.isel.gomoku.utils.playSound
 @Composable
 fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
 
+    Log.v("StrangeBug", "BoardView ${board.hashCode()}")
+
     val ctx = LocalContext.current
     var selector by remember { mutableStateOf<Dot?>(null) }
 
@@ -43,19 +46,18 @@ fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
             contentScale = ContentScale.FillBounds,
         )
 
-        GridView(board, selector) { dot ->
-            Log.v("BoardView", "${board.stones}")
-
-            if (board.getStoneOrNull(dot) != null) return@GridView
-
-            if (selector == null || dot != selector) {
-                selector = dot
-                playSound(ctx, R.raw.selector)
-                return@GridView
+        GridView(board, selector, onCellClick = { dot ->
+            Log.v("StrangeBug", "BoardView handler ${board.hashCode()}")
+            if (board.getStoneOrNull(dot) == null) {
+                if (selector == null || dot != selector) {
+                    selector = dot
+                    playSound(ctx, R.raw.selector)
+                } else {
+                    onCellClick(dot)
+                    selector = null
+                }
             }
-            onCellClick(dot)
-            selector = null
-        }
+        })
     }
 }
 

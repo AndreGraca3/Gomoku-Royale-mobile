@@ -1,5 +1,6 @@
 package pt.isel.gomoku.ui.screens.match
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +54,8 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) {
             match
         )
     }
+
+    Log.v("StrangeBug", "MatchScreen ${internalMatch.board.hashCode()}")
 
     GomokuTheme {
         Box(

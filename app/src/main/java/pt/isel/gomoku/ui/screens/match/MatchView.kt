@@ -1,5 +1,6 @@
 package pt.isel.gomoku.ui.screens.match
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ fun MatchView(
     onCellClick: (Dot) -> Unit,
     onBackRequested: () -> Unit = {},
 ) {
+    Log.v("StrangeBug", "MatchView ${match.board.hashCode()}")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(22.dp),
