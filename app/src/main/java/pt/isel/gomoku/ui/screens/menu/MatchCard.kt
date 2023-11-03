@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.home
+package pt.isel.gomoku.ui.screens.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures

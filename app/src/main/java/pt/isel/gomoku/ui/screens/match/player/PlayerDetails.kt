@@ -11,7 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.User
-import pt.isel.gomoku.ui.components.ElipsedText
+import pt.isel.gomoku.ui.components.text.ElipsedText
 import pt.isel.gomoku.utils.getRankIconByName
 
 @Composable

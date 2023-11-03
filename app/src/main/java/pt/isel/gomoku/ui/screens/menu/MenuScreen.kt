@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.home
+package pt.isel.gomoku.ui.screens.menu
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -20,11 +20,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextMotion
 import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.components.buttons.RoundButton
-import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
 @Composable
-fun MainScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = {}) {
+fun MenuScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = {}) {
 
     val ctx = LocalContext.current
 
@@ -40,61 +39,59 @@ fun MainScreen(onBackRequested: () -> Unit = {}, onMatchRequested: () -> Unit = 
         label = "scale"
     )
 
-    GomokuTheme {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Gomoku",
+            modifier = Modifier
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    transformOrigin = TransformOrigin.Center
+                },
+            // Text composable does not take TextMotion as a parameter.
+            // Provide it via style argument but make sure that we are copying from current theme
+            style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
+        )
+
+
+        Row(
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Gomoku",
-                modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        transformOrigin = TransformOrigin.Center
-                    },
-                // Text composable does not take TextMotion as a parameter.
-                // Provide it via style argument but make sure that we are copying from current theme
-                style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated)
-            )
+            MatchCard(id = R.drawable.multiplayer_match) {
+                playSound(ctx, R.raw.metal_click_1)
+            }
+        }
 
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            MatchCard(id = R.drawable.private_match) {
+                playSound(ctx, R.raw.metal_click_1)
+                onMatchRequested()
+            }
+        }
 
-            Row(
-                horizontalArrangement = Arrangement.Center
+        Row(
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            RoundButton(
+                onClick = {},
             ) {
-                MatchCard(id = R.drawable.multiplayer_match) {
-                    playSound(ctx, R.raw.metal_click_1)
-                }
+                Text("Settings")
             }
 
-            Row(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                MatchCard(id = R.drawable.private_match) {
-                    playSound(ctx, R.raw.metal_click_1)
-                    onMatchRequested()
-                }
-            }
+        }
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
+        Row(
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            RoundButton(
+                onClick = { onBackRequested }
             ) {
-                RoundButton(
-                    onClick = {},
-                ) {
-                    Text("Settings")
-                }
-
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                RoundButton(
-                    onClick = { onBackRequested }
-                ) {
-                    Text("Exit")
-                }
+                Text("Exit")
             }
         }
     }
@@ -116,8 +113,3 @@ RoundButton(onClick = {
 }, content = {
     Text("Click")
 })*/
-
-@Composable
-fun Title() {
-    Text("Gomoku")
-}

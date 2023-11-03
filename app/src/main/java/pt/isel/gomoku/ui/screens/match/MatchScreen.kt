@@ -2,13 +2,8 @@ package pt.isel.gomoku.ui.screens.match
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,14 +15,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.Match
 import pt.isel.gomoku.domain.User
 import pt.isel.gomoku.domain.board.BoardRun
-import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
-import pt.isel.gomoku.ui.screens.match.board.BoardView
-import pt.isel.gomoku.ui.screens.match.player.PlayerPlankRow
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
@@ -38,8 +29,8 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) {
 
     // TODO: this will all be moved to activity, inside view model
     val users = listOf(
-        User("Andre dos Graças", null, "Grand Champion"),
-        User("Diogo Maça Pereira dos Santos", null, "Silver"),
+        User("Andre dos Graças", null, "Silver"),
+        User("Diogo Maça Pereira dos Santos", null, "Grand Champion"),
     )
 
     val match = Match(
