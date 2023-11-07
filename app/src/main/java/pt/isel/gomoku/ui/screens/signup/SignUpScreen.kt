@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.login
+package pt.isel.gomoku.ui.screens.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,14 +20,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.components.buttons.RoundButton
 import pt.isel.gomoku.ui.components.text.TextBox
+import pt.isel.gomoku.ui.screens.login.BlackBoard
 
 @Composable
-fun LoginScreen(onLoginRequest: () -> Unit, onSignInRequest: () -> Unit) {
+fun SignUpScreen(onSignInRequest: () -> Unit) {
+    val name = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
@@ -42,7 +43,7 @@ fun LoginScreen(onLoginRequest: () -> Unit, onSignInRequest: () -> Unit) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BlackBoard(text = "LOGIN", color = Color.White)
+        BlackBoard(text = "SignUp", color = Color.White)
 
         Box(
             modifier = Modifier
@@ -55,6 +56,8 @@ fun LoginScreen(onLoginRequest: () -> Unit, onSignInRequest: () -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                TextBox(title = "Name", text = name)
+
                 TextBox(title = "Email", text = email)
 
                 TextBox(
@@ -67,29 +70,13 @@ fun LoginScreen(onLoginRequest: () -> Unit, onSignInRequest: () -> Unit) {
         }
 
         Row(
-            modifier = Modifier
-                .padding(vertical = 10.dp)
-                .paint(painterResource(id = R.drawable.wooden_plank))
+            modifier = Modifier.padding(vertical = 10.dp)
         ) {
-            RoundButton(
-                onClick = onLoginRequest
-            ) {
-                Text("Login")
-            }
-        }
-
-        Row {
             RoundButton(
                 onClick = onSignInRequest
             ) {
-                Text("Sign up")
+                Text("Signup")
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen({}, {})
 }
