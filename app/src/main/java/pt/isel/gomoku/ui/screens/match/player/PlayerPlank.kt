@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.User
+import pt.isel.gomoku.domain.user.dto.User
 
 @Composable
 fun RowScope.PlayerPlank(user: User) {

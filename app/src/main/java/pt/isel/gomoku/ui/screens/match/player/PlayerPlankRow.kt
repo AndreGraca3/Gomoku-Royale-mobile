@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.Player
-import pt.isel.gomoku.domain.User
+import pt.isel.gomoku.domain.user.dto.User
 import pt.isel.gomoku.ui.components.AnimatedBorderCard
 import pt.isel.gomoku.ui.components.text.ElipsedText
 

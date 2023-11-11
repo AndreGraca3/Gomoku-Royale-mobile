@@ -2,6 +2,7 @@ package pt.isel.gomoku.domain
 
 import pt.isel.gomoku.domain.board.Board
 import pt.isel.gomoku.domain.board.BoardRun
+import pt.isel.gomoku.domain.user.dto.User
 
 data class Match(
     val id: String,

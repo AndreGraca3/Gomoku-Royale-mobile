@@ -64,7 +64,16 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
     implementation("androidx.core:core-splashscreen:1.0.0")
 
+    //implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.google.code.gson:gson:2.10.1")
+
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("io.mockk:mockk-android:1.13.8")
+    testImplementation("com.squareup.okhttp3:mockwebserver")
 
     androidTestImplementation("io.mockk:mockk-android:1.13.8")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.Match
-import pt.isel.gomoku.domain.User
+import pt.isel.gomoku.domain.user.dto.User
 import pt.isel.gomoku.domain.board.BoardRun
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound

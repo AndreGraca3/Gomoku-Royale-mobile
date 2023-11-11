@@ -1,4 +1,4 @@
-package pt.isel.gomoku.domain
+package pt.isel.gomoku.domain.user.dto
 
 data class User(
     val name: String,
