@@ -9,7 +9,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import okhttp3.ResponseBody
 import pt.isel.gomoku.domain.siren.SirenEntity
 import pt.isel.gomoku.domain.user.dto.User
 import pt.isel.gomoku.domain.user.UserService
@@ -74,68 +73,33 @@ class UserServiceImpl(
 
     override suspend fun createUser(input: UserCreateInput): UserIdOutput =
         requestHandler(
-            request = createUserRequest(input),
-            block = { body ->
-                val type: Type = object : TypeToken<SirenEntity<UserIdOutput>>() {}.type
-                return@requestHandler gson.fromJson<SirenEntity<UserIdOutput>>(
-                    body.string(),
-                    type
-                ).properties!!
-            }
+            request = createUserRequest(input)
         )
 
 
     override suspend fun getUser(id: Int): User =
         requestHandler(
-            request = getUserRequest(id),
-            block = { body ->
-                val type: Type = object : TypeToken<SirenEntity<User>>() {}.type
-                return@requestHandler gson.fromJson<SirenEntity<User>>(
-                    body.string(),
-                    type
-                ).properties!!
-            }
+            request = getUserRequest(id)
         )
 
     override suspend fun updateUser(token: String, userInput: UserUpdateInput): UserInfo =
         requestHandler(
-            request = updateUserRequest(token, userInput),
-            block = { body ->
-                val type: Type = object : TypeToken<SirenEntity<UserInfo>>() {}.type
-                return@requestHandler gson.fromJson<SirenEntity<UserInfo>>(
-                    body.string(),
-                    type
-                ).properties!!
-            }
+            request = updateUserRequest(token, userInput)
         )
 
-    override suspend fun deleteUser(token: String) =
+    override suspend fun deleteUser(token: String): Unit =
         requestHandler(
-            request = deleteUserRequest(token),
-            block = { body ->
-                val type: Type = object : TypeToken<SirenEntity<Unit>>() {}.type
-                return@requestHandler gson.fromJson<SirenEntity<Unit>>(
-                    body.string(),
-                    type
-                ).properties!!
-            }
+            request = deleteUserRequest(token)
         )
 
 
     override suspend fun createToken(input: UserCredentialsInput): Token =
         requestHandler(
-            request = createTokenRequest(input),
-            block = { body ->
-                val type: Type = object : TypeToken<SirenEntity<Token>>() {}.type
-                return@requestHandler gson.fromJson<SirenEntity<Token>>(
-                    body.string(),
-                    type
-                ).properties!!
-            }
+            request = createTokenRequest(input)
         )
 
 
-    private suspend fun <T> requestHandler(request: Request, block: (ResponseBody) -> T): T =
+    private suspend fun <T> requestHandler(request: Request): T =
         suspendCancellableCoroutine {
             val call = client.newCall(request)
             call.enqueue(object : Callback {
@@ -148,7 +112,12 @@ class UserServiceImpl(
                     if (!response.isSuccessful || body == null) {
                         it.resumeWithException(UserServiceException(response.message))
                     } else {
-                        it.resumeWith(Result.success(block(body)))
+                        val type: Type = object : TypeToken<SirenEntity<T>>() {}.type
+                        val res = gson.fromJson<SirenEntity<T>>(
+                            body.string(),
+                            type
+                        ).properties!!
+                        it.resumeWith(Result.success(res))
                     }
                 }
             })

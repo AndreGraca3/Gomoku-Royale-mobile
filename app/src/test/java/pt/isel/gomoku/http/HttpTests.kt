@@ -138,7 +138,7 @@ class HttpTests {
         val sut = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
-            getUserRequestUrl = rule.webServer.url("/:id").toUrl(),
+            getUserRequestUrl = rule.webServer.url("/{id}").toUrl(),
         )
 
         // Act
