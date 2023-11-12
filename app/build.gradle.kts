@@ -63,8 +63,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended-android:1.5.2")
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
     implementation("androidx.core:core-splashscreen:1.0.0")
-
-    //implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
     implementation("com.squareup.okhttp3:okhttp")
@@ -83,4 +83,5 @@ dependencies {
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(kotlin("reflect"))
 }

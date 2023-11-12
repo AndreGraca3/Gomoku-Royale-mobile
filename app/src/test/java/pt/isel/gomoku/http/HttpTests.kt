@@ -12,10 +12,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
-import pt.isel.gomoku.domain.siren.SirenEntity
-import pt.isel.gomoku.domain.user.dto.User
-import pt.isel.gomoku.domain.user.dto.UserCreateInput
-import pt.isel.gomoku.domain.user.dto.UserIdOutput
+import pt.isel.gomoku.http.model.siren.SirenEntity
+import pt.isel.gomoku.domain.user.User
+import pt.isel.gomoku.http.model.user.UserCreateInput
+import pt.isel.gomoku.http.model.user.UserIdOutput
+import pt.isel.gomoku.http.service.UserServiceException
+import pt.isel.gomoku.http.service.gomokuroyale.GRUserService
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HttpTests {
@@ -42,7 +44,7 @@ class HttpTests {
                 .setBody(rule.gson.toJson(SirenEntity(properties = expected)))
         )
 
-        val sut = UserServiceImpl(
+        val sut = GRUserService(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl(),
@@ -58,7 +60,7 @@ class HttpTests {
     @Test
     fun `createUser throws UserServiceException on API access timeout`() {
         // Arrange
-        val sut = UserServiceImpl(
+        val sut = GRUserService(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl(),
@@ -79,7 +81,7 @@ class HttpTests {
             MockResponse().setResponseCode(500)
         )
 
-        val sut = UserServiceImpl(
+        val sut = GRUserService(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl()
@@ -96,7 +98,7 @@ class HttpTests {
     @Test
     fun `fetchJoke throws CancellationException when coroutine is cancelled`() = runTest {
         // Arrange
-        val sut = UserServiceImpl(
+        val sut = GRUserService(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl()
@@ -135,7 +137,7 @@ class HttpTests {
                 .setBody(rule.gson.toJson(SirenEntity(properties = expected)))
         )
 
-        val sut = UserServiceImpl(
+        val sut = GRUserService(
             client = rule.httpClient,
             gson = rule.gson,
             getUserRequestUrl = rule.webServer.url("/{id}").toUrl(),

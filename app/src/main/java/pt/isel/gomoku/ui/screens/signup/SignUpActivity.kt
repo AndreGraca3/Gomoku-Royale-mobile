@@ -15,6 +15,7 @@ import pt.isel.gomoku.ui.screens.menu.MenuActivity
 import pt.isel.gomoku.ui.theme.GomokuTheme
 
 class SignUpActivity : ComponentActivity() {
+
     companion object {
         fun navigateTo(origin: Activity) {
             val intent = Intent(origin, SignUpActivity::class.java)
@@ -35,9 +36,7 @@ class SignUpActivity : ComponentActivity() {
                         contentAlignment = Alignment.Center
                     ) {
                         SignUpScreen(
-                            onSignInRequest = {
-                                MenuActivity.navigateTo(this@SignUpActivity)
-                            }
+                            onSignInRequest = { finish() }
                         )
                     }
                 }

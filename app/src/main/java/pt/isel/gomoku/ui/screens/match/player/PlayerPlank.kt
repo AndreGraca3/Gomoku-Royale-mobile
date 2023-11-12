@@ -22,7 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.user.dto.User
+import pt.isel.gomoku.domain.user.User
+import pt.isel.gomoku.ui.components.Avatar
 
 @Composable
 fun RowScope.PlayerPlank(user: User) {
@@ -46,15 +47,7 @@ fun RowScope.PlayerPlank(user: User) {
                 .align(Alignment.Center)
         ) {
 
-            AsyncImage(
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .size(40.dp)
-                    .border(2.dp, Color(233, 104, 19, 255), CircleShape)
-                    .clip(CircleShape),
-                model = user.avatar ?: R.drawable.user_icon,
-                contentDescription = null
-            )
+            Avatar(user.avatar, 40.dp)
 
             PlayerDetails(user)
         }

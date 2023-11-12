@@ -14,8 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import pt.isel.gomoku.domain.board.Board
-import pt.isel.gomoku.domain.Dot
+import pt.isel.gomoku.domain.game.board.Board
+import pt.isel.gomoku.domain.game.cell.Dot
 
 @Composable
 fun GridView(board: Board, selector: Dot?, onCellClick: (Dot) -> Unit) {

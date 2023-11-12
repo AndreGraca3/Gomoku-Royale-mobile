@@ -53,11 +53,11 @@ fun AnimatedImageButton(id: Int, size: Dp, onClick: () -> Unit = {}) {
             .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
-                        playSound(ctx, R.raw.wooden_click_in_1)
+                        ctx.playSound(R.raw.wooden_click_in_1)
                         selected = true
                         try {
                             awaitRelease()
-                            playSound(ctx, R.raw.wooden_click_out_1)
+                            ctx.playSound(R.raw.wooden_click_out_1)
                             onClick()
                         } finally {
                             selected = false

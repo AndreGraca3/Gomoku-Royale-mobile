@@ -11,9 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.Dot
-import pt.isel.gomoku.domain.Match
-import pt.isel.gomoku.domain.user.dto.User
+import pt.isel.gomoku.domain.game.cell.Dot
+import pt.isel.gomoku.domain.game.match.Match
+import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.screens.match.board.BoardView
 import pt.isel.gomoku.ui.screens.match.player.PlayerPlankRow

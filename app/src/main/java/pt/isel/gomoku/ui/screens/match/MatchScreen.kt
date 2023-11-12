@@ -16,9 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.Match
-import pt.isel.gomoku.domain.user.dto.User
-import pt.isel.gomoku.domain.board.BoardRun
+import pt.isel.gomoku.domain.game.match.Match
+import pt.isel.gomoku.domain.user.User
+import pt.isel.gomoku.domain.game.board.BoardRun
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
@@ -66,12 +66,12 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) {
                 internalMatch = internalMatch.play(dot, internalMatch.board.turn)
 
                 if (internalMatch.board !is BoardRun) {
-                    playSound(ctx, R.raw.place_piece_winner)
+                    ctx.playSound(R.raw.place_piece_winner)
                     return@MatchView
                 }
                 val sound =
                     if (Math.random() < 0.5) R.raw.place_piece_1 else R.raw.place_piece_2
-                playSound(ctx, sound)
+                ctx.playSound(sound)
             })
         }
     }
