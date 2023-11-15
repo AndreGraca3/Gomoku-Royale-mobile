@@ -11,17 +11,19 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.defaultShimmerTheme
 import com.valentinilk.shimmer.shimmer
 import pt.isel.gomoku.R
+import pt.isel.gomoku.ui.theme.burBankFamily
 import pt.isel.gomoku.ui.theme.driftWoodFamily
 
 private val titleTheme = defaultShimmerTheme.copy(
     animationSpec = infiniteRepeatable(
         animation = tween(
-            durationMillis = 1000,
+            durationMillis = 2000,
             delayMillis = 3000,
             easing = LinearEasing,
         ),
@@ -30,9 +32,9 @@ private val titleTheme = defaultShimmerTheme.copy(
     shimmerWidth = 40.dp,
     rotation = 45f,
     shaderColors = listOf(
-        Color.White.copy(alpha = 0.7f),
-        Color.White.copy(alpha = 1f),
-        Color.White.copy(alpha = 0.7f),
+        Color.White.copy(alpha = 0.6F),
+        Color.White.copy(alpha = 1F),
+        Color.White.copy(alpha = 0.6F),
     ),
     shaderColorStops = null
 )
@@ -44,8 +46,9 @@ fun TitleShimmer() {
     ) {
         Text(
             getString(LocalContext.current, R.string.app_name),
-            fontFamily = driftWoodFamily,
-            modifier = Modifier.shimmer(),
+            fontFamily = burBankFamily,
+            fontSize = 24.sp,
+            modifier = Modifier.shimmer()
         )
     }
 }

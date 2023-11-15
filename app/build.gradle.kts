@@ -65,6 +65,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
+    implementation("androidx.compose.ui:ui-util")
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
     implementation("com.squareup.okhttp3:okhttp")

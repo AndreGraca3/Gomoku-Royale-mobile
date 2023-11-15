@@ -22,7 +22,7 @@ fun Selector() {
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 400),
             repeatMode = RepeatMode.Reverse
-        ), label = ""
+        ), label = "scaleSelector"
     )
 
     Image(

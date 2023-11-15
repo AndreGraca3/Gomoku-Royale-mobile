@@ -11,6 +11,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import pt.isel.gomoku.ui.theme.driftWoodFamily
 @Composable
 fun MenuTopBar() {
     TopAppBar(
+        modifier = Modifier.shadow(50.dp, ambientColor = Color.Black, spotColor = Color.Black),
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFF4E2608)),
         title = { TitleShimmer() },
         /*navigationIcon = {

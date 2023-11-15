@@ -18,8 +18,8 @@ fun Avatar(avatar: String? = null, size: Dp = 40.dp) {
     AsyncImage(
         contentScale = ContentScale.FillBounds,
         modifier = Modifier
-            .size(40.dp)
-            .border(2.dp, Color(233, 104, 19, 255), CircleShape)
+            .size(42.dp)
+            .border(2.dp, Color.White, CircleShape)
             .clip(CircleShape),
         model = avatar ?: R.drawable.user_icon,
         contentDescription = null

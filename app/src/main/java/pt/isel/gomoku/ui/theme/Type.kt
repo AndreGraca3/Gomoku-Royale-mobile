@@ -35,6 +35,10 @@ val Typography = Typography(
     */
 )
 
+val burBankFamily = FontFamily(
+    Font(R.font.burbank, FontWeight.Normal),
+)
+
 val driftWoodFamily = FontFamily(
     Font(R.font.driftwood, FontWeight.Normal),
 )
