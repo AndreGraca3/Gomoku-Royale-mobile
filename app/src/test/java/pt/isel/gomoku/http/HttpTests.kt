@@ -17,7 +17,7 @@ import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.user.UserCreateInput
 import pt.isel.gomoku.http.model.user.UserIdOutput
 import pt.isel.gomoku.http.service.UserServiceException
-import pt.isel.gomoku.http.service.gomokuroyale.GRUserService
+import pt.isel.gomoku.http.service.gomokuroyale.UserServiceImpl
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HttpTests {
@@ -44,7 +44,7 @@ class HttpTests {
                 .setBody(rule.gson.toJson(SirenEntity(properties = expected)))
         )
 
-        val sut = GRUserService(
+        val sut = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl(),
@@ -60,7 +60,7 @@ class HttpTests {
     @Test
     fun `createUser throws UserServiceException on API access timeout`() {
         // Arrange
-        val sut = GRUserService(
+        val sut = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl(),
@@ -81,7 +81,7 @@ class HttpTests {
             MockResponse().setResponseCode(500)
         )
 
-        val sut = GRUserService(
+        val sut = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl()
@@ -98,7 +98,7 @@ class HttpTests {
     @Test
     fun `fetchJoke throws CancellationException when coroutine is cancelled`() = runTest {
         // Arrange
-        val sut = GRUserService(
+        val sut = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
             usersRequestUrl = rule.webServer.url("/").toUrl()
@@ -137,7 +137,7 @@ class HttpTests {
                 .setBody(rule.gson.toJson(SirenEntity(properties = expected)))
         )
 
-        val sut = GRUserService(
+        val sut = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
             getUserRequestUrl = rule.webServer.url("/{id}").toUrl(),

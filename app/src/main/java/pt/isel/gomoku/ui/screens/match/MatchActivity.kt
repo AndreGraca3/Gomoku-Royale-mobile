@@ -9,11 +9,12 @@ import androidx.activity.viewModels
 import pt.isel.gomoku.utils.viewModelInit
 
 class MatchActivity : ComponentActivity() {
-
     companion object {
-        fun navigateTo(origin: Activity) {
-            val intent = Intent(origin, MatchActivity::class.java)
-            origin.startActivity(intent)
+        fun navigate(origin: Activity) {
+            with(origin) {
+                val intent = Intent(this, MatchActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

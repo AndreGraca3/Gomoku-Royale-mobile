@@ -30,7 +30,7 @@ private const val GOMOKU_USERS_URL = "$GOMOKU_API_URL/users"
 private const val GOMOKU_USERS_GET_URL = "$GOMOKU_USERS_URL/{id}"
 private const val GOMOKU_USERS_TOKEN_URL = "$GOMOKU_USERS_URL/token"
 
-class GRUserService(
+class UserServiceImpl(
     override val client: OkHttpClient,
     override val gson: Gson,
     private val getUserRequestUrl: URL = URL(GOMOKU_USERS_GET_URL),

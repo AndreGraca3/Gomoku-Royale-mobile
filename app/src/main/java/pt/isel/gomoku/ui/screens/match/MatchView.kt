@@ -35,8 +35,8 @@ fun MatchView(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            AnimatedImageButton(R.drawable.home_button, 40.dp, onBackRequested)
-            AnimatedImageButton(R.drawable.settings_button, 40.dp)
+            AnimatedImageButton(R.drawable.home_button, 48.dp, onBackRequested)
+            AnimatedImageButton(R.drawable.settings_button, 48.dp)
         }
 
         PlayerPlankRow(users, match.board.turn)

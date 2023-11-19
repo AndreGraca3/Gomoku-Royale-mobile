@@ -1,111 +1,77 @@
 package pt.isel.gomoku.ui.screens.leaderboard
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.stats.UserStats
+import pt.isel.gomoku.domain.LoadState
+import pt.isel.gomoku.domain.exceptionOrNull
+import pt.isel.gomoku.domain.getOrNull
+import pt.isel.gomoku.domain.stats.UserRank
+import pt.isel.gomoku.domain.success
+import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
+import pt.isel.gomoku.ui.screens.menu.topbar.MenuTopBar
+import pt.isel.gomoku.ui.theme.GomokuTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LeaderBoardScreen() {
-    val leaderBoard = listOf(
-        UserStats(
-            3,
-            "Andre",
-            "Grand Champion",
-            R.drawable.grand_champion
-        ),
-        UserStats(
-            1,
-            "Daniel",
-            "Bronze",
-            R.drawable.silver
-        ),
-        UserStats(
-            2,
-            "Diogo",
-            "Silver",
-            R.drawable.silver
-        ),
-        UserStats(
-            5,
-            "João",
-            "Bronze",
-            R.drawable.silver
-        ),
-    )
+fun LeaderBoardScreen(leaderBoard: LoadState<List<UserRank>>) {
+    GomokuTheme {
+        Scaffold(
+            containerColor = Color.Transparent,
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                MenuTopBar()
+            },
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                leaderBoard.getOrNull()?.let {
+                    LeaderBoardView(leaderBoard = it)
+                }
 
-    Column {
-        for (userStat in leaderBoard) {
-            RankRow(
-                position = leaderBoard.indexOf(userStat) + 1,
-                idUser = userStat.id,
-                playerName = userStat.userName,
-                rankImage = userStat.rankImage
-            )
-        }
-    }
-}
+                leaderBoard.exceptionOrNull()?.let {
+                    Toast.makeText(
+                        LocalContext.current,
+                        "Something went wrong: ${it.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
 
-
-@Composable
-fun RankRow(position: Int, idUser: Int, playerName: String, rankImage: Int) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .paint(
-                painter = painterResource(id = R.drawable.wooden_plank)
-            )
-            .clickable {
-                // navigate to ...
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    AnimatedImageButton(id = R.drawable.left_arrow_button, size = 56.dp)
+                    AnimatedImageButton(id = R.drawable.right_arrow_button, size = 56.dp)
+                }
             }
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.size(75.dp)
-        ) {
-            Text(
-                text = position.toString()
-            )
-        }
-
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.size(75.dp)
-        ) {
-            Text(
-                text = playerName
-            )
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.size(75.dp)
-        ) {
-            Image(
-                painterResource(id = rankImage),
-                contentDescription = null
-            )
         }
     }
 }
 
 @Preview
 @Composable
-fun LeaderBoardPreview() {
-    LeaderBoardScreen()
+fun LeaderBoardScreenPreview() {
+    LeaderBoardScreen(
+        leaderBoard = success(listOf(
+            UserRank(1, "André", "Grand Champion"),
+            UserRank(1, "Diogo Maça Pereira dos Santos Ferreira mil", "Silver"),
+        ))
+    )
 }

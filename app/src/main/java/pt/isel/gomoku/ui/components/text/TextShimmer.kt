@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.menu.topbar
+package pt.isel.gomoku.ui.components.text
 
 import androidx.compose.material3.Text
 import androidx.compose.animation.core.LinearEasing
@@ -9,16 +9,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getString
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.defaultShimmerTheme
 import com.valentinilk.shimmer.shimmer
-import pt.isel.gomoku.R
-import pt.isel.gomoku.ui.theme.burBankFamily
-import pt.isel.gomoku.ui.theme.driftWoodFamily
+import pt.isel.gomoku.ui.theme.mainFont
 
 private val titleTheme = defaultShimmerTheme.copy(
     animationSpec = infiniteRepeatable(
@@ -40,13 +37,13 @@ private val titleTheme = defaultShimmerTheme.copy(
 )
 
 @Composable
-fun TitleShimmer() {
+fun TextShimmer(text: String, fontFamily: FontFamily = mainFont) {
     CompositionLocalProvider(
         LocalShimmerTheme provides titleTheme,
     ) {
         Text(
-            getString(LocalContext.current, R.string.app_name),
-            fontFamily = burBankFamily,
+            text,
+            fontFamily = fontFamily,
             fontSize = 24.sp,
             modifier = Modifier.shimmer()
         )

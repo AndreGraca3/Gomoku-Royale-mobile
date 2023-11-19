@@ -36,7 +36,6 @@ fun BackgroundCloud(initialOffsetX: Float, offsetY: Float, direction: Int = 1) {
     )
 
     LaunchedEffect(Unit) {
-        delay(3000)
         position = initialOffsetX + screenWidth * direction
     }
 

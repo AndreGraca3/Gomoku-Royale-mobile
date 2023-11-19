@@ -24,5 +24,4 @@ interface UserService {
     suspend fun deleteUser(token: String)
 
     suspend fun createToken(input: UserCredentialsInput): Token
-
 }

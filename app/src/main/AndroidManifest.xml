@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.Starting"
+        android:theme="@style/Theme.Gomoku"
         tools:targetApi="31">
         <activity
             android:name=".ui.screens.match.MatchActivity"
@@ -24,20 +24,21 @@
             android:name=".ui.screens.signup.SignUpActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.screens.leaderboard.LeaderBoardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.screens.menu.MenuActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <service
             android:name=".utils.MusicService"
-            android:enabled="true"/>
+            android:enabled="true" />
     </application>
 
 </manifest>

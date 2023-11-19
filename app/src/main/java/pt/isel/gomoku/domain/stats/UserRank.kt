@@ -1,8 +1,7 @@
 package pt.isel.gomoku.domain.stats
 
-data class UserStats(
+data class UserRank(
     val id: Int,
     val userName: String,
-    val rankName: String,
-    val rankImage: Int
+    val rank: String
 )

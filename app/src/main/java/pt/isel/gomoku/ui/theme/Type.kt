@@ -8,10 +8,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.R
 
+val mainFont = FontFamily(
+    Font(R.font.burbank, FontWeight.Normal),
+)
+
+val woodFont = FontFamily(
+    Font(R.font.driftwood, FontWeight.Normal),
+)
+
+val handFont = FontFamily(
+    Font(R.font.overthink, FontWeight.Normal),
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
@@ -33,12 +45,4 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
-)
-
-val burBankFamily = FontFamily(
-    Font(R.font.burbank, FontWeight.Normal),
-)
-
-val driftWoodFamily = FontFamily(
-    Font(R.font.driftwood, FontWeight.Normal),
 )

@@ -43,12 +43,6 @@ fun AnimatedImageButton(id: Int, size: Dp, onClick: () -> Unit = {}) {
         modifier = Modifier
             .size(size)
             .scale(scale.value)
-            .border(
-                width = 4.dp,
-                color = if (selected) Color(19, 18, 17, 255).copy(alpha = 0.2f)
-                else Color.Transparent,
-                shape = RoundedCornerShape(4.dp)
-            )
             .clip(RoundedCornerShape(4.dp))
             .pointerInput(Unit) {
                 detectTapGestures(

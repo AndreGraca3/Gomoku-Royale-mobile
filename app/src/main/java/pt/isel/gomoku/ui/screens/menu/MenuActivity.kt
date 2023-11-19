@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import pt.isel.gomoku.ui.screens.leaderboard.LeaderBoardActivity
 import pt.isel.gomoku.ui.screens.match.MatchActivity
 import pt.isel.gomoku.utils.MusicService
 
@@ -22,7 +23,8 @@ class MenuActivity : ComponentActivity() {
 
         setContent {
             MenuScreen(
-                onMatchRequested = { MatchActivity.navigateTo(this@MenuActivity) }
+                onMatchRequested = { MatchActivity.navigate(this@MenuActivity) },
+                onLeaderBoardRequested = { LeaderBoardActivity.navigate(this@MenuActivity) }
             )
         }
     }

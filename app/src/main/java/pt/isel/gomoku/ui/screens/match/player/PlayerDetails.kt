@@ -12,12 +12,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.ui.components.text.ElipsedText
+import pt.isel.gomoku.ui.theme.woodFont
 import pt.isel.gomoku.utils.getRankIconByName
 
 @Composable
 fun PlayerDetails(user: User) {
     Column {
-        ElipsedText(text = user.name)
+        ElipsedText(text = user.name, fontFamily = woodFont)
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
