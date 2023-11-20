@@ -1,4 +1,4 @@
-package pt.isel.gomoku.http.service
+package pt.isel.gomoku.http.service.interfaces
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient

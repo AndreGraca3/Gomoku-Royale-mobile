@@ -3,7 +3,7 @@ package pt.isel.gomoku
 import android.app.Application
 import okhttp3.OkHttpClient
 import com.google.gson.Gson
-import pt.isel.gomoku.http.service.LeaderBoardService
+import pt.isel.gomoku.http.service.interfaces.LeaderBoardService
 import pt.isel.gomoku.http.service.gomokuroyale.LeaderBoardServiceImpl
 import java.util.concurrent.TimeUnit
 
@@ -27,7 +27,7 @@ interface GomokuDependencyProvider {
 class GomokuApplication: Application(), GomokuDependencyProvider {
     override val httpClient: OkHttpClient =
         OkHttpClient.Builder()
-            .callTimeout(10, TimeUnit.SECONDS)
+            .callTimeout(5, TimeUnit.SECONDS)
             .build()
 
     override val gson: Gson = Gson()

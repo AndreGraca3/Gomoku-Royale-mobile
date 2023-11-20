@@ -28,8 +28,9 @@ fun MenuScreen(onMatchRequested: () -> Unit = {}, onLeaderBoardRequested: () -> 
             topBar = {
                 MenuTopBar()
             },
-        ) {
+        ) { innerPadding ->
             MenuBody(
+                innerPadding = innerPadding,
                 onMatchRequested = onMatchRequested,
                 onLeaderBoardRequested = onLeaderBoardRequested
             )

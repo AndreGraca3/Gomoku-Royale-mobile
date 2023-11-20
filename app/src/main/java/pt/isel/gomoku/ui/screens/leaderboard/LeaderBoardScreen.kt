@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,10 +18,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.LoadState
+import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.exceptionOrNull
 import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.stats.UserRank
 import pt.isel.gomoku.domain.success
+import pt.isel.gomoku.ui.components.LoadingSpinner
 import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.screens.menu.topbar.MenuTopBar
 import pt.isel.gomoku.ui.theme.GomokuTheme
@@ -36,14 +39,20 @@ fun LeaderBoardScreen(leaderBoard: LoadState<List<UserRank>>) {
             topBar = {
                 MenuTopBar()
             },
-        ) {
+        ) { innerPadding ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) {
                 leaderBoard.getOrNull()?.let {
                     LeaderBoardView(leaderBoard = it)
+                }
+
+                if(leaderBoard is Loading) {
+                    LoadingSpinner()
                 }
 
                 leaderBoard.exceptionOrNull()?.let {
@@ -52,13 +61,6 @@ fun LeaderBoardScreen(leaderBoard: LoadState<List<UserRank>>) {
                         "Something went wrong: ${it.message}",
                         Toast.LENGTH_LONG
                     ).show()
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    AnimatedImageButton(id = R.drawable.left_arrow_button, size = 56.dp)
-                    AnimatedImageButton(id = R.drawable.right_arrow_button, size = 56.dp)
                 }
             }
         }
@@ -69,9 +71,11 @@ fun LeaderBoardScreen(leaderBoard: LoadState<List<UserRank>>) {
 @Composable
 fun LeaderBoardScreenPreview() {
     LeaderBoardScreen(
-        leaderBoard = success(listOf(
-            UserRank(1, "André", "Grand Champion"),
-            UserRank(1, "Diogo Maça Pereira dos Santos Ferreira mil", "Silver"),
-        ))
+        leaderBoard = success(
+            listOf(
+                UserRank(1, "André", "Grand Champion"),
+                UserRank(1, "Diogo Maça Pereira dos Santos Ferreira mil", "Silver"),
+            )
+        )
     )
 }
