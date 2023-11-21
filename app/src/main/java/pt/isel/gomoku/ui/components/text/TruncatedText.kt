@@ -9,13 +9,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.ui.theme.mainFont
-import pt.isel.gomoku.ui.theme.woodFont
 
 @Composable
-fun ElipsedText(text: String, fontSize: TextUnit = 12.sp, fontFamily: FontFamily = mainFont) {
+fun TruncatedText(
+    text: String,
+    fontSize: TextUnit = 12.sp,
+    color: Color = Color.White,
+    fontFamily: FontFamily = mainFont
+) {
     Text(
         textAlign = TextAlign.Center,
         fontFamily = fontFamily,
+        color = color,
         fontSize = fontSize,
         text = text,
         maxLines = 1,

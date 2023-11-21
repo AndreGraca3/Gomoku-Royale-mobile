@@ -9,5 +9,5 @@ interface LeaderBoardService {
     val client: OkHttpClient
     val gson: Gson
 
-    suspend fun getTopPlayers(skip: Int, limit: Int): List<UserRank>
+    suspend fun getTopPlayers(limit: Int): List<UserRank>
 }

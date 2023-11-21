@@ -35,8 +35,8 @@ class LeaderBoardActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.loadTopPlayers()
         setContent {
-            viewModel.loadTopPlayers()
             LeaderBoardScreen(viewModel.topPlayers)
         }
     }

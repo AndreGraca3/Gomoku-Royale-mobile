@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.game.match.Player
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.ui.components.AnimatedBorderCard
-import pt.isel.gomoku.ui.components.text.ElipsedText
+import pt.isel.gomoku.ui.components.text.TruncatedText
 
 @Composable
 fun PlayerPlankRow(users: List<User>, turn: Player) {
@@ -39,7 +39,7 @@ fun PlayerPlankRow(users: List<User>, turn: Player) {
             for (i in users.indices) {
                 this.PlayerPlank(users[i])
                 if (i < users.size - 1) {
-                    ElipsedText(text = "VS", fontSize = 20.sp)
+                    TruncatedText(text = "VS", fontSize = 20.sp)
                 }
             }
         }

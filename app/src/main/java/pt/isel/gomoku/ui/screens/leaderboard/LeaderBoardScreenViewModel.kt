@@ -30,7 +30,7 @@ class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : View
     fun loadTopPlayers() {
         viewModelScope.launch {
             topPlayers = Loading
-            val res = runCatching { service.getTopPlayers(0, limit) }
+            val res = runCatching { service.getTopPlayers(limit) }
             topPlayers = loaded(res)
         }
     }

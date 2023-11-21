@@ -17,13 +17,13 @@ import kotlin.coroutines.resumeWithException
 abstract class GomokuService {
 
     companion object {
-        const val GOMOKU_API_URL = "http://localhost:8080"
+        const val GOMOKU_API_URL = "http://192.168.1.2:8080"
     }
 
     abstract val client: OkHttpClient
     abstract val gson: Gson
 
-    protected suspend fun <T> requestHandler(request: Request): T =
+    protected suspend inline fun <reified T> requestHandler(request: Request): T =
         suspendCancellableCoroutine {
             val call = client.newCall(request)
             call.enqueue(object : Callback {
@@ -36,11 +36,11 @@ abstract class GomokuService {
                     if (!response.isSuccessful || body == null) {
                         it.resumeWithException(Exception(response.message))
                     } else {
-                        val type: Type = object : TypeToken<SirenEntity<T>>() {}.type
+                        val type = object : TypeToken<SirenEntity<T>>() {}.type
                         val res = gson.fromJson<SirenEntity<T>>(
                             body.string(),
                             type
-                        ).properties!!
+                        ).properties
                         it.resumeWith(Result.success(res))
                     }
                 }

@@ -1,6 +1,3 @@
 package pt.isel.gomoku.http.model
 
-data class PaginationInput(
-    val skip: Int,
-    val limit: Int
-)
+data class PaginationInput(val limit: Int)

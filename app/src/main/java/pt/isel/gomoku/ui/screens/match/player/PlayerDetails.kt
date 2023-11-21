@@ -11,14 +11,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.user.User
-import pt.isel.gomoku.ui.components.text.ElipsedText
+import pt.isel.gomoku.ui.components.text.TruncatedText
 import pt.isel.gomoku.ui.theme.woodFont
 import pt.isel.gomoku.utils.getRankIconByName
 
 @Composable
 fun PlayerDetails(user: User) {
     Column {
-        ElipsedText(text = user.name, fontFamily = woodFont)
+        TruncatedText(text = user.name, fontFamily = woodFont)
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -28,7 +28,7 @@ fun PlayerDetails(user: User) {
                 contentDescription = null,
                 contentScale = ContentScale.Inside
             )
-            ElipsedText(text = user.rank, 10.sp)
+            TruncatedText(text = user.rank, 10.sp)
         }
     }
 }
