@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.game.match.Player
 import pt.isel.gomoku.domain.user.User
-import pt.isel.gomoku.ui.components.AnimatedBorderCard
+import pt.isel.gomoku.ui.components.common.AnimatedBorderCard
 import pt.isel.gomoku.ui.components.text.TruncatedText
 
 @Composable

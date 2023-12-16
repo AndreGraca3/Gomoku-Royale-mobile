@@ -1,18 +1,19 @@
 package pt.isel.gomoku.ui.screens.leaderboard
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import pt.isel.gomoku.domain.Idle
-import pt.isel.gomoku.domain.LoadState
-import pt.isel.gomoku.domain.Loading
+import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
-import pt.isel.gomoku.domain.stats.UserRank
+import pt.isel.gomoku.domain.loading
+import pt.isel.gomoku.http.model.stats.LeaderBoard
 import pt.isel.gomoku.http.service.interfaces.LeaderBoardService
 
 class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : ViewModel() {
@@ -24,14 +25,17 @@ class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : View
         private const val limit = 10
     }
 
-    var topPlayers by mutableStateOf<LoadState<List<UserRank>>>(Idle)
-        private set
+    private val topPlayersFlow: MutableStateFlow<IOState<LeaderBoard>> = MutableStateFlow(idle())
+
+    val topPlayers: Flow<IOState<LeaderBoard>>
+        get() = topPlayersFlow.asStateFlow()
 
     fun loadTopPlayers() {
+        topPlayersFlow.value =
+            loading() // coroutine may not run immediately so we set the state to loading here
         viewModelScope.launch {
-            topPlayers = Loading
             val res = runCatching { service.getTopPlayers(limit) }
-            topPlayers = loaded(res)
+            topPlayersFlow.value = loaded(res)
         }
     }
 }

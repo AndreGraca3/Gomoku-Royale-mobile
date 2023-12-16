@@ -1,41 +1,54 @@
 package pt.isel.gomoku.ui.screens.leaderboard
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import pt.isel.gomoku.domain.LoadState
-import pt.isel.gomoku.domain.stats.UserRank
-import pt.isel.gomoku.domain.success
-import pt.isel.gomoku.ui.screens.menu.topbar.MenuTopBar
+import androidx.compose.ui.unit.sp
+import pt.isel.gomoku.R
+import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.loaded
+import pt.isel.gomoku.domain.stats.Rank
+import pt.isel.gomoku.http.model.stats.LeaderBoard
+import pt.isel.gomoku.http.model.stats.UserItem
+import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.theme.GomokuTheme
+import kotlin.Result.Companion.success
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeaderBoardScreen(leaderBoard: LoadState<List<UserRank>>) {
+fun LeaderBoardScreen(leaderBoard: IOState<LeaderBoard>) {
     GomokuTheme {
         Scaffold(
             containerColor = Color.Transparent,
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                MenuTopBar()
-            },
+                AnimatedImageButton(
+                    id = R.drawable.left_arrow_button,
+                    size = 60.dp,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         ) { innerPadding ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
+                modifier = Modifier.padding(innerPadding)
             ) {
+                Text(
+                    "Leaderboard",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp,
+                    color = Color.White
+                )
                 LeaderBoardView(leaderBoard)
             }
         }
@@ -45,15 +58,18 @@ fun LeaderBoardScreen(leaderBoard: LoadState<List<UserRank>>) {
 @Preview
 @Composable
 fun LeaderBoardScreenPreview() {
-    val list = buildList<UserRank> {
+    val list = buildList<UserItem> {
         repeat(10) {
-            UserRank(
+            UserItem(
                 1,
                 "Andre",
-                "Grand Champion",
-                "https://i.imgur.com/JGtwTBw.png"
+                "admin",
+                Rank(
+                    "Grand Champion",
+                    "https://i.imgur.com/JGtwTBw.png"
+                )
             )
         }
     }
-    LeaderBoardScreen(leaderBoard = success(list))
+    LeaderBoardScreen(leaderBoard = loaded(success(LeaderBoard(list))))
 }

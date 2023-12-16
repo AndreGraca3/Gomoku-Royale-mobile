@@ -46,8 +46,6 @@ fun MatchScreen(onBackRequested: () -> Unit = {}) {
         )
     }
 
-    Log.v("StrangeBug", "MatchScreen ${internalMatch.board.hashCode()}")
-
     GomokuTheme {
         Box(
             contentAlignment = Alignment.Center,

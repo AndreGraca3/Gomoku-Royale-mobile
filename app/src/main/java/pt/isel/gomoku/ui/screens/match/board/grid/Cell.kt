@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.game.match.Player
 import pt.isel.gomoku.domain.game.cell.Stone
-import pt.isel.gomoku.ui.components.Cross
+import pt.isel.gomoku.ui.components.common.Cross
 
 @Composable
 fun Cell(stone: Stone?, isSelected: Boolean, onClick: () -> Unit) {

@@ -1,65 +1,65 @@
 package pt.isel.gomoku.ui.screens.menu
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
-import pt.isel.gomoku.ui.screens.menu.actions.Action
 import pt.isel.gomoku.ui.screens.menu.actions.MenuActions
 import pt.isel.gomoku.ui.screens.menu.logo.HeartBeatLogo
 import pt.isel.gomoku.ui.screens.menu.playlist.Playlist
-import pt.isel.gomoku.ui.screens.menu.playlist.PlaylistCards
+import pt.isel.gomoku.ui.screens.menu.playlist.PlaylistPager
 import pt.isel.gomoku.utils.playSound
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuBody(
     innerPadding: PaddingValues,
+    isInitialized: Boolean,
+    isLoggedIn: Boolean,
     onMatchRequested: () -> Unit,
-    onLeaderBoardRequested: () -> Unit
+    onLeaderBoardRequested: () -> Unit,
+    onAboutRequested: () -> Unit
 ) {
     val ctx = LocalContext.current
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
+    val playlistCards = listOf(
+        Playlist(
+            name = "Multiplayer",
+            image = R.drawable.multiplayer_match,
+            disabledImage = R.drawable.multiplayer_match_disabled,
+            onClick = {}),
+        Playlist(
+            name = "Private",
+            image = R.drawable.private_match,
+            disabledImage = R.drawable.private_match_disabled,
+            onClick = {
+                ctx.playSound(R.raw.metal_click_1)
+                onMatchRequested()
+            }
+        ),
+    )
+
+    Scaffold(
+        containerColor = Color.Transparent,
+        modifier = Modifier.padding(innerPadding),
+        topBar = {
+            HeartBeatLogo(innerPadding, modifier = Modifier.fillMaxWidth())
+        },
+        bottomBar = {
+            MenuActions(onLeaderBoardRequested, onAboutRequested)
+        }
     ) {
-        HeartBeatLogo()
-
-        PlaylistCards(
-            listOf(
-                Playlist("Multiplayer", R.drawable.multiplayer_match, onClick = {}),
-                Playlist(
-                    "Private", R.drawable.private_match, onClick = {
-                        ctx.playSound(R.raw.metal_click_1)
-                        onMatchRequested()
-                    }
-                ),
-            )
-        )
-
-        MenuActions(
-            listOf(
-                Action(
-                    "Leaderboard",
-                    R.drawable.leaderboard_button,
-                    onClick = onLeaderBoardRequested
-                ),
-                Action("Stats", R.drawable.stats_button, onClick = {}),
-                Action("Settings", R.drawable.settings_button, onClick = {}),
-                Action("Info", R.drawable.info_button, onClick = {}),
-            )
+        PlaylistPager(
+            isInitialized,
+            isActive = isLoggedIn,
+            cards = playlistCards,
+            modifier = Modifier.padding(it)
         )
     }
 }

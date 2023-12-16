@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
@@ -20,21 +21,24 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.screens.match.MatchActivity"
-            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.signup.SignUpActivity"
-            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.screens.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.leaderboard.LeaderBoardActivity"
-            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.screens.about.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.menu.MenuActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

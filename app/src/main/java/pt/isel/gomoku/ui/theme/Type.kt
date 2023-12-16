@@ -10,6 +10,7 @@ import pt.isel.gomoku.R
 
 val mainFont = FontFamily(
     Font(R.font.burbank, FontWeight.Normal),
+    Font(R.font.burbank_bold, FontWeight.Bold),
 )
 
 val woodFont = FontFamily(
@@ -21,28 +22,16 @@ val handFont = FontFamily(
 )
 
 // Set of Material typography styles to start with
+val textStyle = TextStyle(
+    fontFamily = mainFont,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    letterSpacing = 0.5.sp
+)
+
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = mainFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    bodyLarge = textStyle.copy(fontSize = 20.sp),
+    bodyMedium = textStyle,
+    bodySmall = textStyle.copy(fontSize = 14.sp),
 )

@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.components
+package pt.isel.gomoku.ui.components.common
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.size
@@ -14,11 +14,11 @@ import coil.compose.AsyncImage
 import pt.isel.gomoku.R
 
 @Composable
-fun Avatar(avatar: String? = null, size: Dp = 40.dp) {
+fun AsyncAvatar(avatar: String? = null, size: Dp = 40.dp) {
     AsyncImage(
         contentScale = ContentScale.FillBounds,
         modifier = Modifier
-            .size(42.dp)
+            .size(size)
             .border(2.dp, Color.White, CircleShape)
             .clip(CircleShape),
         model = avatar ?: R.drawable.user_icon,

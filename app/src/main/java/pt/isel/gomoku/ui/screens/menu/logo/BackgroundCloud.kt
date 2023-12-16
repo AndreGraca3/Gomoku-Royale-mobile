@@ -32,7 +32,7 @@ fun BackgroundCloud(initialOffsetX: Float, offsetY: Float, direction: Int = 1) {
 
     val horizontalBias by animateFloatAsState(
         targetValue = position,
-        animationSpec = tween(60000, easing = LinearEasing),
+        animationSpec = tween(10000, easing = LinearEasing),
         label = "",
     )
 

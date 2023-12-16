@@ -12,8 +12,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
-import pt.isel.gomoku.http.model.siren.SirenEntity
 import pt.isel.gomoku.domain.user.User
+import pt.isel.gomoku.http.model.Siren
 import pt.isel.gomoku.http.model.user.UserCreateInput
 import pt.isel.gomoku.http.model.user.UserIdOutput
 import pt.isel.gomoku.http.service.UserServiceException
@@ -41,7 +41,7 @@ class HttpTests {
             MockResponse()
                 .setResponseCode(201)
                 .addHeader("Content-type", "application/vnd.siren+json")
-                .setBody(rule.gson.toJson(SirenEntity(properties = expected)))
+                .setBody(rule.gson.toJson(Siren(properties = expected)))
         )
 
         val sut = UserServiceImpl(
@@ -134,7 +134,7 @@ class HttpTests {
             MockResponse()
                 .setResponseCode(200)
                 .addHeader("Content-type", "application/vnd.siren+json")
-                .setBody(rule.gson.toJson(SirenEntity(properties = expected)))
+                .setBody(rule.gson.toJson(Siren(properties = expected)))
         )
 
         val sut = UserServiceImpl(

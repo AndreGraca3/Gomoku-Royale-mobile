@@ -27,8 +27,6 @@ import pt.isel.gomoku.utils.playSound
 @Composable
 fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
 
-    Log.v("StrangeBug", "BoardView ${board.hashCode()}")
-
     val ctx = LocalContext.current
     var selector by remember { mutableStateOf<Dot?>(null) }
 
@@ -46,7 +44,6 @@ fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
         )
 
         GridView(board, selector, onCellClick = { dot ->
-            Log.v("StrangeBug", "BoardView handler ${board.hashCode()}")
             if (board.getStoneOrNull(dot) == null) {
                 if (selector == null || dot != selector) {
                     selector = dot

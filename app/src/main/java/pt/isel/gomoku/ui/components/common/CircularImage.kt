@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.components
+package pt.isel.gomoku.ui.components.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size

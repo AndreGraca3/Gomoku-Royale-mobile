@@ -19,8 +19,6 @@ import pt.isel.gomoku.domain.game.cell.Dot
 
 @Composable
 fun GridView(board: Board, selector: Dot?, onCellClick: (Dot) -> Unit) {
-    Log.v("StrangeBug", "GridView ${board.hashCode()}")
-
     val shape = RoundedCornerShape(10.dp)
 
     LazyVerticalGrid(columns = GridCells.Fixed(board.size),
