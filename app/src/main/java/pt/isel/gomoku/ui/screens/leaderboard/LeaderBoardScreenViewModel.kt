@@ -34,6 +34,7 @@ class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : View
         topPlayersFlow.value =
             loading() // coroutine may not run immediately so we set the state to loading here
         viewModelScope.launch {
+            delay(2000)
             val res = runCatching { service.getTopPlayers(limit) }
             topPlayersFlow.value = loaded(res)
         }
