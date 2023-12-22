@@ -20,7 +20,7 @@ import kotlin.coroutines.resumeWithException
 abstract class GomokuService {
 
     companion object {
-        const val GOMOKU_API_URL = "http://192.168.1.5:2001/api"
+        const val GOMOKU_API_URL = "http://192.168.1.206:2001/api"
     }
 
     abstract val client: OkHttpClient

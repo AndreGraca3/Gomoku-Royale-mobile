@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.login
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text

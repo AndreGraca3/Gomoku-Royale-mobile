@@ -1,5 +1,6 @@
 package pt.isel.gomoku.ui.screens.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,6 +28,7 @@ class LoginScreenViewModel(private val userService: UserService) : ViewModel() {
             val result = kotlin.runCatching {
                 userService.createToken(UserCredentialsInput(email, password))
             }
+            Log.v("login", "result: $result")
         }
     }
 }

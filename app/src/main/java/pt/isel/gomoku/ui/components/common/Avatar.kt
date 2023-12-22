@@ -14,9 +14,9 @@ import coil.compose.AsyncImage
 import pt.isel.gomoku.R
 
 @Composable
-fun AsyncAvatar(avatar: String? = null, size: Dp = 40.dp) {
+fun AsyncAvatar(avatar: String? = null, size: Dp = 50.dp) {
     AsyncImage(
-        contentScale = ContentScale.FillBounds,
+        contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(size)
             .border(2.dp, Color.White, CircleShape)

@@ -1,5 +1,6 @@
 package pt.isel.gomoku.ui.screens.menu
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -42,6 +43,7 @@ class MainScreenViewModel(
         viewModelScope.launch {
             val result = kotlin.runCatching { userService.getAuthenticatedUser() }
             userInfoFlow.value = loaded(result)
+            Log.v("login", "result authuser: $result")
         }
     }
 
@@ -51,6 +53,7 @@ class MainScreenViewModel(
         get() = tokenFlow.asStateFlow()
 
     fun getLocalToken() {
+        Log.v("login", "getLocalToken")
         viewModelScope.launch {
             tokenFlow.value = tokenRepository.getLocalToken()
         }

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -63,8 +64,8 @@ fun LeaderBoardPosition(
                 .clip(shape)
                 .background(Brown)
                 .innerShadow(Color.White, cornersRadius = 16.dp, spread = 4.dp, blur = 4.dp)
-                .padding(10.dp)
                 .clickable { onPlayerRequested() }
+                .padding(10.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(0.8F)

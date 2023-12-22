@@ -16,13 +16,6 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 
 class SignUpActivity : ComponentActivity() {
 
-    companion object {
-        fun navigateTo(origin: Activity) {
-            val intent = Intent(origin, SignUpActivity::class.java)
-            origin.startActivity(intent)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -35,9 +28,6 @@ class SignUpActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        SignUpScreen(
-                            onSignInRequest = { finish() }
-                        )
                     }
                 }
             }
