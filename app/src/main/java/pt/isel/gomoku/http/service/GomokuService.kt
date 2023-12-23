@@ -14,13 +14,15 @@ import okhttp3.Response
 import pt.isel.gomoku.http.model.Problem
 import pt.isel.gomoku.http.model.Siren
 import java.io.IOException
+import java.net.InetAddress
 import java.net.URL
 import kotlin.coroutines.resumeWithException
 
 abstract class GomokuService {
 
     companion object {
-        const val GOMOKU_API_URL = "http://192.168.1.206:2001/api"
+        const val GOMOKU_API_URL = "https://gomoku.serveo.net/api"
+        // const val GOMOKU_API_URL = "http://192.168.1.207:2001/api"
     }
 
     abstract val client: OkHttpClient
@@ -43,7 +45,8 @@ abstract class GomokuService {
                             return
                         }
                         val res = gson.fromJson(body?.string(), Problem::class.java)
-                        it.resumeWithException(Exception(res.detail))
+                        val detail = res?.detail ?: "Internal Server Error"
+                        it.resumeWithException(Exception(detail))
                     } else {
                         val type = object : TypeToken<Siren<T>>() {}.type
                         val res = gson.fromJson<Siren<T>>(

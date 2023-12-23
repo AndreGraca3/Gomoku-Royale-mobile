@@ -33,33 +33,39 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import pt.isel.gomoku.R
 
 enum class PressState { Pressed, Idle }
 
-fun Modifier.bounceClick() = composed {
+fun Modifier.bounceClick(onClick: () -> Unit) = composed {
+    val ctx = LocalContext.current
     var pressState by remember { mutableStateOf(PressState.Idle) }
-    val scale by animateFloatAsState(if (pressState == PressState.Pressed) 0.70f else 1f)
+    val scale by animateFloatAsState(
+        if (pressState == PressState.Pressed) 0.70f else 1f,
+        label = "scale"
+    )
 
     this
         .graphicsLayer {
             scaleX = scale
             scaleY = scale
         }
-        .clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-            onClick = { }
-        )
+        .clickableWithoutRipple { onClick() }
         .pointerInput(pressState) {
             awaitPointerEventScope {
-                pressState = if (pressState == PressState.Pressed) {
-                    waitForUpOrCancellation()
-                    PressState.Idle
+                if (pressState == PressState.Pressed) {
+                    val upGesture = waitForUpOrCancellation()
+                    pressState = PressState.Idle
+                    if (upGesture != null) {
+                        ctx.playSound(R.raw.wooden_click_out_1)
+                    }
                 } else {
                     awaitFirstDown(false)
-                    PressState.Pressed
+                    pressState = PressState.Pressed
+                    ctx.playSound(R.raw.wooden_click_in_1)
                 }
             }
         }
@@ -184,16 +190,25 @@ fun Modifier.innerShadow(
     }
 }
 
+fun Modifier.clickableWithoutRipple(onClick: () -> Unit) = composed {
+    clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null,
+        onClick = onClick
+    )
+}
+
 @Composable
-fun animateScaleWithDelay(delay: Int, duration: Int) = rememberInfiniteTransition(label = "ScaledDelay").animateFloat(
-    initialValue = 0f,
-    targetValue = 0f,
-    animationSpec = infiniteRepeatable(
-        animation = keyframes {
-            durationMillis = 300 * 4
-            0f at delay with LinearEasing
-            1f at delay + 300 with LinearEasing
-            0f at delay + 300 * 2
-        }
-    ), label = "scaledDelay"
-)
+fun animateScaleWithDelay(delay: Int, duration: Int) =
+    rememberInfiniteTransition(label = "ScaledDelay").animateFloat(
+        initialValue = 0f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 300 * 4
+                0f at delay with LinearEasing
+                1f at delay + 300 with LinearEasing
+                0f at delay + 300 * 2
+            }
+        ), label = "scaledDelay"
+    )

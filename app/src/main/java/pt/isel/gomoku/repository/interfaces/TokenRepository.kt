@@ -10,5 +10,5 @@ interface TokenRepository {
     /**
      * Updates the local token, or removes it if the token is null.
      */
-    suspend fun updateLocalToken(token: String?)
+    suspend fun updateOrRemoveLocalToken(token: String?)
 }

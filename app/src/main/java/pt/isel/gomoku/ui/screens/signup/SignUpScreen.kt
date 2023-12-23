@@ -1,14 +1,11 @@
-package pt.isel.gomoku.ui.screens.login
+package pt.isel.gomoku.ui.screens.signup
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -19,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.domain.IOState
@@ -28,15 +24,14 @@ import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.ui.components.common.LoadingDots
 import pt.isel.gomoku.ui.components.text.GTextField
-import pt.isel.gomoku.ui.components.text.TruncatedText
-import pt.isel.gomoku.ui.theme.Brown
+import pt.isel.gomoku.ui.screens.login.AuthButton
 import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.ui.theme.Green
 import pt.isel.gomoku.ui.theme.Yellow
 
 @Composable
-fun LoginScreen(
+fun SignUpScreen(
     phaseState: IOState<Unit> = Idle,
     email: String,
     password: String,
@@ -58,8 +53,7 @@ fun LoginScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(24.dp),
                     modifier = Modifier
-                        .background(Brown, RoundedCornerShape(12.dp))
-                        .border(8.dp, DarkBrown, RoundedCornerShape(12.dp))
+                        .background(DarkBrown, RoundedCornerShape(12.dp))
                         .padding(28.dp)
                         .fillMaxWidth(0.8F)
                 ) {
@@ -91,30 +85,19 @@ fun LoginScreen(
                         isPassword = true,
                     )
 
-                    Column(
-                        modifier = Modifier.height(32.dp),
-                    ) {
-                        when (phaseState) {
-                            is Loading -> {
-                                LoadingDots(message = "Fetching your stone...")
-                            }
-
-                            is Loaded -> {
-                                val isSuccess = phaseState.value.isSuccess
-                                TruncatedText(
-                                    text =
-                                    if (isSuccess) "Login successful"
-                                    else phaseState.value.exceptionOrNull()?.message
-                                        ?: "Login failed",
-                                    color = if (isSuccess) Color.Green else Color.Red,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = TextUnit.Unspecified,
-                                    maxLines = 2,
-                                )
-                            }
-
-                            else -> {}
-                        }
+                    if (phaseState is Loading) {
+                        LoadingDots(message = "Fetching your stone...")
+                    } else if (phaseState is Loaded) {
+                        val isSuccess = phaseState.value.isSuccess
+                        Text(
+                            text =
+                            if (isSuccess)
+                                "Login successful"
+                            else phaseState.value.exceptionOrNull()?.message ?: "Login failed",
+                            color = if (isSuccess) Color.Green else Color.Red,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                        )
                     }
 
                     AuthButton(text = "Login", color = Yellow, onClick = onLoginRequest)
@@ -133,7 +116,7 @@ fun LoginScreen(
 @Preview
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(
+    SignUpScreen(
         email = "",
         password = "",
         onEmailChange = {},

@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.user.UserCreateInput
 import pt.isel.gomoku.http.model.user.UserCredentialsInput
+import pt.isel.gomoku.http.model.user.UserDetails
 import pt.isel.gomoku.http.model.user.UserIdOutput
 import pt.isel.gomoku.http.model.user.UserInfo
 import pt.isel.gomoku.http.model.user.UserUpdateInput
@@ -16,7 +17,7 @@ interface UserService {
 
     suspend fun createUser(input: UserCreateInput): UserIdOutput
 
-    suspend fun getAuthenticatedUser(): UserInfo
+    suspend fun getAuthenticatedUser(): UserDetails
 
     suspend fun getUser(id: Int): User
 

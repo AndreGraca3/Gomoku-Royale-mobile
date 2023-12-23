@@ -6,6 +6,7 @@ import okhttp3.Request
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.user.UserCreateInput
 import pt.isel.gomoku.http.model.user.UserCredentialsInput
+import pt.isel.gomoku.http.model.user.UserDetails
 import pt.isel.gomoku.http.model.user.UserIdOutput
 import pt.isel.gomoku.http.model.user.UserInfo
 import pt.isel.gomoku.http.model.user.UserUpdateInput
@@ -74,8 +75,8 @@ class UserServiceImpl(
             request = createUserRequest(input)
         ).properties
 
-    override suspend fun getAuthenticatedUser(): UserInfo =
-        requestHandler<UserInfo>(
+    override suspend fun getAuthenticatedUser(): UserDetails =
+        requestHandler<UserDetails>(
             request = getAuthenticatedUserRequest()
         ).properties
 

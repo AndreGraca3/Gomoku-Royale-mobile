@@ -1,9 +1,6 @@
 package pt.isel.gomoku.ui.screens.menu
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -13,9 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
+import pt.isel.gomoku.http.model.user.UserDetails
 import pt.isel.gomoku.http.model.user.UserInfo
 import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.repository.interfaces.TokenRepository
@@ -31,31 +30,25 @@ class MainScreenViewModel(
         }
     }
 
-    var hasInitialized by mutableStateOf(false) // defines when to remove the splash screen
+    private val authUserFlow: MutableStateFlow<IOState<UserDetails?>> = MutableStateFlow(idle())
 
-    private val userInfoFlow: MutableStateFlow<IOState<UserInfo?>> = MutableStateFlow(idle())
+    val authUser: Flow<IOState<UserDetails?>>
+        get() = authUserFlow.asStateFlow()
 
-    val userInfo: Flow<IOState<UserInfo?>>
-        get() = userInfoFlow.asStateFlow()
+    val isLoggedIn: Boolean
+        get() = authUserFlow.value.getOrNull() != null
 
     fun fetchAuthenticatedUser() {
-        userInfoFlow.value = loading()
+        Log.v("login", "fetching auth user")
+        authUserFlow.value = loading()
         viewModelScope.launch {
             val result = kotlin.runCatching { userService.getAuthenticatedUser() }
-            userInfoFlow.value = loaded(result)
-            Log.v("login", "result authuser: $result")
-        }
-    }
-
-    private val tokenFlow: MutableStateFlow<String?> = MutableStateFlow(null)
-
-    val token: Flow<String?>
-        get() = tokenFlow.asStateFlow()
-
-    fun getLocalToken() {
-        Log.v("login", "getLocalToken")
-        viewModelScope.launch {
-            tokenFlow.value = tokenRepository.getLocalToken()
+            if(result.isFailure) {
+                Log.v("login", "result failed, removing token from local storage")
+                tokenRepository.updateOrRemoveLocalToken(null)
+            }
+            authUserFlow.value = loaded(result)
+            Log.v("login", "result of fetchAuth: $result")
         }
     }
 }

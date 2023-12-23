@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat.getString
 import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.components.common.AsyncAvatar
 import pt.isel.gomoku.ui.components.text.TextShimmer
+import pt.isel.gomoku.utils.clickableWithoutRipple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +36,7 @@ fun MenuTopBar(
             Column(
                 modifier = Modifier
                     .padding(4.dp)
-                    .clickable { onAvatarClick() }
+                    .clickableWithoutRipple { onAvatarClick() }
             ) {
                 AsyncAvatar(userAvatar)
             }

@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.login
+package pt.isel.gomoku.ui.screens.signup
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -19,11 +19,11 @@ import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.http.model.user.UserCredentialsInput
 import pt.isel.gomoku.http.service.interfaces.UserService
 
-class LoginScreenViewModel(private val userService: UserService) : ViewModel() {
+class SignUpScreenViewModel(private val userService: UserService) : ViewModel() {
 
     companion object {
         fun factory(userService: UserService) = viewModelFactory {
-            initializer { LoginScreenViewModel(userService) }
+            initializer { SignUpScreenViewModel(userService) }
         }
     }
 

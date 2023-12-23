@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.http.model.user.UserDetails
 import pt.isel.gomoku.http.model.user.UserInfo
 import pt.isel.gomoku.ui.screens.menu.topbar.MenuTopBar
 import pt.isel.gomoku.ui.theme.GomokuTheme
@@ -20,8 +22,7 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(
-    userInfoState: IOState<UserInfo?>,
-    isInitialized: Boolean = true,
+    userInfoState: IOState<UserDetails?>,
     onAvatarClick: () -> Unit = {},
     onMatchRequested: () -> Unit = {},
     onLeaderBoardRequested: () -> Unit = {},
@@ -38,7 +39,7 @@ fun MenuScreen(
         ) { innerPadding ->
             MenuBody(
                 innerPadding = innerPadding,
-                isInitialized = isInitialized,
+                isInitialized = userInfoState is Loaded,
                 isLoggedIn = userInfo != null,
                 onMatchRequested = onMatchRequested,
                 onLeaderBoardRequested = onLeaderBoardRequested,

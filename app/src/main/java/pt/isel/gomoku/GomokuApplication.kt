@@ -21,29 +21,6 @@ import pt.isel.gomoku.repository.infra.TokenRepositoryImpl
 import pt.isel.gomoku.repository.interfaces.TokenRepository
 import java.util.concurrent.TimeUnit
 
-interface DependenciesContainer {
-    /**
-     * The HTTP client used to perform HTTP requests
-     */
-    val httpClient: OkHttpClient
-
-    /**
-     * The JSON serializer/deserializer used to convert JSON into DTOs
-     */
-    val gson: Gson
-
-    /**
-     * The service used to perform leaderboard requests
-     */
-    val leaderBoardService: LeaderBoardService
-
-    val userService: UserService
-
-    val matchService: MatchService
-
-    val tokenRepository: TokenRepository
-}
-
 class GomokuApplication : Application(), DependenciesContainer {
 
     private val dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
@@ -53,36 +30,36 @@ class GomokuApplication : Application(), DependenciesContainer {
 
     override val httpClient: OkHttpClient =
         OkHttpClient.Builder()
-            .callTimeout(5, TimeUnit.SECONDS)
+            .callTimeout(10, TimeUnit.SECONDS)
             .cookieJar(object : CookieJar {
-                private val cookiesList = mutableListOf<Cookie>()
+                var authCookie: Cookie? = null
 
                 override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
                     cookies.find { it.name == "Authorization" }?.let {
-                        cookiesList.add(it)
+                        authCookie = it
                         runBlocking {
-                            Log.v("login", "saveFromResponse: ${it.value}")
-                            tokenRepository.updateLocalToken(it.value)
+                            Log.v("login", "saving token from Response: ${it.value}")
+                            tokenRepository.updateOrRemoveLocalToken(it.value)
                         }
                     }
                 }
 
                 override fun loadForRequest(url: HttpUrl): List<Cookie> {
-                    if(cookiesList.isEmpty()) {
+                    if (authCookie == null) {
                         runBlocking {
                             val token = tokenRepository.getLocalToken()
                             Log.v("login", "loadForRequest: $token")
                             token?.let {
-                                cookiesList.add(Cookie.Builder()
-                                    .name("Authorization")
-                                    .value(it)
-                                    .domain("gomoku-royale.herokuapp.com")
-                                    .build())
+                                authCookie =
+                                    Cookie.Builder()
+                                        .name("Authorization")
+                                        .domain("gomokuroyale.com")
+                                        .value(it)
+                                        .build()
                             }
                         }
                     }
-                    Log.v("login", "loadForRequest: ${cookiesList.toList()}")
-                    return cookiesList.toList()
+                    return listOfNotNull(authCookie)
                 }
             })
             .build()
@@ -97,16 +74,4 @@ class GomokuApplication : Application(), DependenciesContainer {
 
     override val matchService: MatchService
         get() = MatchServiceImpl(httpClient, gson)
-}
-
-private class MyCookieJar : CookieJar {
-    private val cookiesList = mutableListOf<Cookie>()
-
-    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        cookies.find { it.name == "Authorization" }?.let {
-            cookiesList.add(it)
-        }
-    }
-
-    override fun loadForRequest(url: HttpUrl): List<Cookie> = cookiesList
 }

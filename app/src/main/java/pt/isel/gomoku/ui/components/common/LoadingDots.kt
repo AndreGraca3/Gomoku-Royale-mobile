@@ -1,9 +1,11 @@
 package pt.isel.gomoku.ui.components.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,13 +20,16 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.utils.animateScaleWithDelay
 
 @Composable
-fun LoadingDots(modifier: Modifier = Modifier) {
+fun LoadingDots(modifier: Modifier = Modifier, message: String = "Loading...") {
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Row {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             repeat(5) {
                 val scale by animateScaleWithDelay(delay = it * 100, duration = 2000)
                 Image(
@@ -36,9 +41,8 @@ fun LoadingDots(modifier: Modifier = Modifier) {
             }
         }
         Text(
-            text = "Loading...",
-            modifier = Modifier
-                .shimmer()
+            text = message,
+            modifier = Modifier.shimmer(),
         )
     }
 }

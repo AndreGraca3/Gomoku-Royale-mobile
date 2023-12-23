@@ -23,6 +23,6 @@ fun AuthButton(
         ),
         modifier = modifier
     ) {
-        Text(text = text, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        Text(text = text, fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 18.sp)
     }
 }

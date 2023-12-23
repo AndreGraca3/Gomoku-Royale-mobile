@@ -1,17 +1,9 @@
 package pt.isel.gomoku.ui.screens.signup
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import pt.isel.gomoku.ui.screens.menu.MenuActivity
+import androidx.compose.material3.Text
 import pt.isel.gomoku.ui.theme.GomokuTheme
 
 class SignUpActivity : ComponentActivity() {
@@ -20,17 +12,9 @@ class SignUpActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GomokuTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                    }
-                }
+                Text(text = "Hello World!")
             }
+            // SignUpScreen()
         }
     }
 }

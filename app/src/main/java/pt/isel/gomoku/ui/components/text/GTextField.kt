@@ -13,6 +13,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.ui.theme.Brown
+import pt.isel.gomoku.ui.theme.DarkBrown
+import pt.isel.gomoku.ui.theme.Yellow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,17 +26,20 @@ fun GTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
 ) {
-    TextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         placeholder = placeholder,
         singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Brown,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = DarkBrown,
+            focusedBorderColor = Yellow,
+            unfocusedBorderColor = Color.White,
+            cursorColor = Color.White
         ),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(16.dp),
         visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = if(isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions.Default,
 

@@ -15,7 +15,7 @@ class TokenRepositoryImpl(private val dataStore: DataStore<Preferences>) : Token
         return preferences[tokenKey]
     }
 
-    override suspend fun updateLocalToken(token: String?) {
+    override suspend fun updateOrRemoveLocalToken(token: String?) {
         dataStore.edit { preferences ->
             token?.let {
                 preferences[tokenKey] = it

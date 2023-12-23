@@ -35,7 +35,7 @@ fun MatchView(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            AnimatedImageButton(R.drawable.home_button, 48.dp, onBackRequested)
+            AnimatedImageButton(R.drawable.home_button, 48.dp, onClick = onBackRequested)
             AnimatedImageButton(R.drawable.settings_button, 48.dp)
         }
 
