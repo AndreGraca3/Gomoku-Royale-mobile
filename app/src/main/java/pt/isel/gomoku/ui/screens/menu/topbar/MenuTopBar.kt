@@ -33,13 +33,13 @@ fun MenuTopBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFF4E2608)),
         title = { TextShimmer(getString(LocalContext.current, R.string.app_name)) },
         actions = {
-            Column(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .clickableWithoutRipple { onAvatarClick() }
-            ) {
-                AsyncAvatar(userAvatar)
-            }
+            //Column(
+            //    modifier = Modifier
+            //        .padding(4.dp)
+            //        .clickableWithoutRipple { onAvatarClick() }
+            //) {
+                AsyncAvatar(userAvatar, onClick = onAvatarClick)
+            //}
         }
     )
 }

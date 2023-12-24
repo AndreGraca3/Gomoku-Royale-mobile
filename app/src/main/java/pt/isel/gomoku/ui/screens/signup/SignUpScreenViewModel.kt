@@ -1,5 +1,8 @@
 package pt.isel.gomoku.ui.screens.signup
 
+import android.content.ContentResolver
+import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,33 +19,66 @@ import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
-import pt.isel.gomoku.http.model.user.UserCredentialsInput
+import pt.isel.gomoku.http.model.UserCreationInputModel
+import pt.isel.gomoku.http.model.UserIdOutputModel
 import pt.isel.gomoku.http.service.interfaces.UserService
+import java.io.InputStream
 
-class SignUpScreenViewModel(private val userService: UserService) : ViewModel() {
+
+class SignUpScreenViewModel(
+    private val userService: UserService,
+    private val contentResolver: ContentResolver
+) : ViewModel() {
 
     companion object {
-        fun factory(userService: UserService) = viewModelFactory {
-            initializer { SignUpScreenViewModel(userService) }
+        fun factory(userService: UserService, contentResolver: ContentResolver) = viewModelFactory {
+            initializer { SignUpScreenViewModel(userService, contentResolver) }
         }
     }
 
-    private val loginStateFlow: MutableStateFlow<IOState<Unit>> = MutableStateFlow(idle())
+    private val signUpPhaseFlow: MutableStateFlow<IOState<UserIdOutputModel>> =
+        MutableStateFlow(idle())
 
-    val loginState: Flow<IOState<Unit>>
-        get() = loginStateFlow.asStateFlow()
+    val signUpPhase: Flow<IOState<UserIdOutputModel>>
+        get() = signUpPhaseFlow.asStateFlow()
 
+    var name by mutableStateOf("")
     var email by mutableStateOf("")
     var password by mutableStateOf("")
+    var avatarPath: Uri? by mutableStateOf(null)
 
-    fun createToken() {
-        loginStateFlow.value = loading()
+    fun createUser() {
+        signUpPhaseFlow.value = loading()
         viewModelScope.launch {
             val result = kotlin.runCatching {
-                userService.createToken(UserCredentialsInput(email, password))
+                userService.createUser(
+                    UserCreationInputModel(
+                        name,
+                        email,
+                        password,
+                        avatarPath?.let { uri -> convertImageToBase64(uri) }
+                    )
+                )
             }
-            loginStateFlow.value = loaded(result)
+            signUpPhaseFlow.value = loaded(result)
             Log.v("login", "result: $result")
+        }
+    }
+
+    private fun convertImageToBase64(uri: Uri): String? {
+        return try {
+            val inputStream: InputStream? = contentResolver.openInputStream(uri)
+            val bytes: ByteArray = inputStream?.readBytes() ?: return null
+
+            // Convert the bytes to base64
+            val base64Image: String = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+            inputStream.close()
+            val mimeType = contentResolver.getType(uri)
+            "data:$mimeType;base64,$base64Image"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 }

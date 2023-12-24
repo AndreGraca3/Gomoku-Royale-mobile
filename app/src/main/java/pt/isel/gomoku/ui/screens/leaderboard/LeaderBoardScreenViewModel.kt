@@ -13,7 +13,7 @@ import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
-import pt.isel.gomoku.http.model.stats.LeaderBoard
+import pt.isel.gomoku.http.model.LeaderBoard
 import pt.isel.gomoku.http.service.interfaces.LeaderBoardService
 
 class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : ViewModel() {

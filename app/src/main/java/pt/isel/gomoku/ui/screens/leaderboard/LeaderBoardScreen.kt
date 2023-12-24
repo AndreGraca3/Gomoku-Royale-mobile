@@ -18,8 +18,8 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.stats.Rank
-import pt.isel.gomoku.http.model.stats.LeaderBoard
-import pt.isel.gomoku.http.model.stats.UserItem
+import pt.isel.gomoku.http.model.LeaderBoard
+import pt.isel.gomoku.http.model.UserItem
 import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import kotlin.Result.Companion.success

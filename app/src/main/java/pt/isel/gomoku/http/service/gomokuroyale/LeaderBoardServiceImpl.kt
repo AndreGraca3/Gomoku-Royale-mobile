@@ -3,8 +3,8 @@ package pt.isel.gomoku.http.service.gomokuroyale
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import pt.isel.gomoku.http.model.LeaderBoard
 import pt.isel.gomoku.http.model.PaginationInput
-import pt.isel.gomoku.http.model.stats.LeaderBoard
 import pt.isel.gomoku.http.service.GomokuService
 import pt.isel.gomoku.http.service.GomokuService.Companion.GOMOKU_API_URL
 import pt.isel.gomoku.http.service.interfaces.LeaderBoardService

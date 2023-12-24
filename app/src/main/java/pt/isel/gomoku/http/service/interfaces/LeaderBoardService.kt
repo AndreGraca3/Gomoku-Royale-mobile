@@ -2,7 +2,7 @@ package pt.isel.gomoku.http.service.interfaces
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
-import pt.isel.gomoku.http.model.stats.LeaderBoard
+import pt.isel.gomoku.http.model.LeaderBoard
 
 interface LeaderBoardService {
 

@@ -4,12 +4,12 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import pt.isel.gomoku.domain.user.User
-import pt.isel.gomoku.http.model.user.UserCreateInput
-import pt.isel.gomoku.http.model.user.UserCredentialsInput
-import pt.isel.gomoku.http.model.user.UserDetails
-import pt.isel.gomoku.http.model.user.UserIdOutput
-import pt.isel.gomoku.http.model.user.UserInfo
-import pt.isel.gomoku.http.model.user.UserUpdateInput
+import pt.isel.gomoku.http.model.UserCreationInputModel
+import pt.isel.gomoku.http.model.UserCredentialsInputModel
+import pt.isel.gomoku.http.model.UserDetails
+import pt.isel.gomoku.http.model.UserIdOutputModel
+import pt.isel.gomoku.http.model.UserInfo
+import pt.isel.gomoku.http.model.UserUpdateInputModel
 import pt.isel.gomoku.http.service.GomokuService
 import pt.isel.gomoku.http.service.GomokuService.Companion.GOMOKU_API_URL
 import pt.isel.gomoku.http.service.interfaces.UserService
@@ -29,7 +29,7 @@ class UserServiceImpl(
     private val authUserRequestUrl: URL = URL(GOMOKU_USERS_AUTH_URL)
 ) : UserService, GomokuService() {
 
-    private fun createUserRequest(input: UserCreateInput) =
+    private fun createUserRequest(input: UserCreationInputModel) =
         Request.Builder()
             .buildRequest(
                 url = usersRequestUrl,
@@ -50,7 +50,7 @@ class UserServiceImpl(
             input = id
         )
 
-    private fun updateUserRequest(userInput: UserUpdateInput) =
+    private fun updateUserRequest(userInput: UserUpdateInputModel) =
         Request.Builder().buildRequest(
             url = usersRequestUrl,
             input = userInput,
@@ -63,15 +63,15 @@ class UserServiceImpl(
             method = HttpMethod.DELETE
         )
 
-    private fun createTokenRequest(input: UserCredentialsInput) =
+    private fun createTokenRequest(input: UserCredentialsInputModel) =
         Request.Builder().buildRequest(
             url = userTokenRequestUrl,
             input = input,
             method = HttpMethod.PUT
         )
 
-    override suspend fun createUser(input: UserCreateInput): UserIdOutput =
-        requestHandler<UserIdOutput>(
+    override suspend fun createUser(input: UserCreationInputModel): UserIdOutputModel =
+        requestHandler<UserIdOutputModel>(
             request = createUserRequest(input)
         ).properties
 
@@ -85,7 +85,7 @@ class UserServiceImpl(
             request = getUserRequest(id)
         ).properties
 
-    override suspend fun updateUser(userInput: UserUpdateInput): UserInfo =
+    override suspend fun updateUser(userInput: UserUpdateInputModel): UserInfo =
         requestHandler<UserInfo>(
             request = updateUserRequest(userInput)
         ).properties
@@ -95,7 +95,7 @@ class UserServiceImpl(
             request = deleteUserRequest()
         ).properties
 
-    override suspend fun createToken(input: UserCredentialsInput) =
+    override suspend fun createToken(input: UserCredentialsInputModel) =
         requestHandler<Unit>(
             request = createTokenRequest(input)
         ).properties

@@ -14,8 +14,7 @@ import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
-import pt.isel.gomoku.http.model.user.UserDetails
-import pt.isel.gomoku.http.model.user.UserInfo
+import pt.isel.gomoku.http.model.UserDetails
 import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.repository.interfaces.TokenRepository
 

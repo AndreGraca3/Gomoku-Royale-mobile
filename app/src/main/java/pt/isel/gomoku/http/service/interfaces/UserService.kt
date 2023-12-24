@@ -3,27 +3,27 @@ package pt.isel.gomoku.http.service.interfaces
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.isel.gomoku.domain.user.User
-import pt.isel.gomoku.http.model.user.UserCreateInput
-import pt.isel.gomoku.http.model.user.UserCredentialsInput
-import pt.isel.gomoku.http.model.user.UserDetails
-import pt.isel.gomoku.http.model.user.UserIdOutput
-import pt.isel.gomoku.http.model.user.UserInfo
-import pt.isel.gomoku.http.model.user.UserUpdateInput
+import pt.isel.gomoku.http.model.UserCreationInputModel
+import pt.isel.gomoku.http.model.UserCredentialsInputModel
+import pt.isel.gomoku.http.model.UserDetails
+import pt.isel.gomoku.http.model.UserIdOutputModel
+import pt.isel.gomoku.http.model.UserInfo
+import pt.isel.gomoku.http.model.UserUpdateInputModel
 
 interface UserService {
 
     val client: OkHttpClient
     val gson: Gson
 
-    suspend fun createUser(input: UserCreateInput): UserIdOutput
+    suspend fun createUser(input: UserCreationInputModel): UserIdOutputModel
 
     suspend fun getAuthenticatedUser(): UserDetails
 
     suspend fun getUser(id: Int): User
 
-    suspend fun updateUser(userInput: UserUpdateInput): UserInfo
+    suspend fun updateUser(userInput: UserUpdateInputModel): UserInfo
 
     suspend fun deleteUser()
 
-    suspend fun createToken(input: UserCredentialsInput)
+    suspend fun createToken(input: UserCredentialsInputModel)
 }

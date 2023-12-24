@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
-import pt.isel.gomoku.http.model.user.UserDetails
+import pt.isel.gomoku.http.model.UserDetails
 
 private const val USER_DETAILS_EXTRA = "UserDetails"
 

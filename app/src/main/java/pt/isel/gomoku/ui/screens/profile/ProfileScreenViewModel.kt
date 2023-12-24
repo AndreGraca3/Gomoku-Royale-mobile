@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.idle
-import pt.isel.gomoku.http.model.user.UserInfo
+import pt.isel.gomoku.http.model.UserInfo
 import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.repository.interfaces.TokenRepository
 

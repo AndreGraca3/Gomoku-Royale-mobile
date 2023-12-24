@@ -14,8 +14,8 @@ import org.junit.Rule
 import org.junit.Test
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.Siren
-import pt.isel.gomoku.http.model.user.UserCreateInput
-import pt.isel.gomoku.http.model.user.UserIdOutput
+import pt.isel.gomoku.http.model.UserCreationInputModel
+import pt.isel.gomoku.http.model.user.UserIdOutputModel
 import pt.isel.gomoku.http.service.UserServiceException
 import pt.isel.gomoku.http.service.gomokuroyale.UserServiceImpl
 
@@ -25,7 +25,7 @@ class HttpTests {
     @get:Rule
     val rule = MockWebServerRule()
 
-    private val uci = UserCreateInput(
+    private val uci = UserCreationInputModel(
         name = "Diogo",
         email = "Diogo@gmail.com",
         password = "Diogo123",
@@ -35,7 +35,7 @@ class HttpTests {
     @Test
     fun `createUser returns user's identifier produced by the API`() {
         // Arrange
-        val expected = UserIdOutput(1)
+        val expected = UserIdOutputModel(1)
 
         rule.webServer.enqueue(
             MockResponse()

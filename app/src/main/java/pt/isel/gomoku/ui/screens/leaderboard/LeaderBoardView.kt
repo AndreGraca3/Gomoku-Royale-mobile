@@ -11,10 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.domain.IOState
-import pt.isel.gomoku.domain.Loading
-import pt.isel.gomoku.http.model.stats.LeaderBoard
-import pt.isel.gomoku.ui.components.common.IOResource
-import pt.isel.gomoku.ui.components.common.LoadingDots
+import pt.isel.gomoku.http.model.LeaderBoard
+import pt.isel.gomoku.ui.components.common.IOResourceLoader
 
 @Composable
 fun LeaderBoardView(leaderBoard: IOState<LeaderBoard>) {
@@ -27,7 +25,7 @@ fun LeaderBoardView(leaderBoard: IOState<LeaderBoard>) {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        IOResource(resource = leaderBoard) { leaderBoardData ->
+        IOResourceLoader(resource = leaderBoard) { leaderBoardData ->
             leaderBoardData.ranks.forEachIndexed { i, it ->
                 LeaderBoardPosition(
                     position = i + 1,

@@ -9,7 +9,7 @@ import pt.isel.gomoku.domain.exceptionOrNull
 import pt.isel.gomoku.domain.getOrNull
 
 @Composable
-fun <T> IOResource(
+fun <T> IOResourceLoader(
     resource: IOState<T>,
     errorContent: @Composable () -> Unit = {},
     content: @Composable (T) -> Unit,

@@ -23,7 +23,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            vm.loginState.collect {
+            vm.loginPhase.collect {
                 if (it is Loaded && it.value.isSuccess) {
                     finish()
                 }
@@ -31,7 +31,7 @@ class LoginActivity : ComponentActivity() {
         }
 
         setContent {
-            val phase = vm.loginState.collectAsState(initial = idle())
+            val phase = vm.loginPhase.collectAsState(initial = idle())
             LoginScreen(
                 phaseState = phase.value,
                 email = vm.email,
