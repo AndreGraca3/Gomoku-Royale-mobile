@@ -14,14 +14,13 @@ import okhttp3.Response
 import pt.isel.gomoku.http.model.Problem
 import pt.isel.gomoku.http.model.Siren
 import java.io.IOException
-import java.net.InetAddress
 import java.net.URL
 import kotlin.coroutines.resumeWithException
 
 abstract class GomokuService {
 
     companion object {
-        const val GOMOKU_API_URL = "https://gomoku.serveo.net/api"
+        const val GOMOKU_API_URL = "https://0b78fd3e552c63d2c99caa5a988ad85b.serveo.net/api"
         // const val GOMOKU_API_URL = "http://192.168.1.207:2001/api"
     }
 

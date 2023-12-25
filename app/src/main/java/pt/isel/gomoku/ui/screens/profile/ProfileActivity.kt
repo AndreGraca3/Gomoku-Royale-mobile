@@ -7,8 +7,15 @@ import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.UserDetails
 
 private const val USER_DETAILS_EXTRA = "UserDetails"
@@ -23,7 +30,7 @@ class ProfileActivity : ComponentActivity() {
         }
     }
 
-    private val vm by viewModels<ProfileScreenViewModel> {
+    private val viewModel by viewModels<ProfileScreenViewModel> {
         val app = (application as DependenciesContainer)
         ProfileScreenViewModel.factory(app.userService, app.tokenRepository)
     }
@@ -31,13 +38,20 @@ class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.fetchUserDetails()
+            }
+        }
+
         setContent {
+            val userDetails by viewModel.userDetails.collectAsState(initial = idle())
             ProfileScreen(
-                onLogoutRequested = {
-                    vm.logout()
-                    finish()
-                },
-            )
+                userDetailsState = userDetails,
+            ) {
+                viewModel.logout()
+                finish()
+            }
         }
     }
 }
