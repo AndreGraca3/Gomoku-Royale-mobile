@@ -10,10 +10,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.ui.screens.login.LoginActivity
 import pt.isel.gomoku.utils.NavigateAux
+import pt.isel.gomoku.utils.overrideTransition
 
 class SignUpActivity : ComponentActivity() {
 
@@ -25,6 +27,7 @@ class SignUpActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overrideTransition(R.anim.pop_up_in, R.anim.pop_up_out)
 
         lifecycleScope.launch {
             vm.signUpPhase.collect {

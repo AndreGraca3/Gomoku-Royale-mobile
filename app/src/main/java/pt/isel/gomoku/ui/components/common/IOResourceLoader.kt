@@ -3,6 +3,7 @@ package pt.isel.gomoku.ui.components.common
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetError
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.exceptionOrNull
@@ -22,11 +23,10 @@ fun <T> IOResourceLoader(
         else -> {
             val ex = resource.exceptionOrNull()
             if (ex != null) {
-                Toast.makeText(
-                    LocalContext.current,
-                    ex.message,
+                SweetError(
+                    ex.message ?: "Unknown error",
                     Toast.LENGTH_LONG
-                ).show()
+                )
                 errorContent()
             } else {
                 val data = resource.getOrNull()

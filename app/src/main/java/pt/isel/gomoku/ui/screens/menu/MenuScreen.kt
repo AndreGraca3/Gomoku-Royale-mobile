@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.Loaded
+import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.UserDetails
@@ -37,7 +38,7 @@ fun MenuScreen(
         ) { innerPadding ->
             MenuBody(
                 innerPadding = innerPadding,
-                isInitialized = userInfoState is Loaded,
+                isInitialized = userInfoState !is Loading,
                 isLoggedIn = userInfo != null,
                 onMatchRequested = onMatchRequested,
                 onLeaderBoardRequested = onLeaderBoardRequested,

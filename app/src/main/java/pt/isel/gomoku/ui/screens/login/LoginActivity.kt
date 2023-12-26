@@ -25,6 +25,7 @@ class LoginActivity : ComponentActivity() {
         lifecycleScope.launch {
             vm.loginPhase.collect {
                 if (it is Loaded && it.value.isSuccess) {
+                    setResult(RESULT_OK)
                     finish()
                 }
             }
