@@ -54,7 +54,7 @@ class UserServiceImpl(
         Request.Builder().buildRequest(
             url = usersRequestUrl,
             input = userInput,
-            method = HttpMethod.PUT
+            method = HttpMethod.PATCH
         )
 
     private fun deleteUserRequest() =

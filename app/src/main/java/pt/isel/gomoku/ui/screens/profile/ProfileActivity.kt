@@ -1,33 +1,18 @@
 package pt.isel.gomoku.ui.screens.profile
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
-import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.UserDetails
-
-private const val USER_DETAILS_EXTRA = "UserDetails"
 
 class ProfileActivity : ComponentActivity() {
 
     companion object {
-        fun createIntent(ctx: Context, userDetails: UserDetails? = null): Intent {
-            val intent = Intent(ctx, ProfileActivity::class.java)
-            userDetails?.let { intent.putExtra(USER_DETAILS_EXTRA, UserDetailsExtra(it)) }
-            return intent
-        }
+        const val USER_DETAILS_EXTRA = "UserDetails"
     }
 
     private val viewModel by viewModels<ProfileScreenViewModel> {
@@ -38,21 +23,36 @@ class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.fetchUserDetails()
-            }
-        }
+        viewModel.name = userDetailsExtra.toUserDetails().name
 
         setContent {
-            val userDetails by viewModel.userDetails.collectAsState(initial = idle())
             ProfileScreen(
-                userDetailsState = userDetails,
-            ) {
-                viewModel.logout()
-                finish()
-            }
+                userDetails = userDetailsExtra.toUserDetails(),
+                name = viewModel.name,
+                avatar = viewModel.avatar,
+                isEditing = viewModel.isEditing,
+                onLogoutRequested = {
+                    viewModel.logout()
+                    finish()
+                },
+                onNameChange = { viewModel.name = it },
+                onAvatarChange = { viewModel.avatar = it },
+                onEditRequest = { viewModel.changeToEditMode() },
+                onFinishEdit = { viewModel.updateUserRequest() }
+            )
         }
+    }
+
+    /**
+     * Helper method to get the user details extra from the intent.
+     */
+    private val userDetailsExtra: UserDetailsExtra by lazy {
+        val extra = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU)
+            intent.getParcelableExtra(USER_DETAILS_EXTRA, UserDetailsExtra::class.java)
+        else
+            intent.getParcelableExtra(USER_DETAILS_EXTRA)
+
+        checkNotNull(extra) { "No user details extra found in intent" }
     }
 }
 

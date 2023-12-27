@@ -1,48 +1,116 @@
 package pt.isel.gomoku.ui.screens.profile
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.IOState
+import androidx.compose.ui.unit.sp
 import pt.isel.gomoku.http.model.UserDetails
-import pt.isel.gomoku.ui.components.common.IOResourceLoader
+import pt.isel.gomoku.ui.theme.Brown
+import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    userDetailsState: IOState<UserDetails>,
-    onLogoutRequested: () -> Unit
+    userDetails: UserDetails,
+    name: String,
+    avatar: String?,
+    isEditing: Boolean,
+    onLogoutRequested: () -> Unit,
+    onNameChange: (String) -> Unit,
+    onAvatarChange: (String?) -> Unit,
+    onEditRequest: () -> Unit,
+    onFinishEdit: () -> Unit
 ) {
     GomokuTheme {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
-            IOResourceLoader(resource = userDetailsState) {
-                AvatarIcon(it.role)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize(0.8F)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Brown)
+                    .border(5.dp, color = DarkBrown, shape = RoundedCornerShape(20.dp))
+            ) {
+                Text(
+                    text = "User profile",
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Red
+                )
 
-                Text(text = it.name)
+                AvatarIcon(
+                    userDetails.role,
+                    onAvatarChange = onAvatarChange
+                )
 
-                Text(text = it.email)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (isEditing) {
+                        OutlinedTextField(
+                            value = name,
+                            placeholder = { Text(text = userDetails.name) },
+                            onValueChange = onNameChange,
+                            modifier = Modifier
+                                .size(230.dp, 60.dp)
+                        )
 
-                Text(text = "Playing since: ${it.createdAt}")
+                        Text(
+                            text = "✔️",
+                            modifier = Modifier
+                                .clickable { onFinishEdit() }
+                        )
+                    } else {
+                        Text(
+                            text = name // is this correct?
+                        )
 
-                Button(onClick = onLogoutRequested) {
+                        Text(
+                            text = "✏️",
+                            modifier = Modifier
+                                .clickable {
+                                    onEditRequest()
+                                }
+                        )
+                    }
+                }
+
+                Text(
+                    text = userDetails.email
+                )
+
+                TimeDisplay(
+                    text = "Playing since:",
+                    time = userDetails.createdAt
+                )
+
+                Button(
+                    onClick = onLogoutRequested
+                ) {
                     Text(text = "Logout")
                 }
             }
@@ -51,28 +119,12 @@ fun ProfileScreen(
 }
 
 @Composable
-fun AvatarIcon(role: String = "user") {
-    Box {
-        Image(
-            painter = painterResource(R.drawable.diogo_avatar),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .size(90.dp)
-                .border(2.dp, Color.White, CircleShape)
-                .clip(CircleShape)
-        )
-        if (role == "admin") {
-            Text(
-                text = "👑",
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-            )
-        }
-        Text(
-            text = "\uD83D\uDCF7",
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-        )
+fun TimeDisplay(text: String, time: String) {
+    val date = time.split("T")[0]
+    /* TODO = formatter*/
+
+    Row {
+        Text(text = text)
+        Text(text = date)
     }
 }

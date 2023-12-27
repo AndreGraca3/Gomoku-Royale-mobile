@@ -12,4 +12,8 @@ data class Problem(
     val status: Int,
     val detail: String,
     val instance: String,
-) : Response<Nothing>()
+) : Response<Nothing>() {
+    override fun toString(): String {
+        return "{type=$type, title=$title, status=$status, detail=$detail, instance:$instance}"
+    }
+}

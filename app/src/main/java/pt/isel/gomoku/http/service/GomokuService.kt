@@ -20,7 +20,7 @@ import kotlin.coroutines.resumeWithException
 abstract class GomokuService {
 
     companion object {
-        const val GOMOKU_API_URL = "https://0b78fd3e552c63d2c99caa5a988ad85b.serveo.net/api"
+        const val GOMOKU_API_URL = "https://1eedbdaa278c67b474c876bdd5947e60.serveo.net/api"
         // const val GOMOKU_API_URL = "http://192.168.1.207:2001/api"
     }
 
@@ -45,6 +45,8 @@ abstract class GomokuService {
                         }
                         val res = gson.fromJson(body?.string(), Problem::class.java)
                         val detail = res?.detail ?: "Internal Server Error"
+                        Log.v("Details", res.toString())
+                        Log.v("Details", detail)
                         it.resumeWithException(Exception(detail))
                     } else {
                         val type = object : TypeToken<Siren<T>>() {}.type
