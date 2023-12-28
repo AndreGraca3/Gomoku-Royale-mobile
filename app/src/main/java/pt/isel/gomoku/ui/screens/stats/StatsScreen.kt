@@ -25,7 +25,6 @@ import pt.isel.gomoku.ui.theme.Brown
 import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.getRankIconByName
-import kotlin.math.round
 
 @Composable
 fun StatsScreen(
@@ -71,7 +70,7 @@ fun StatsScreen(
                             Text(text = "\uD83E\uDD1D Draws: ${winStats.draws}")
                             Text(text = "\uD83D\uDCC8⚫ Wins as black: ${winStats.winsAsBlack}")
                             Text(text = "\uD83D\uDCC8⚪ Wins as white: ${winStats.winsAsWhite}")
-                            Text(text = "\uD83D\uDCCA Win rate: ${round(winStats.winRate * 100) / 100}")
+                            Text(text = "\uD83D\uDCCA Win rate: ${winStats.winRate}")
                         }
                     }
 

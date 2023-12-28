@@ -11,12 +11,13 @@ import pt.isel.gomoku.domain.getOrNull
 @Composable
 fun <T> IOResourceLoader(
     resource: IOState<T>,
+    onCancelRequested: () -> Unit = {},
     errorContent: @Composable () -> Unit = {},
     content: @Composable (T) -> Unit,
 ) {
     when (resource) {
         is Loading -> {
-            LoadingDots()
+            LoadingDots(onCancelRequested)
         }
 
         else -> {

@@ -1,9 +1,12 @@
 package pt.isel.gomoku.ui.screens.profile
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
@@ -24,8 +27,17 @@ class ProfileActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         viewModel.name = userDetailsExtra.toUserDetails().name
+        viewModel.avatar = userDetailsExtra.toUserDetails().avatarUrl
 
         setContent {
+
+            val launcher = rememberLauncherForActivityResult(
+                contract =
+                ActivityResultContracts.GetContent()
+            ) { uri: Uri? ->
+                viewModel.avatar = uri.toString()
+                viewModel.updateUserRequest()
+            }
             ProfileScreen(
                 userDetails = userDetailsExtra.toUserDetails(),
                 name = viewModel.name,
@@ -36,7 +48,9 @@ class ProfileActivity : ComponentActivity() {
                     finish()
                 },
                 onNameChange = { viewModel.name = it },
-                onAvatarChange = { viewModel.avatar = it },
+                onAvatarChange = {
+                    launcher.launch("image/*")
+                },
                 onEditRequest = { viewModel.changeToEditMode() },
                 onFinishEdit = { viewModel.updateUserRequest() }
             )

@@ -22,7 +22,7 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 fun MenuScreen(
     userInfoState: IOState<UserDetails?>,
     onAvatarClick: () -> Unit = {},
-    onMatchRequested: () -> Unit = {},
+    onMatchRequested: (Boolean) -> Unit = {},
     onLeaderBoardRequested: () -> Unit = {},
     onAboutRequested: () -> Unit = {},
     onStatsRequested: () -> Unit = {}

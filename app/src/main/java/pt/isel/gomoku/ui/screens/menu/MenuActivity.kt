@@ -18,7 +18,8 @@ import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.ui.screens.about.AboutActivity
 import pt.isel.gomoku.ui.screens.leaderboard.LeaderBoardActivity
 import pt.isel.gomoku.ui.screens.login.LoginActivity
-import pt.isel.gomoku.ui.screens.match.MatchActivity
+import pt.isel.gomoku.ui.screens.preferences.MatchPrivacyExtra
+import pt.isel.gomoku.ui.screens.preferences.PreferencesActivity
 import pt.isel.gomoku.ui.screens.profile.ProfileActivity
 import pt.isel.gomoku.ui.screens.profile.UserDetailsExtra
 import pt.isel.gomoku.ui.screens.stats.StatsActivity
@@ -61,7 +62,13 @@ class MenuActivity : ComponentActivity() {
                         UserDetailsExtra(authUser.getOrNull()!!)
                     )
                 },
-                onMatchRequested = { NavigateAux.navigateTo<MatchActivity>(this) },
+                onMatchRequested = { isPrivate ->
+                    NavigateAux.navigateTo<PreferencesActivity>(
+                        this,
+                        PreferencesActivity.MATCH_PRIVACY_EXTRA,
+                        MatchPrivacyExtra(isPrivate)
+                    )
+                },
                 onLeaderBoardRequested = { NavigateAux.navigateTo<LeaderBoardActivity>(this) },
                 onAboutRequested = { NavigateAux.navigateTo<AboutActivity>(this) },
                 onStatsRequested = {

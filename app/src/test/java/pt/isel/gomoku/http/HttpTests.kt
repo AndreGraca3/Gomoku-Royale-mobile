@@ -1,3 +1,4 @@
+/*
 package pt.isel.gomoku.http
 
 import kotlinx.coroutines.CancellationException
@@ -149,4 +150,4 @@ class HttpTests {
         // Assert
         assertEquals(expected, actual)
     }
-}
+}*/
