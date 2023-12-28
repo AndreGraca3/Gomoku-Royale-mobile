@@ -18,6 +18,7 @@ import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.MatchCreationInputModel
 import pt.isel.gomoku.http.model.MatchState
 import pt.isel.gomoku.http.service.interfaces.MatchService
+import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
 //enum class MatchState { IDLE, STARTED, FINISHED }
 
@@ -62,7 +63,7 @@ class MatchScreenViewModel(private val matchService: MatchService) : ViewModel()
 
     fun getMatch(id: String) {
         viewModelScope.launch {
-            val result = kotlin.runCatching {
+            val result = runCatchingAPIFailure {
                 matchService.getMatchById(id)
             }
             if (result.isFailure) {

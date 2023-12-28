@@ -15,6 +15,7 @@ import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.http.model.UserStatsOutputModel
 import pt.isel.gomoku.http.service.interfaces.StatsService
+import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
 class StatsScreenViewModel(
     private val statsService: StatsService
@@ -35,7 +36,7 @@ class StatsScreenViewModel(
     fun fetchUserStats(id: Int) {
         userStatsFlow.value = loading()
         viewModelScope.launch {
-            val result = kotlin.runCatching {
+            val result = runCatchingAPIFailure {
                 statsService.getUserStats(id)
             }
             if (result.isFailure) {

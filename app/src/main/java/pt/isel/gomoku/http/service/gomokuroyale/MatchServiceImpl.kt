@@ -13,36 +13,47 @@ import pt.isel.gomoku.http.service.interfaces.MatchService
 import java.net.URL
 
 private fun GOMOKU_MATCH_BY_ID_URL(id: String) = "${GomokuService.GOMOKU_API_URL}/matches/$id"
+private const val GOMOKU_CREATE_MATCH_URL = "${GomokuService.GOMOKU_API_URL}/matches"
 
 class MatchServiceImpl(
     override val client: OkHttpClient,
     override val gson: Gson,
-    private val matchRequestUrlBuilder: (String) -> String = ::GOMOKU_MATCH_BY_ID_URL
+    private val getMatchRequestUrl: (String) -> String = ::GOMOKU_MATCH_BY_ID_URL,
+    private val createMatchRequestUrl: URL = URL(GOMOKU_CREATE_MATCH_URL)
 ) : MatchService, GomokuService() {
+
+    override suspend fun createMatch(input: MatchCreationInputModel) =
+        requestHandler<MatchCreationOutputModel>(
+            Request.Builder().buildRequest(
+                url = createMatchRequestUrl,
+                method = HttpMethod.POST,
+                input = input
+            )
+        )
 
     override suspend fun getMatchById(id: String) =
         requestHandler<Match>(
             Request.Builder().buildRequest(
-                url = URL(matchRequestUrlBuilder(id)),
+                url = URL(getMatchRequestUrl(id)),
                 method = HttpMethod.GET
             )
         )
 
-    override suspend fun createMatch(input: MatchCreationInputModel): MatchCreationOutputModel {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun getMatchById(id: String): Match {
-        return requestHandler<Match>(
-            getMatchByIdRequest(id)
-        ).properties
-    }
+    override suspend fun play(id: String, move: Dot) =
+        requestHandler<PlayOutputModel>(
+            Request.Builder().buildRequest(
+                url = URL(getMatchRequestUrl(id)),
+                method = HttpMethod.POST,
+                input = move
+            )
+        )
 
-    override suspend fun play(id: String, move: Dot): PlayOutputModel {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteSetupMatch(id: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun deleteSetupMatch(id: String) =
+        requestHandler<Unit>(
+            Request.Builder().buildRequest(
+                url = URL(getMatchRequestUrl(id)),
+                method = HttpMethod.DELETE
+            )
+        )
 }
