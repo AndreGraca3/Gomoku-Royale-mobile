@@ -1,5 +1,8 @@
 package pt.isel.gomoku.domain
 
+import pt.isel.gomoku.http.service.result.APIResult
+import pt.isel.gomoku.http.service.result.APIException
+
 /**
  * Sum type that represents the state of a I/O operation.
  */
@@ -16,23 +19,10 @@ data object Idle : IOState<Nothing>()
 data object Loading : IOState<Nothing>()
 
 /**
- * The saving state, i.e. the state while the save operation is in progress.
- */
-data object Saving : IOState<Nothing>()
-
-/**
  * The loaded state, i.e. the state after the load operation has finished.
  * @param value the result of the load operation.
  */
-data class Loaded<T>(val value: Result<T>) : IOState<T>()
-
-/**
- * The saved state, i.e. the state after the save operation has finished.
- * @param value the result of the save operation. If the save operation
- * was successful, the result is the saved value. If the save operation
- * failed, the result is the exception that caused the failure.
- */
-data class Saved<T>(val value: Result<T>) : IOState<T>()
+data class Loaded<T>(val value: APIResult<T>) : IOState<T>()
 
 /**
  * Returns a new [IOState] in the idle state.
@@ -45,39 +35,19 @@ fun idle(): Idle = Idle
 fun loading(): Loading = Loading
 
 /**
- * Returns a new [IOState] in the saving state.
- */
-fun saving(): Saving = Saving
-
-/**
  * Returns a new [IOState] in the loaded state.
  */
-fun <T> loaded(value: Result<T>): Loaded<T> = Loaded(value)
-
-/**
- * Returns a new [IOState] in the saved state.
- */
-fun <T> saved(value: Result<T>): Saved<T> = Saved(value)
+fun <T> loaded(value: APIResult<T>): Loaded<T> = Loaded(value)
 
 /**
  * Returns a new [IOState] in the loaded state with a successful result.
  */
-fun <T> loadSuccess(value: T): Loaded<T> = loaded(Result.success(value))
+fun <T> loadSuccess(value: T): Loaded<T> = loaded(APIResult.success(value))
 
 /**
  * Returns a new [IOState] in the loaded state with a failed result.
  */
-fun <T> loadFailure(error: Throwable): Loaded<T> = loaded(Result.failure(error))
-
-/**
- * Returns a new [IOState] in the saved state with a successful result.
- */
-fun <T> saveSuccess(value: T): Saved<T> = saved(Result.success(value))
-
-/**
- * Returns a new [IOState] in the saved state with a failed result.
- */
-fun <T> saveFailure(error: Throwable): Saved<T> = saved(Result.failure(error))
+fun <T> loadFailure(error: APIException): Loaded<Nothing> = loaded(APIResult.failure(error))
 
 /**
  * Returns the result of the I/O operation, if one is available.

@@ -25,7 +25,10 @@ fun LeaderBoardView(leaderBoard: IOState<LeaderBoard>) {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        IOResourceLoader(resource = leaderBoard) { leaderBoardData ->
+        IOResourceLoader(
+            loadingMessage = "Getting the best players...",
+            resource = leaderBoard
+        ) { leaderBoardData ->
             leaderBoardData.ranks.forEachIndexed { i, it ->
                 LeaderBoardPosition(
                     position = i + 1,

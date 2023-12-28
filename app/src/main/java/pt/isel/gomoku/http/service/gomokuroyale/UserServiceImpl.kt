@@ -29,74 +29,56 @@ class UserServiceImpl(
     private val authUserRequestUrl: URL = URL(GOMOKU_USERS_AUTH_URL)
 ) : UserService, GomokuService() {
 
-    private fun createUserRequest(input: UserCreationInputModel) =
-        Request.Builder()
-            .buildRequest(
-                url = usersRequestUrl,
-                method = HttpMethod.POST,
-                input = input
-            )
-
-    private fun getAuthenticatedUserRequest() =
-        Request.Builder().buildRequest(
-            url = authUserRequestUrl,
-            method = HttpMethod.GET
-        )
-
-    private fun getUserRequest(id: Int) =
-        Request.Builder().buildRequest(
-            url = getUserRequestUrl,
-            method = HttpMethod.GET,
-            input = id
-        )
-
-    private fun updateUserRequest(userInput: UserUpdateInputModel) =
-        Request.Builder().buildRequest(
-            url = usersRequestUrl,
-            input = userInput,
-            method = HttpMethod.PUT
-        )
-
-    private fun deleteUserRequest() =
-        Request.Builder().buildRequest(
-            url = usersRequestUrl,
-            method = HttpMethod.DELETE
-        )
-
-    private fun createTokenRequest(input: UserCredentialsInputModel) =
-        Request.Builder().buildRequest(
-            url = userTokenRequestUrl,
-            input = input,
-            method = HttpMethod.PUT
-        )
-
-    override suspend fun createUser(input: UserCreationInputModel): UserIdOutputModel =
+    override suspend fun createUser(input: UserCreationInputModel) =
         requestHandler<UserIdOutputModel>(
-            request = createUserRequest(input)
-        ).properties
+            request = Request.Builder()
+                .buildRequest(
+                    url = usersRequestUrl,
+                    method = HttpMethod.POST,
+                    input = input
+                )
+        )
 
-    override suspend fun getAuthenticatedUser(): UserDetails =
+    override suspend fun getAuthenticatedUser() =
         requestHandler<UserDetails>(
-            request = getAuthenticatedUserRequest()
-        ).properties
+            request = Request.Builder().buildRequest(
+                url = authUserRequestUrl,
+                method = HttpMethod.GET
+            )
+        )
 
-    override suspend fun getUser(id: Int): User =
+    override suspend fun getUser(id: Int) =
         requestHandler<User>(
-            request = getUserRequest(id)
-        ).properties
+            request = Request.Builder().buildRequest(
+                url = getUserRequestUrl,
+                method = HttpMethod.GET,
+                input = id
+            )
+        )
 
-    override suspend fun updateUser(userInput: UserUpdateInputModel): UserInfo =
+    override suspend fun updateUser(userInput: UserUpdateInputModel) =
         requestHandler<UserInfo>(
-            request = updateUserRequest(userInput)
-        ).properties
+            request = Request.Builder().buildRequest(
+                url = usersRequestUrl,
+                input = userInput,
+                method = HttpMethod.PUT
+            )
+        )
 
-    override suspend fun deleteUser(): Unit =
+    override suspend fun deleteUser() =
         requestHandler<Unit>(
-            request = deleteUserRequest()
-        ).properties
+            request = Request.Builder().buildRequest(
+                url = usersRequestUrl,
+                method = HttpMethod.DELETE
+            )
+        )
 
     override suspend fun createToken(input: UserCredentialsInputModel) =
         requestHandler<Unit>(
-            request = createTokenRequest(input)
-        ).properties
+            request = Request.Builder().buildRequest(
+                url = userTokenRequestUrl,
+                input = input,
+                method = HttpMethod.PUT
+            )
+        )
 }

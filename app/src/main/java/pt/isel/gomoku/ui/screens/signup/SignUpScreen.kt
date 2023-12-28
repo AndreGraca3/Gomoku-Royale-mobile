@@ -30,7 +30,7 @@ import pt.isel.gomoku.ui.components.common.AsyncAvatar
 import pt.isel.gomoku.ui.components.common.LoadingDots
 import pt.isel.gomoku.ui.components.text.GTextField
 import pt.isel.gomoku.ui.components.text.TruncatedText
-import pt.isel.gomoku.ui.screens.login.AuthButton
+import pt.isel.gomoku.ui.components.buttons.ScaledButton
 import pt.isel.gomoku.ui.theme.Brown
 import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
@@ -136,7 +136,7 @@ fun SignUpScreen(
                         }
                     }
 
-                    AuthButton(text = "Sign Up", color = Yellow, onClick = onSignUpRequested)
+                    ScaledButton(text = "Sign Up", color = Yellow, onClick = onSignUpRequested)
                 }
             }
         }

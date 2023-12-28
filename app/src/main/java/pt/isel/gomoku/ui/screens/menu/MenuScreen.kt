@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import pt.isel.gomoku.domain.IOState
-import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle

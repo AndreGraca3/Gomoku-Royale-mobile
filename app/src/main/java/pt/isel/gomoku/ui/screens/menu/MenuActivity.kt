@@ -34,7 +34,10 @@ class MenuActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition {
+            vm.fetchAuthenticatedUser() // this isn't suspended, so it will not block the splash screen
+            false
+        }
 
         // Start background music
         val svc = Intent(this, MusicService::class.java)

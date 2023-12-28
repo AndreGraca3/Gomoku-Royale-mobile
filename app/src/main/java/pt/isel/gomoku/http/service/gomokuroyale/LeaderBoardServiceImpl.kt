@@ -25,11 +25,8 @@ class LeaderBoardServiceImpl(
             method = HttpMethod.GET
         )
 
-    override suspend fun getTopPlayers(limit: Int): LeaderBoard {
-        val sirenLeaderBoard =
-            requestHandler<LeaderBoard>(
-                getTopPlayersRequest(PaginationInput(limit))
-            )
-        return sirenLeaderBoard.properties
-    }
+    override suspend fun getTopPlayers(limit: Int) =
+        requestHandler<LeaderBoard>(
+            getTopPlayersRequest(PaginationInput(limit))
+        )
 }

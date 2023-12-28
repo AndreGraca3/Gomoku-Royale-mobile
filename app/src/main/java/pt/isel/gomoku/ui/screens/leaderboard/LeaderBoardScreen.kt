@@ -54,22 +54,3 @@ fun LeaderBoardScreen(leaderBoard: IOState<LeaderBoard>) {
         }
     }
 }
-
-@Preview
-@Composable
-fun LeaderBoardScreenPreview() {
-    val list = buildList<UserItem> {
-        repeat(10) {
-            UserItem(
-                1,
-                "Andre",
-                "admin",
-                Rank(
-                    "Grand Champion",
-                    "https://i.imgur.com/JGtwTBw.png"
-                )
-            )
-        }
-    }
-    LeaderBoardScreen(leaderBoard = loaded(success(LeaderBoard(list))))
-}

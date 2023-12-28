@@ -11,5 +11,13 @@ data class Problem(
     val title: String,
     val status: Int,
     val detail: String,
-    val instance: String,
-) : Response<Nothing>()
+) : Response<Nothing>() {
+    companion object {
+        val INTERNAL_SERVER_ERROR = Problem(
+            type = "https://gomokuroyale.pt/probs/internal-server-error",
+            title = "Something went wrong",
+            status = 500,
+            detail = "Oh no! An unexpected error occurred",
+        )
+    }
+}

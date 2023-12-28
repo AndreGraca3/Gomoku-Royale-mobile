@@ -33,18 +33,22 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import pt.isel.gomoku.R
 
 enum class PressState { Pressed, Idle }
 
-fun Modifier.bounceClick(onClick: () -> Unit) = composed {
-    val ctx = LocalContext.current
+/**
+ * A modifier that makes a composable clickable with a bounce animation. Only works if click wasn't consumed by a parent.
+ */
+fun Modifier.bounceClick(
+    onClickIn: () -> Unit = {},
+    onClickOut: () -> Unit = {},
+    onCancel: () -> Unit = {}
+) = composed {
     var pressState by remember { mutableStateOf(PressState.Idle) }
     val scale by animateFloatAsState(
-        if (pressState == PressState.Pressed) 0.70f else 1f,
+        if (pressState == PressState.Pressed) 0.8F else 1F,
         label = "scale"
     )
 
@@ -53,19 +57,17 @@ fun Modifier.bounceClick(onClick: () -> Unit) = composed {
             scaleX = scale
             scaleY = scale
         }
-        .clickableWithoutRipple { onClick() }
         .pointerInput(pressState) {
             awaitPointerEventScope {
                 if (pressState == PressState.Pressed) {
                     val upGesture = waitForUpOrCancellation()
                     pressState = PressState.Idle
-                    if (upGesture != null) {
-                        ctx.playSound(R.raw.wooden_click_out_1)
-                    }
+                    if (upGesture != null) onClickOut()
+                    else onCancel()
                 } else {
                     awaitFirstDown(false)
                     pressState = PressState.Pressed
-                    ctx.playSound(R.raw.wooden_click_in_1)
+                    onClickIn()
                 }
             }
         }

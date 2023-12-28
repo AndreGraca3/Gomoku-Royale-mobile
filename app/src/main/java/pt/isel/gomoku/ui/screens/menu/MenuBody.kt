@@ -39,7 +39,7 @@ fun MenuBody(
             image = R.drawable.private_match,
             disabledImage = R.drawable.private_match_disabled,
             onClick = {
-                ctx.playSound(R.raw.metal_click_1)
+                ctx.playSound(R.raw.metal_click_medium)
                 onMatchRequested()
             }
         ),
