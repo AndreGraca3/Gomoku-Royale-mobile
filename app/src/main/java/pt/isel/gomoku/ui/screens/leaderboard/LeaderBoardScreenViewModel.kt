@@ -10,11 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.http.model.LeaderBoard
 import pt.isel.gomoku.http.service.interfaces.LeaderBoardService
+import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
 class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : ViewModel() {
     companion object {
@@ -31,11 +33,12 @@ class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : View
         get() = topPlayersFlow.asStateFlow()
 
     fun loadTopPlayers() {
+        if (topPlayersFlow.value is Loaded) return
         topPlayersFlow.value =
             loading() // coroutine may not run immediately so we set the state to loading here
         viewModelScope.launch {
             delay(2000)
-            val res = runCatching { service.getTopPlayers(limit) }
+            val res = runCatchingAPIFailure { service.getTopPlayers(limit) }
             topPlayersFlow.value = loaded(res)
         }
     }

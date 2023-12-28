@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.utils.overrideTransition
 
 class LeaderBoardActivity : ComponentActivity() {
 
@@ -34,19 +35,10 @@ class LeaderBoardActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // if build is 34 or higher, use the following line instead:
-        if (android.os.Build.VERSION.SDK_INT >= 34) {
-            overrideActivityTransition(
-                OVERRIDE_TRANSITION_OPEN,
-                R.anim.pop_up_in,
-                R.anim.pop_up_out
-            )
-        } else {
-            overridePendingTransition(R.anim.pop_up_in, R.anim.pop_up_out)
-        }
+        overrideTransition(R.anim.pop_up_in, R.anim.pop_up_out)
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.loadTopPlayers()
             }
         }

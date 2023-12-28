@@ -22,6 +22,7 @@ import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.http.model.UserCreationInputModel
 import pt.isel.gomoku.http.model.UserIdOutputModel
 import pt.isel.gomoku.http.service.interfaces.UserService
+import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 import java.io.InputStream
 
 
@@ -50,7 +51,7 @@ class SignUpScreenViewModel(
     fun createUser() {
         signUpPhaseFlow.value = loading()
         viewModelScope.launch {
-            val result = kotlin.runCatching {
+            val result = runCatchingAPIFailure {
                 userService.createUser(
                     UserCreationInputModel(
                         name,

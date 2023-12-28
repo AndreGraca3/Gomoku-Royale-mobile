@@ -13,6 +13,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import pt.isel.gomoku.http.model.Problem
 import pt.isel.gomoku.http.model.Siren
+import pt.isel.gomoku.http.service.result.APIException
 import java.io.IOException
 import java.net.URL
 import kotlin.coroutines.resumeWithException
@@ -27,7 +28,7 @@ abstract class GomokuService {
     abstract val client: OkHttpClient
     abstract val gson: Gson
 
-    protected suspend inline fun <reified T> requestHandler(request: Request): Siren<T> =
+    protected suspend inline fun <reified T> requestHandler(request: Request): T =
         suspendCancellableCoroutine {
             val call = client.newCall(request)
             call.enqueue(object : Callback {
@@ -37,23 +38,19 @@ abstract class GomokuService {
 
                 override fun onResponse(call: Call, response: Response) {
                     val body = response.body
-                    Log.v("RequestLogger", response.toString())
                     if (!response.isSuccessful) {
-                        if (response.code == 500) {
-                            it.resumeWithException(Exception("Internal Server Error"))
+                        if (response.code >= 500) {
+                            it.resumeWithException(APIException(Problem.INTERNAL_SERVER_ERROR))
                             return
                         }
-                        val res = gson.fromJson(body?.string(), Problem::class.java)
-                        val detail = res?.detail ?: "Internal Server Error"
-                        Log.v("Details", res.toString())
-                        Log.v("Details", detail)
-                        it.resumeWithException(Exception(detail))
+                        val problem = gson.fromJson(body?.string(), Problem::class.java)
+                        it.resumeWithException(APIException(problem))
                     } else {
                         val type = object : TypeToken<Siren<T>>() {}.type
                         val res = gson.fromJson<Siren<T>>(
                             body?.string(),
                             type
-                        )
+                        ).properties
                         it.resumeWith(Result.success(res))
                     }
                 }

@@ -68,6 +68,7 @@ dependencies {
     implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
     implementation("androidx.compose.ui:ui-util")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("com.github.tfaki:ComposableSweetToast:1.0.1")
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
     implementation("com.squareup.okhttp3:okhttp")

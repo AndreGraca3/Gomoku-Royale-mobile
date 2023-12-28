@@ -16,8 +16,10 @@ import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
+import pt.isel.gomoku.http.model.Problem
 import pt.isel.gomoku.http.model.UserCredentialsInputModel
 import pt.isel.gomoku.http.service.interfaces.UserService
+import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
 class LoginScreenViewModel(private val userService: UserService) : ViewModel() {
 
@@ -27,7 +29,8 @@ class LoginScreenViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    private val loginPhaseFlow: MutableStateFlow<IOState<Unit>> = MutableStateFlow(idle())
+    private val loginPhaseFlow: MutableStateFlow<IOState<Unit>> =
+        MutableStateFlow(idle())
 
     val loginPhase: Flow<IOState<Unit>>
         get() = loginPhaseFlow.asStateFlow()
@@ -38,7 +41,7 @@ class LoginScreenViewModel(private val userService: UserService) : ViewModel() {
     fun createToken() {
         loginPhaseFlow.value = loading()
         viewModelScope.launch {
-            val result = kotlin.runCatching {
+            val result = runCatchingAPIFailure {
                 userService.createToken(UserCredentialsInputModel(email, password))
             }
             loginPhaseFlow.value = loaded(result)

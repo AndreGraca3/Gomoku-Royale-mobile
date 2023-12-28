@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.Flow
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.loaded
@@ -53,23 +54,4 @@ fun LeaderBoardScreen(leaderBoard: IOState<LeaderBoard>) {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun LeaderBoardScreenPreview() {
-    val list = buildList<UserItem> {
-        repeat(10) {
-            UserItem(
-                1,
-                "Andre",
-                "admin",
-                Rank(
-                    "Grand Champion",
-                    "https://i.imgur.com/JGtwTBw.png"
-                )
-            )
-        }
-    }
-    LeaderBoardScreen(leaderBoard = loaded(success(LeaderBoard(list))))
 }
