@@ -24,7 +24,8 @@ fun MenuScreen(
     onAvatarClick: () -> Unit = {},
     onMatchRequested: () -> Unit = {},
     onLeaderBoardRequested: () -> Unit = {},
-    onAboutRequested: () -> Unit = {}
+    onAboutRequested: () -> Unit = {},
+    onStatsRequested: () -> Unit = {}
 ) {
     val userInfo = userInfoState.getOrNull()
     GomokuTheme {
@@ -41,7 +42,8 @@ fun MenuScreen(
                 isLoggedIn = userInfo != null,
                 onMatchRequested = onMatchRequested,
                 onLeaderBoardRequested = onLeaderBoardRequested,
-                onAboutRequested = onAboutRequested
+                onAboutRequested = onAboutRequested,
+                onStatsRequested = onStatsRequested
             )
         }
     }

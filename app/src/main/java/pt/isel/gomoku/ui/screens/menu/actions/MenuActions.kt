@@ -11,11 +11,15 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 
 @Composable
-fun MenuActions(onLeaderBoardRequested: () -> Unit, onAboutRequested: () -> Unit) {
+fun MenuActions(
+    onLeaderBoardRequested: () -> Unit,
+    onAboutRequested: () -> Unit,
+    onStatsRequested: () -> Unit
+) {
 
     val actions = listOf(
         Action("Leaderboard", R.drawable.leaderboard_button, onClick = onLeaderBoardRequested),
-        Action("Stats", R.drawable.stats_button, onClick = {}),
+        Action("Stats", R.drawable.stats_button, onClick = onStatsRequested),
         Action("Settings", R.drawable.settings_button, onClick = {}),
         Action("Info", R.drawable.info_button, onClick = onAboutRequested),
     )

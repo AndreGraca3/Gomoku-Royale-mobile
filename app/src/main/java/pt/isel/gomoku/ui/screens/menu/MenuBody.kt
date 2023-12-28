@@ -24,7 +24,8 @@ fun MenuBody(
     isLoggedIn: Boolean,
     onMatchRequested: () -> Unit,
     onLeaderBoardRequested: () -> Unit,
-    onAboutRequested: () -> Unit
+    onAboutRequested: () -> Unit,
+    onStatsRequested: () -> Unit
 ) {
     val ctx = LocalContext.current
 
@@ -52,7 +53,11 @@ fun MenuBody(
             HeartBeatLogo(innerPadding, modifier = Modifier.fillMaxWidth())
         },
         bottomBar = {
-            MenuActions(onLeaderBoardRequested, onAboutRequested)
+            MenuActions(
+                onLeaderBoardRequested,
+                onAboutRequested,
+                onStatsRequested
+            )
         }
     ) {
         PlaylistPager(

@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.isel.gomoku.http.service.interfaces.LeaderBoardService
 import pt.isel.gomoku.http.service.interfaces.MatchService
+import pt.isel.gomoku.http.service.interfaces.StatsService
 import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.repository.interfaces.TokenRepository
 
@@ -28,4 +29,6 @@ interface DependenciesContainer {
     val matchService: MatchService
 
     val tokenRepository: TokenRepository
+
+    val statsService: StatsService
 }

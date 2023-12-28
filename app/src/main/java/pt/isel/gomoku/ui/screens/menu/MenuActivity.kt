@@ -21,6 +21,8 @@ import pt.isel.gomoku.ui.screens.login.LoginActivity
 import pt.isel.gomoku.ui.screens.match.MatchActivity
 import pt.isel.gomoku.ui.screens.profile.ProfileActivity
 import pt.isel.gomoku.ui.screens.profile.UserDetailsExtra
+import pt.isel.gomoku.ui.screens.stats.StatsActivity
+import pt.isel.gomoku.ui.screens.stats.UserIdExtra
 import pt.isel.gomoku.utils.MusicService
 import pt.isel.gomoku.utils.NavigateAux
 
@@ -61,7 +63,16 @@ class MenuActivity : ComponentActivity() {
                 },
                 onMatchRequested = { NavigateAux.navigateTo<MatchActivity>(this) },
                 onLeaderBoardRequested = { NavigateAux.navigateTo<LeaderBoardActivity>(this) },
-                onAboutRequested = { NavigateAux.navigateTo<AboutActivity>(this) }
+                onAboutRequested = { NavigateAux.navigateTo<AboutActivity>(this) },
+                onStatsRequested = {
+                    if (authUser.getOrNull() == null)
+                        NavigateAux.navigateTo<LoginActivity>(this)
+                    else NavigateAux.navigateTo<StatsActivity>(
+                        this,
+                        StatsActivity.USER_ID_EXTRA,
+                        UserIdExtra(authUser.getOrNull()!!.id)
+                    )
+                }
             )
         }
     }

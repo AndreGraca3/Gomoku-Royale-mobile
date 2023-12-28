@@ -62,6 +62,7 @@ fun ProfileScreen(
                 )
 
                 AvatarIcon(
+                    avatar = avatar,
                     userDetails.role,
                     onAvatarChange = onAvatarChange
                 )
@@ -115,16 +116,5 @@ fun ProfileScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TimeDisplay(text: String, time: String) {
-    val date = time.split("T")[0]
-    /* TODO = formatter*/
-
-    Row {
-        Text(text = text)
-        Text(text = date)
     }
 }
