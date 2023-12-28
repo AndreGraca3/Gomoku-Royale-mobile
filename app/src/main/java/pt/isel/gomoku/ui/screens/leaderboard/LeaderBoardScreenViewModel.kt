@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
@@ -32,6 +33,7 @@ class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : View
         get() = topPlayersFlow.asStateFlow()
 
     fun loadTopPlayers() {
+        if (topPlayersFlow.value is Loaded) return
         topPlayersFlow.value =
             loading() // coroutine may not run immediately so we set the state to loading here
         viewModelScope.launch {

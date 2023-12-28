@@ -10,15 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
-import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.Loaded
-import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.http.model.UserDetails
-import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 import pt.isel.gomoku.http.service.interfaces.UserService
+import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 import pt.isel.gomoku.repository.interfaces.TokenRepository
 
 class MainScreenViewModel(
@@ -38,6 +36,7 @@ class MainScreenViewModel(
         get() = authUserFlow.asStateFlow()
 
     fun fetchAuthenticatedUser() {
+        if (authUserFlow.value is Loaded) return
         authUserFlow.value = loading()
         viewModelScope.launch {
             val result = runCatchingAPIFailure { userService.getAuthenticatedUser() }
