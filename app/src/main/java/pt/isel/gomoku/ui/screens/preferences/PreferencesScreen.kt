@@ -32,7 +32,7 @@ fun PreferencesScreen(
     variantSelected: String?,
     onSizeSelectRequested: (Int?) -> Unit,
     onVariantSelectRequested: (String?) -> Unit,
-    onCreateMatchRequested: () -> Unit
+    onCreateMatchRequested: () -> Unit,
 ) {
     GomokuTheme {
         Column(

@@ -1,8 +1,11 @@
 package pt.isel.gomoku.ui.screens.profile
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.provider.MediaStore
+import android.util.Base64
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -11,6 +14,8 @@ import androidx.activity.viewModels
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.http.model.UserDetails
+import java.io.ByteArrayOutputStream
+
 
 class ProfileActivity : ComponentActivity() {
 
@@ -35,8 +40,17 @@ class ProfileActivity : ComponentActivity() {
                 contract =
                 ActivityResultContracts.GetContent()
             ) { uri: Uri? ->
-                viewModel.avatar = uri.toString()
-                viewModel.updateUserRequest()
+                if (uri != null) {
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+
+                    val outputStream = ByteArrayOutputStream()
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+
+                    viewModel.avatar = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+                    viewModel.updateUserRequest()
+                }
             }
             ProfileScreen(
                 userDetails = userDetailsExtra.toUserDetails(),

@@ -26,7 +26,7 @@ import pt.isel.gomoku.utils.animateScaleWithDelay
 @Composable
 fun LoadingDots(
     modifier: Modifier = Modifier,
-    onCancelRequested: () -> Unit = {},
+    onCancelRequested: (() -> Unit)? = null,
     message: String = "Loading..."
 ) {
     Column(
@@ -53,7 +53,7 @@ fun LoadingDots(
             modifier = Modifier.shimmer(),
         )
 
-        if (onCancelRequested != {}) {
+        if (onCancelRequested != null) {
             Button(
                 onClick = onCancelRequested,
                 colors = ButtonDefaults.buttonColors(Color.Red)

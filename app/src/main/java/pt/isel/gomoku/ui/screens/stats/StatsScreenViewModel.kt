@@ -39,9 +39,6 @@ class StatsScreenViewModel(
             val result = runCatchingAPIFailure {
                 statsService.getUserStats(id)
             }
-            if (result.isFailure) {
-                Log.v("user stats", "result failed, removing token from local storage")
-            }
             userStatsFlow.value = loaded(result)
             Log.v("user stats", "result of fetchUserStats: $result")
         }

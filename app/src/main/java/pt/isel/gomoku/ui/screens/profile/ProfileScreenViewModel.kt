@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.profile
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,7 +33,6 @@ class ProfileScreenViewModel(
     }
 
     fun updateUserRequest() {
-        Log.v("updateUser", "I'm updating the user...")
         viewModelScope.launch {
             userService.updateUser(
                 UserUpdateInputModel(
@@ -44,7 +42,6 @@ class ProfileScreenViewModel(
             )
         }
         isEditing = false
-        Log.v("updateUser", "I Have finished updating the user...")
     }
 
     fun logout() {

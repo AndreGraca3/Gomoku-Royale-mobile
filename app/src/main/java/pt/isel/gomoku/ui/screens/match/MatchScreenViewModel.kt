@@ -15,8 +15,6 @@ import pt.isel.gomoku.domain.game.match.Match
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.user.User
-import pt.isel.gomoku.http.model.MatchCreationInputModel
-import pt.isel.gomoku.http.model.MatchState
 import pt.isel.gomoku.http.service.interfaces.MatchService
 import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
@@ -44,33 +42,16 @@ class MatchScreenViewModel(private val matchService: MatchService) : ViewModel()
     val opponentUser: Flow<IOState<User>>
         get() = opponentUserFlow.asStateFlow()
 
-    fun createMatch(input: MatchCreationInputModel) {
-        viewModelScope.launch {
-            val result = kotlin.runCatching {
-                matchService.createMatch(input)
-            }
-            if (result.isFailure) {
-                // it can result in failure because the user is already in a match.
-                Log.v("create match", "result failed, for various reasons...")
-            }
-            val matchCreationOutput = result.getOrNull()
-            if (matchCreationOutput?.state == MatchState.ONGOING) {
-                getMatch(matchCreationOutput.id)
-            }
-            Log.v("create match", "result of createMatch: $result")
-        }
-    }
-
     fun getMatch(id: String) {
         viewModelScope.launch {
             val result = runCatchingAPIFailure {
                 matchService.getMatchById(id)
             }
-            if (result.isFailure) {
-                Log.v("get match", "result failed, for various reasons...")
-            }
+            Log.v("get match", ":: Before loaded(result) :: result of getMatch: $result")
+            //if (result.isSuccess && result.getOrNull()!!.state != MatchState.SETUP) {
             matchFlow.value = loaded(result)
-            Log.v("get match", "result of getMatch: $result")
+            //}
+            Log.v("get match", ":: after loaded(result) :: result of getMatch: $result")
         }
     }
 
