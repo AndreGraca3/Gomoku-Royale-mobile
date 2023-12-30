@@ -49,10 +49,10 @@ class MatchServiceImpl(
             )
         )
 
-    override suspend fun deleteSetupMatch(id: String) =
+    override suspend fun deleteSetupMatch() =
         requestHandler<Unit>(
             Request.Builder().buildRequest(
-                url = URL(getMatchRequestUrl(id)),
+                url = createMatchRequestUrl,
                 method = HttpMethod.DELETE
             )
         )

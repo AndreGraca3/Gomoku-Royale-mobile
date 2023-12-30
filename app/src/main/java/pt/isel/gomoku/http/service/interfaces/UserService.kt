@@ -2,7 +2,6 @@ package pt.isel.gomoku.http.service.interfaces
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
-import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.UserCreationInputModel
 import pt.isel.gomoku.http.model.UserCredentialsInputModel
 import pt.isel.gomoku.http.model.UserDetails
@@ -19,7 +18,7 @@ interface UserService {
 
     suspend fun getAuthenticatedUser(): UserDetails
 
-    suspend fun getUser(id: Int): User
+    suspend fun getUser(id: Int): UserInfo
 
     suspend fun updateUser(userInput: UserUpdateInputModel): UserInfo
 

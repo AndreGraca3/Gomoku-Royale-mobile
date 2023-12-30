@@ -2,6 +2,7 @@ package pt.isel.gomoku.ui.screens.match
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -12,13 +13,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
-import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
-import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.MatchCreationOutputModel
 import pt.isel.gomoku.http.model.MatchState
-import pt.isel.gomoku.ui.screens.menu.MenuActivity
-import pt.isel.gomoku.utils.NavigateAux
 
 class MatchActivity : ComponentActivity() {
 
@@ -27,7 +24,8 @@ class MatchActivity : ComponentActivity() {
     }
 
     private val viewModel by viewModels<MatchScreenViewModel> {
-        MatchScreenViewModel.factory((application as DependenciesContainer).matchService)
+        val app = (application as DependenciesContainer)
+        MatchScreenViewModel.factory(app.userService, app.statsService, app.matchService)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +33,8 @@ class MatchActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             viewModel.match.collect {
-                if (it.getOrNull()?.state != MatchState.FINISHED) {
+                while (true) {
+                    Log.v("Polling", "Polling...")
                     delay(3000)
                     viewModel.getMatch(matchCreationExtra.toMatchCreationOutputModel().id)
                 }
@@ -46,22 +45,14 @@ class MatchActivity : ComponentActivity() {
             val match by viewModel.match.collectAsState(initial = idle())
             MatchScreen(
                 users = listOf(
-                    User(
-                        name = "Diogo",
-                        avatar = null,
-                        rank = "Grand Champion"
-                    ),
-                    User(
-                        name = "André",
-                        avatar = null,
-                        rank = "Champion"
-                    )
+                    viewModel.currentUser,
+                    viewModel.opponentUser
                 ),
                 match = match,
                 onPlayRequested = { idMatch, move -> viewModel.play(idMatch, move) },
                 onCancelRequested = {
-                    viewModel.deleteSetupMatch(matchCreationExtra.toMatchCreationOutputModel().id)
-                    NavigateAux.navigateTo<MenuActivity>(this)
+                    viewModel.deleteSetupMatch()
+                    finish()
                 }
             )
         }

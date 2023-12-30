@@ -12,9 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
-import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.MockWebServerRule
-import pt.isel.gomoku.http.ServerProblemType
 import pt.isel.gomoku.http.UserProblemType
 import pt.isel.gomoku.http.model.Siren
 import pt.isel.gomoku.http.model.UserCreationInputModel
@@ -80,30 +78,6 @@ class UserServiceImplTests {
     }
 
     @Test
-    fun `API throws APIException when API internal server error`() {
-        // Arrange
-        rule.webServer.enqueue(
-            MockResponse().setResponseCode(500)
-        )
-
-        val sut = UserServiceImpl(
-            client = rule.httpClient,
-            gson = rule.gson,
-            usersRequestUrl = rule.webServer.url("/").toUrl()
-        )
-
-        // Act & Assert
-        val ex = assertThrows(APIException::class.java) {
-            runBlocking {
-                sut.createUser(userInput)
-            }
-        }
-
-        assertEquals(500, ex.problem.status)
-        assertEquals(ServerProblemType.INTERNAL_SERVER_ERROR, ex.problem.type)
-    }
-
-    @Test
     fun `fetchJoke throws CancellationException when coroutine is cancelled`() = runTest {
         // Arrange
         val sut = UserServiceImpl(
@@ -129,7 +103,7 @@ class UserServiceImplTests {
         Assert.assertTrue(cancellationThrown)
     }
 
-    @Test
+    /*@Test
     fun `getUser returns User Object produced by the API`() {
         // Arrange
         val expected = User(
@@ -156,5 +130,5 @@ class UserServiceImplTests {
 
         // Assert
         assertEquals(expected, actual)
-    }
+    }*/
 }

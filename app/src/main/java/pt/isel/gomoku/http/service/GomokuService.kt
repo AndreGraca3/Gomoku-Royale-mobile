@@ -21,7 +21,7 @@ import kotlin.coroutines.resumeWithException
 abstract class GomokuService {
 
     companion object {
-        const val GOMOKU_API_URL = "https://7053d9b9187c38f28228d9f6439f1254.serveo.net/api"
+        const val GOMOKU_API_URL = "https://c805c1fb441aaf1c6fbeb5748dab255a.serveo.net/api"
         // const val GOMOKU_API_URL = "http://192.168.1.207:2001/api"
     }
 
@@ -38,13 +38,13 @@ abstract class GomokuService {
 
                 override fun onResponse(call: Call, response: Response) {
                     val body = response.body
-                    Log.v("requestHandler", "Result of call to API: $body")
                     if (!response.isSuccessful) {
                         if (response.code >= 500) {
                             it.resumeWithException(APIException(Problem.INTERNAL_SERVER_ERROR))
                             return
                         }
                         val problem = gson.fromJson(body?.string(), Problem::class.java)
+                        Log.v("requestHandler", "Result of call to API: $problem")
                         it.resumeWithException(APIException(problem))
                     } else {
                         val type = object : TypeToken<Siren<T>>() {}.type

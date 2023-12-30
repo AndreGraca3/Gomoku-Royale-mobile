@@ -20,7 +20,7 @@ import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.ui.components.common.AsyncAvatar
 
 @Composable
-fun RowScope.PlayerPlank(user: User) {
+fun RowScope.PlayerPlank(user: User?) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -41,7 +41,7 @@ fun RowScope.PlayerPlank(user: User) {
                 .align(Alignment.Center)
         ) {
 
-            AsyncAvatar(user.avatar, 40.dp)
+            AsyncAvatar(user?.avatar, 40.dp)
 
             PlayerDetails(user)
         }

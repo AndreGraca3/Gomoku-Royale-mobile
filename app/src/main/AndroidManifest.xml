@@ -19,9 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gomoku"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.screens.match.MatchActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".ui.screens.match.MatchActivity" />
         <activity
             android:name=".ui.screens.signup.SignUpActivity"
             android:screenOrientation="portrait" />
@@ -34,6 +32,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.leaderboard.LeaderBoardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.screens.userDetails.UserDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.stats.StatsActivity"

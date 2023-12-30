@@ -20,7 +20,7 @@ import pt.isel.gomoku.utils.playSound
 
 @Composable
 fun MatchScreen(
-    users: List<User>,
+    users: List<User?>,
     match: IOState<Match>,
     onPlayRequested: (String, Dot) -> Unit,
     onCancelRequested: () -> Unit = {}
