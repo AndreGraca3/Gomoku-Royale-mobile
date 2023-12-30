@@ -7,10 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.domain.idle
@@ -25,14 +21,11 @@ class StatsActivity : ComponentActivity() {
         val app = (application as DependenciesContainer)
         StatsScreenViewModel.factory(app.statsService)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.fetchUserStats(userIdExtra.toId())
-            }
-        }
+        viewModel.fetchUserStats(userIdExtra.toId())
 
         setContent {
             val userStats by viewModel.userStats.collectAsState(initial = idle())

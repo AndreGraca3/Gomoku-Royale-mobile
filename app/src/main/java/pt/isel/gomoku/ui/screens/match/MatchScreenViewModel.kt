@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,17 +58,21 @@ class MatchScreenViewModel(
 
     fun getMatch(id: String) {
         viewModelScope.launch {
-            val matchResult = runCatchingAPIFailure {
-                matchService.getMatchById(id)
-            }
-            val match = matchResult.getOrNull()
-            if (matchResult.isSuccess && match != null) {
-                if (match.state != MatchState.SETUP) {
-                    Log.v("get match", "found another player...")
-                    val opponentId = if (currentUser?.id == match.blackId)
-                        match.whiteId else match.blackId
-                    fetchOpponentUser(opponentId!!)
-                    matchFlow.value = loaded(matchResult)
+            while (true) {
+                Log.v("Polling", "Polling...")
+                delay(3000)
+                val matchResult = runCatchingAPIFailure {
+                    matchService.getMatchById(id)
+                }
+                val match = matchResult.getOrNull()
+                if (matchResult.isSuccess && match != null) {
+                    if (match.state != MatchState.SETUP) {
+                        Log.v("get match", "found another player...")
+                        val opponentId = if (currentUser?.id == match.blackId)
+                            match.whiteId else match.blackId
+                        fetchOpponentUser(opponentId!!)
+                        matchFlow.value = loaded(matchResult)
+                    }
                 }
             }
         }

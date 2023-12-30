@@ -36,7 +36,6 @@ class PreferencesActivity : ComponentActivity() {
                         "Preferences screen",
                         "finished loading match with result: ${it.value.getOrNull()!!}"
                     )
-                    setResult(RESULT_OK)
                     NavigateAux.navigateTo<MatchActivity>(
                         this@PreferencesActivity,
                         MatchActivity.MATCH_CREATION_EXTRA,

@@ -2,15 +2,11 @@ package pt.isel.gomoku.ui.screens.match
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.domain.idle
@@ -31,15 +27,7 @@ class MatchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            viewModel.match.collect {
-                while (true) {
-                    Log.v("Polling", "Polling...")
-                    delay(3000)
-                    viewModel.getMatch(matchCreationExtra.toMatchCreationOutputModel().id)
-                }
-            }
-        }
+        viewModel.getMatch(matchCreationExtra.toMatchCreationOutputModel().id)
 
         setContent {
             val match by viewModel.match.collectAsState(initial = idle())
