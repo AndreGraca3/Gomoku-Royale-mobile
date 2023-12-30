@@ -12,6 +12,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import pt.isel.gomoku.domain.stats.Rank
 import pt.isel.gomoku.http.model.Problem
 import pt.isel.gomoku.http.model.Siren
 import pt.isel.gomoku.http.model.UserCreationInputModel
@@ -143,14 +144,18 @@ class GomokuServiceTests {
         val sut: UserServiceImpl = UserServiceImpl(
             client = rule.httpClient,
             gson = rule.gson,
-            getUserRequestUrl = rule.webServer.url("/").toUrl()
+            getUserRequestUrl = { return@UserServiceImpl rule.webServer.url("/").toUrl() }
         )
         val expected = UserInfo(
             id = 1,
             name = "Diogo",
             avatarUrl = null,
             role = "user",
-            rank = "silver"
+            rank = Rank(
+                "Silver",
+                "url.com"
+            ),
+            createdAt = "2021-05-01T00:00:00.000Z",
         )
 
         rule.webServer.enqueue(

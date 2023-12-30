@@ -15,14 +15,15 @@ import pt.isel.gomoku.http.service.interfaces.UserService
 import java.net.URL
 
 private const val GOMOKU_USERS_URL = "$GOMOKU_API_URL/users"
-private fun GOMOKU_USERS_GET_URL(id: Int) = "$GOMOKU_USERS_URL/$id"
 private const val GOMOKU_USERS_TOKEN_URL = "$GOMOKU_USERS_URL/token"
 private const val GOMOKU_USERS_AUTH_URL = "$GOMOKU_USERS_URL/me"
+
+private fun GOMOKU_USERS_GET_URL(id: Int) = URL("$GOMOKU_USERS_URL/$id")
 
 class UserServiceImpl(
     override val client: OkHttpClient,
     override val gson: Gson,
-    private val getUserRequestUrl: (Int) -> String = ::GOMOKU_USERS_GET_URL,
+    private val getUserRequestUrl: (Int) -> URL = ::GOMOKU_USERS_GET_URL,
     private val userTokenRequestUrl: URL = URL(GOMOKU_USERS_TOKEN_URL),
     private val usersRequestUrl: URL = URL(GOMOKU_USERS_URL),
     private val authUserRequestUrl: URL = URL(GOMOKU_USERS_AUTH_URL)
@@ -49,7 +50,7 @@ class UserServiceImpl(
     override suspend fun getUser(id: Int) =
         requestHandler<UserInfo>(
             request = Request.Builder().buildRequest(
-                url = URL(getUserRequestUrl(id)),
+                url = getUserRequestUrl(id),
                 method = HttpMethod.GET
             )
         )
