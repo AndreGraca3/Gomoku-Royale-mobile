@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.stats
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -40,7 +39,6 @@ class StatsScreenViewModel(
                 statsService.getUserStats(id)
             }
             userStatsFlow.value = loaded(result)
-            Log.v("user stats", "result of fetchUserStats: $result")
         }
     }
 }

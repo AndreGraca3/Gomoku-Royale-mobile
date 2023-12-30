@@ -1,15 +1,13 @@
-package pt.isel.gomoku.ui.main
+package pt.isel.gomoku.ui.tests.main
 
-import io.mockk.coEvery
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withTimeout
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -17,34 +15,21 @@ import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.Loading
+import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.http.model.UserDetails
-import pt.isel.gomoku.http.service.interfaces.UserService
-import pt.isel.gomoku.repository.interfaces.TokenRepository
 import pt.isel.gomoku.ui.screens.menu.MainScreenViewModel
+import pt.isel.gomoku.ui.services.authUser
+import pt.isel.gomoku.ui.services.tokenRepo
+import pt.isel.gomoku.ui.services.userService
 import pt.isel.gomoku.utils.MockMainDispatcherRule
 import pt.isel.gomoku.utils.SuspendingGate
+import pt.isel.gomoku.utils.awaitAndThenAssert
+import pt.isel.gomoku.utils.xAssertNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainScreenViewModelTests {
     @get:Rule
     val rule = MockMainDispatcherRule(testDispatcher = StandardTestDispatcher())
-
-    private val authUser = UserDetails(
-        id = 1,
-        name = "Diogo",
-        email = "diogo@gmail.com",
-        avatarUrl = null,
-        role = "user",
-        createdAt = "2021-04-01T00:00:00.000Z",
-    )
-
-    private val userService = mockk<UserService> {
-        coEvery { getAuthenticatedUser() } returns authUser
-    }
-
-    private val tokenRepo = mockk<TokenRepository> {
-        coEvery { getLocalToken() } returns "token"
-    }
 
     @Test
     fun initially_the_authUserFlow_is_idle() = runTest {
@@ -60,14 +45,13 @@ class MainScreenViewModelTests {
             }
         }
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        assertTrue("Expected Idle bot got $collectedState instead", collectedState is Idle)
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            val state = collectedState
+            xAssertNotNull(state)
+            assertTrue("Expected Idle but got $state instead", state is Idle)
+        }
     }
 
     @Test
@@ -87,17 +71,14 @@ class MainScreenViewModelTests {
         }
         sut.fetchAuthenticatedUser()
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        assertTrue(
-            "Expected Loaded bot got $lastCollectedState instead",
-            lastCollectedState is Loaded
-        )
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            val state = lastCollectedState
+            xAssertNotNull(state)
+            assertTrue("Expected Loaded but got $state instead", state is Loaded)
+            assertEquals(authUser, state.getOrNull())
+        }
     }
 
     @Test
@@ -123,21 +104,26 @@ class MainScreenViewModelTests {
         }
         sut.fetchAuthenticatedUser()
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        assertTrue(
-            "Expected Loading bot got $secondCollectedState instead",
-            secondCollectedState is Loading
-        )
-        assertTrue(
-            "Expected Loaded bot got $lastCollectedState instead",
-            lastCollectedState is Loaded
-        )
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            val secondState = secondCollectedState
+            val lastState = lastCollectedState
+            xAssertNotNull(secondState)
+            xAssertNotNull(lastState)
+            assertTrue(
+                "Expected Loading but got $secondState instead",
+                secondState is Loading
+            )
+            assertTrue(
+                "Expected Loaded but got $lastState instead",
+                lastState is Loaded
+            )
+            assertEquals(
+                authUser,
+                lastState.getOrNull()
+            )
+        }
     }
 
     @Test
@@ -171,20 +157,23 @@ class MainScreenViewModelTests {
         }
         sut.fetchAuthenticatedUser()
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        assertTrue(
-            "Expected Loading bot got $secondCollectedState instead",
-            secondCollectedState is Loading
-        )
-        assertTrue(
-            "Expected Loaded bot got $lastCollectedState instead",
-            lastCollectedState is Loaded
-        )
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            val secondState = secondCollectedState
+            val lastState = lastCollectedState
+            assertTrue(
+                "Expected Loading but got $secondState instead",
+                secondState is Loading
+            )
+            assertTrue(
+                "Expected Loaded but got $lastState instead",
+                lastState is Loaded
+            )
+            assertEquals(
+                authUser,
+                lastState?.getOrNull()
+            )
+        }
     }
 }

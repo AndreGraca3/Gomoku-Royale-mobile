@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.match
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -59,7 +58,6 @@ class MatchScreenViewModel(
     fun getMatch(id: String) {
         viewModelScope.launch {
             while (true) {
-                Log.v("Polling", "Polling...")
                 delay(3000)
                 val matchResult = runCatchingAPIFailure {
                     matchService.getMatchById(id)
@@ -67,7 +65,6 @@ class MatchScreenViewModel(
                 val match = matchResult.getOrNull()
                 if (matchResult.isSuccess && match != null) {
                     if (match.state != MatchState.SETUP) {
-                        Log.v("get match", "found another player...")
                         val opponentId = if (currentUser?.id == match.blackId)
                             match.whiteId else match.blackId
                         fetchOpponentUser(opponentId!!)
@@ -83,9 +80,6 @@ class MatchScreenViewModel(
             val result = runCatchingAPIFailure {
                 matchService.play(id, move)
             }
-            if (result.isFailure) {
-                Log.v("play", "result failed, for various reasons...")
-            }
         }
     }
 
@@ -93,9 +87,6 @@ class MatchScreenViewModel(
         viewModelScope.launch {
             val result = runCatchingAPIFailure {
                 matchService.deleteSetupMatch()
-            }
-            if (result.isFailure) {
-                Log.v("deleteMatch", "result failed, for various reasons...")
             }
         }
     }
