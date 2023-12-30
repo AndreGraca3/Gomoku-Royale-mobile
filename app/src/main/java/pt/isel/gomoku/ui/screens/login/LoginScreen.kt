@@ -117,14 +117,14 @@ fun LoginScreen(
     }
 }
 
-        @Preview
-        @Composable
-        fun LoginScreenPreview() {
-            LoginScreen(
-                email = "",
-                password = "",
-                onEmailChange = {},
-                onPasswordChange = {},
-                onLoginRequest = {},
-                onSignUpRequest = {})
-        }
+@Preview
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(
+        email = "",
+        password = "",
+        onEmailChange = {},
+        onPasswordChange = {},
+        onLoginRequest = {},
+        onSignUpRequest = {})
+}

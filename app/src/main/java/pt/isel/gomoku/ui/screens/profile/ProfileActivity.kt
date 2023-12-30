@@ -1,29 +1,29 @@
 package pt.isel.gomoku.ui.screens.profile
 
-import android.content.Context
-import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.provider.MediaStore
+import android.util.Base64
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.http.model.UserDetails
+import java.io.ByteArrayOutputStream
 
-private const val USER_DETAILS_EXTRA = "UserDetails"
 
 class ProfileActivity : ComponentActivity() {
 
     companion object {
-        fun createIntent(ctx: Context, userDetails: UserDetails? = null): Intent {
-            val intent = Intent(ctx, ProfileActivity::class.java)
-            userDetails?.let { intent.putExtra(USER_DETAILS_EXTRA, UserDetailsExtra(it)) }
-            return intent
-        }
+        const val USER_DETAILS_EXTRA = "UserDetails"
     }
 
-    private val vm by viewModels<ProfileScreenViewModel> {
+    private val viewModel by viewModels<ProfileScreenViewModel> {
         val app = (application as DependenciesContainer)
         ProfileScreenViewModel.factory(app.userService, app.tokenRepository)
     }
@@ -31,14 +31,56 @@ class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.name = userDetailsExtra.toUserDetails().name
+        viewModel.avatar = userDetailsExtra.toUserDetails().avatarUrl
+
         setContent {
+
+            val launcher = rememberLauncherForActivityResult(
+                contract =
+                ActivityResultContracts.GetContent()
+            ) { uri: Uri? ->
+                if (uri != null) {
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+
+                    val outputStream = ByteArrayOutputStream()
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+
+                    viewModel.avatar = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+                    viewModel.updateUserRequest()
+                }
+            }
             ProfileScreen(
+                userDetails = userDetailsExtra.toUserDetails(),
+                name = viewModel.name,
+                avatar = viewModel.avatar,
+                isEditing = viewModel.isEditing,
                 onLogoutRequested = {
-                    vm.logout()
+                    viewModel.logout()
                     finish()
                 },
+                onNameChange = { viewModel.name = it },
+                onAvatarChange = {
+                    launcher.launch("image/*")
+                },
+                onEditRequest = { viewModel.changeToEditMode() },
+                onFinishEdit = { viewModel.updateUserRequest() }
             )
         }
+    }
+
+    /**
+     * Helper method to get the user details extra from the intent.
+     */
+    private val userDetailsExtra: UserDetailsExtra by lazy {
+        val extra = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU)
+            intent.getParcelableExtra(USER_DETAILS_EXTRA, UserDetailsExtra::class.java)
+        else
+            intent.getParcelableExtra(USER_DETAILS_EXTRA)
+
+        checkNotNull(extra) { "No user details extra found in intent" }
     }
 }
 

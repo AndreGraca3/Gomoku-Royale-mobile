@@ -22,9 +22,10 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 fun MenuScreen(
     userInfoState: IOState<UserDetails?>,
     onAvatarClick: () -> Unit = {},
-    onMatchRequested: () -> Unit = {},
+    onMatchRequested: (Boolean) -> Unit = {},
     onLeaderBoardRequested: () -> Unit = {},
-    onAboutRequested: () -> Unit = {}
+    onAboutRequested: () -> Unit = {},
+    onStatsRequested: () -> Unit = {}
 ) {
     val userInfo = userInfoState.getOrNull()
     GomokuTheme {
@@ -41,7 +42,8 @@ fun MenuScreen(
                 isLoggedIn = userInfo != null,
                 onMatchRequested = onMatchRequested,
                 onLeaderBoardRequested = onLeaderBoardRequested,
-                onAboutRequested = onAboutRequested
+                onAboutRequested = onAboutRequested,
+                onStatsRequested = onStatsRequested
             )
         }
     }

@@ -22,9 +22,10 @@ fun MenuBody(
     innerPadding: PaddingValues,
     isInitialized: Boolean,
     isLoggedIn: Boolean,
-    onMatchRequested: () -> Unit,
+    onMatchRequested: (Boolean) -> Unit,
     onLeaderBoardRequested: () -> Unit,
-    onAboutRequested: () -> Unit
+    onAboutRequested: () -> Unit,
+    onStatsRequested: () -> Unit
 ) {
     val ctx = LocalContext.current
 
@@ -33,14 +34,16 @@ fun MenuBody(
             name = "Multiplayer",
             image = R.drawable.multiplayer_match,
             disabledImage = R.drawable.multiplayer_match_disabled,
-            onClick = {}),
+            onClick = {
+                onMatchRequested(false)
+            }),
         Playlist(
             name = "Private",
             image = R.drawable.private_match,
             disabledImage = R.drawable.private_match_disabled,
             onClick = {
                 ctx.playSound(R.raw.metal_click_medium)
-                onMatchRequested()
+                onMatchRequested(true)
             }
         ),
     )
@@ -52,7 +55,11 @@ fun MenuBody(
             HeartBeatLogo(innerPadding, modifier = Modifier.fillMaxWidth())
         },
         bottomBar = {
-            MenuActions(onLeaderBoardRequested, onAboutRequested)
+            MenuActions(
+                onLeaderBoardRequested,
+                onAboutRequested,
+                onStatsRequested
+            )
         }
     ) {
         PlaylistPager(

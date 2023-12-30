@@ -11,6 +11,9 @@ import androidx.compose.runtime.getValue
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.ui.screens.userDetails.UserDetailsActivity
+import pt.isel.gomoku.ui.screens.userDetails.UserItemExtra
+import pt.isel.gomoku.utils.NavigateAux
 import pt.isel.gomoku.utils.overrideTransition
 
 class LeaderBoardActivity : ComponentActivity() {
@@ -37,7 +40,16 @@ class LeaderBoardActivity : ComponentActivity() {
 
         setContent {
             val leaderBoard by viewModel.topPlayers.collectAsState(initial = idle())
-            LeaderBoardScreen(leaderBoard)
+            LeaderBoardScreen(
+                leaderBoard = leaderBoard,
+                onPlayerRequested = { id ->
+                    NavigateAux.navigateTo<UserDetailsActivity>(
+                        this,
+                        UserDetailsActivity.USER_ITEM_EXTRA,
+                        UserItemExtra(id)
+                    )
+                }
+            )
         }
     }
 }

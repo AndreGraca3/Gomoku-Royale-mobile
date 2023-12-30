@@ -15,8 +15,12 @@ import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.ui.screens.about.AboutActivity
 import pt.isel.gomoku.ui.screens.leaderboard.LeaderBoardActivity
 import pt.isel.gomoku.ui.screens.login.LoginActivity
-import pt.isel.gomoku.ui.screens.match.MatchActivity
+import pt.isel.gomoku.ui.screens.preferences.MatchPrivacyExtra
+import pt.isel.gomoku.ui.screens.preferences.PreferencesActivity
 import pt.isel.gomoku.ui.screens.profile.ProfileActivity
+import pt.isel.gomoku.ui.screens.profile.UserDetailsExtra
+import pt.isel.gomoku.ui.screens.stats.StatsActivity
+import pt.isel.gomoku.ui.screens.stats.UserIdExtra
 import pt.isel.gomoku.utils.MusicService
 import pt.isel.gomoku.utils.NavigateAux
 
@@ -51,11 +55,30 @@ class MenuActivity : ComponentActivity() {
                 onAvatarClick = {
                     if (authUser.getOrNull() == null)
                         loginLauncher.launch(Intent(this, LoginActivity::class.java))
-                    else NavigateAux.navigateTo<ProfileActivity>(this)
+                    else NavigateAux.navigateTo<ProfileActivity>(
+                        this,
+                        ProfileActivity.USER_DETAILS_EXTRA,
+                        UserDetailsExtra(authUser.getOrNull()!!)
+                    )
                 },
-                onMatchRequested = { NavigateAux.navigateTo<MatchActivity>(this) },
+                onMatchRequested = { isPrivate ->
+                    NavigateAux.navigateTo<PreferencesActivity>(
+                        this,
+                        PreferencesActivity.MATCH_PRIVACY_EXTRA,
+                        MatchPrivacyExtra(isPrivate)
+                    )
+                },
                 onLeaderBoardRequested = { NavigateAux.navigateTo<LeaderBoardActivity>(this) },
-                onAboutRequested = { NavigateAux.navigateTo<AboutActivity>(this) }
+                onAboutRequested = { NavigateAux.navigateTo<AboutActivity>(this) },
+                onStatsRequested = {
+                    if (authUser.getOrNull() == null)
+                        NavigateAux.navigateTo<LoginActivity>(this)
+                    else NavigateAux.navigateTo<StatsActivity>(
+                        this,
+                        StatsActivity.USER_ID_EXTRA,
+                        UserIdExtra(authUser.getOrNull()!!.id)
+                    )
+                }
             )
         }
     }

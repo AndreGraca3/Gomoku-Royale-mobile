@@ -18,7 +18,7 @@ import pt.isel.gomoku.ui.components.common.AnimatedBorderCard
 import pt.isel.gomoku.ui.components.text.TruncatedText
 
 @Composable
-fun PlayerPlankRow(users: List<User>, turn: Player) {
+fun PlayerPlankRow(users: List<User?>, turn: Player) {
     val shape = RoundedCornerShape(16.dp)
 
     AnimatedBorderCard(

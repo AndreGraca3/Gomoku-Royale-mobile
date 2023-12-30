@@ -7,7 +7,8 @@ data class UserInfo(
     val name: String,
     val avatarUrl: String?,
     val role: String,
-    val rank: String
+    val createdAt: String,
+    val rank: Rank,
 )
 
 data class UserDetails(

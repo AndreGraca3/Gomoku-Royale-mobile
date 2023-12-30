@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.match.board
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -19,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.game.board.Board
-import pt.isel.gomoku.domain.game.board.BoardRun
 import pt.isel.gomoku.domain.game.cell.Dot
+import pt.isel.gomoku.domain.game.match.Player
 import pt.isel.gomoku.ui.screens.match.board.grid.GridView
 import pt.isel.gomoku.utils.playSound
 
@@ -61,7 +60,7 @@ fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
 @Composable
 fun BoardViewPreview() {
     BoardView(
-        board = BoardRun(15),
+        board = Board(15, emptyList(), Player.BLACK),
         onCellClick = {}
     )
 }

@@ -20,7 +20,7 @@ import pt.isel.gomoku.ui.screens.match.player.PlayerPlankRow
 
 @Composable
 fun MatchView(
-    users: List<User>,
+    users: List<User?>,
     match: Match,
     onCellClick: (Dot) -> Unit,
     onBackRequested: () -> Unit = {},

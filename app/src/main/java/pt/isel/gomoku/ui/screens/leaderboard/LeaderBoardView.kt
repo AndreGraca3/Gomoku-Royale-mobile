@@ -15,7 +15,10 @@ import pt.isel.gomoku.http.model.LeaderBoard
 import pt.isel.gomoku.ui.components.common.IOResourceLoader
 
 @Composable
-fun LeaderBoardView(leaderBoard: IOState<LeaderBoard>) {
+fun LeaderBoardView(
+    leaderBoard: IOState<LeaderBoard>,
+    onPlayerRequested: (Int) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,7 +37,7 @@ fun LeaderBoardView(leaderBoard: IOState<LeaderBoard>) {
                     position = i + 1,
                     playerName = it.name,
                     rank = it.rank,
-                    onPlayerRequested = { /*TODO*/ }
+                    onPlayerRequested = { onPlayerRequested(it.id) }
                 )
             }
         }
