@@ -48,7 +48,7 @@ class UserServiceImpl(
         )
 
     override suspend fun getUser(id: Int) =
-        requestHandler<User>(
+        requestHandler<UserInfo>(
             request = Request.Builder().buildRequest(
                 url = getUserRequestUrl,
                 method = HttpMethod.GET,

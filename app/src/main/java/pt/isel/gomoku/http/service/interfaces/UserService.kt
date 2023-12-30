@@ -19,7 +19,7 @@ interface UserService {
 
     suspend fun getAuthenticatedUser(): UserDetails
 
-    suspend fun getUser(id: Int): User
+    suspend fun getUser(id: Int): UserInfo
 
     suspend fun updateUser(userInput: UserUpdateInputModel): UserInfo
 

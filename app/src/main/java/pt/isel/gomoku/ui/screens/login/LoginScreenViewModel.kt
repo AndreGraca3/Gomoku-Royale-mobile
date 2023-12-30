@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.login
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,10 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
-import pt.isel.gomoku.http.model.Problem
 import pt.isel.gomoku.http.model.UserCredentialsInputModel
 import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
@@ -39,13 +38,14 @@ class LoginScreenViewModel(private val userService: UserService) : ViewModel() {
     var password by mutableStateOf("")
 
     fun createToken() {
+        if (loginPhaseFlow.value is Loading || email.isEmpty() || password.isEmpty()) return
         loginPhaseFlow.value = loading()
+
         viewModelScope.launch {
             val result = runCatchingAPIFailure {
                 userService.createToken(UserCredentialsInputModel(email, password))
             }
             loginPhaseFlow.value = loaded(result)
-            Log.v("login", "result: $result")
         }
     }
 }

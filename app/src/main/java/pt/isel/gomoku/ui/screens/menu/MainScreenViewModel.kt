@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.menu
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
-import pt.isel.gomoku.domain.Loaded
+import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
@@ -36,15 +35,17 @@ class MainScreenViewModel(
         get() = authUserFlow.asStateFlow()
 
     fun fetchAuthenticatedUser() {
-        if (authUserFlow.value is Loaded) return
+        if (authUserFlow.value !is Idle) return
+
         authUserFlow.value = loading()
         viewModelScope.launch {
             val result = runCatchingAPIFailure { userService.getAuthenticatedUser() }
             if (result.exceptionOrNull()?.problem?.status == 401) {
                 tokenRepository.updateOrRemoveLocalToken(null)
+                authUserFlow.value = idle()
+                return@launch
             }
             authUserFlow.value = loaded(result)
-            Log.v("login", "result of fetchAuth: $result")
         }
     }
 }

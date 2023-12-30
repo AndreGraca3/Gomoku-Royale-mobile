@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.domain.Loaded
+import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.ui.screens.signup.SignUpActivity
 import pt.isel.gomoku.utils.NavigateAux

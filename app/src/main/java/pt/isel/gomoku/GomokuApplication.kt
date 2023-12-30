@@ -17,7 +17,7 @@ import pt.isel.gomoku.http.service.gomokuroyale.UserServiceImpl
 import pt.isel.gomoku.http.service.interfaces.LeaderBoardService
 import pt.isel.gomoku.http.service.interfaces.MatchService
 import pt.isel.gomoku.http.service.interfaces.UserService
-import pt.isel.gomoku.repository.infra.TokenRepositoryImpl
+import pt.isel.gomoku.repository.infra.TokenRepositoryDataStore
 import pt.isel.gomoku.repository.interfaces.TokenRepository
 import java.util.concurrent.TimeUnit
 
@@ -26,7 +26,7 @@ class GomokuApplication : Application(), DependenciesContainer {
     private val dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
 
     override val tokenRepository: TokenRepository
-        get() = TokenRepositoryImpl(dataStore)
+        get() = TokenRepositoryDataStore(dataStore)
 
     override val httpClient: OkHttpClient =
         OkHttpClient.Builder()
@@ -38,7 +38,6 @@ class GomokuApplication : Application(), DependenciesContainer {
                     cookies.find { it.name == "Authorization" }?.let {
                         authCookie = it
                         runBlocking {
-                            Log.v("login", "saving token from Response: ${it.value}")
                             tokenRepository.updateOrRemoveLocalToken(it.value)
                         }
                     }
@@ -48,7 +47,6 @@ class GomokuApplication : Application(), DependenciesContainer {
                     if (authCookie == null) {
                         runBlocking {
                             val token = tokenRepository.getLocalToken()
-                            Log.v("login", "loadForRequest: $token")
                             token?.let {
                                 authCookie =
                                     Cookie.Builder()

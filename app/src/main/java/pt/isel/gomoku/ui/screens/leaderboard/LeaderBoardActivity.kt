@@ -8,10 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.launch
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.idle
@@ -37,11 +33,7 @@ class LeaderBoardActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         overrideTransition(R.anim.pop_up_in, R.anim.pop_up_out)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.loadTopPlayers()
-            }
-        }
+        viewModel.loadTopPlayers()
 
         setContent {
             val leaderBoard by viewModel.topPlayers.collectAsState(initial = idle())
