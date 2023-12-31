@@ -33,7 +33,6 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 
 const val ProfileScreenTag = "ProfileScreenTag"
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     userDetailsState: IOState<UserDetails>,

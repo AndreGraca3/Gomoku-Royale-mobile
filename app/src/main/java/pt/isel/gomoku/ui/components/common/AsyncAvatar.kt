@@ -1,5 +1,7 @@
 package pt.isel.gomoku.ui.components.common
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -28,7 +30,6 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.Yellow
 
-@OptIn(ExperimentalFoundationApi::class)
 const val AvatarTag = "MainScreenAvatarTag"
 val userAvatar = SemanticsPropertyKey<String?>("UserAvatar")
 var SemanticsPropertyReceiver.userAvatar by userAvatar
