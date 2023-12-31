@@ -1,6 +1,7 @@
 package pt.isel.gomoku.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -24,6 +25,7 @@ val handFont = FontFamily(
 // Set of Material typography styles to start with
 val textStyle = TextStyle(
     fontFamily = mainFont,
+    color = Color.White,
     fontWeight = FontWeight.Normal,
     fontSize = 16.sp,
     lineHeight = 24.sp,
@@ -31,7 +33,7 @@ val textStyle = TextStyle(
 )
 
 val Typography = Typography(
-    bodyLarge = textStyle.copy(fontSize = 20.sp),
+    bodyLarge = textStyle.copy(fontSize = 20.sp, color = Color.White),
     bodyMedium = textStyle,
-    bodySmall = textStyle.copy(fontSize = 14.sp),
+    bodySmall = textStyle.copy(fontSize = 14.sp, color = Color.White),
 )

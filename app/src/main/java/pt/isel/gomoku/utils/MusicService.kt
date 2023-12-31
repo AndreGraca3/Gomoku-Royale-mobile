@@ -17,17 +17,32 @@ fun Context.playSound(id: Int) {
 
 class MusicService() : Service() {
 
+    companion object {
+        const val ACTION_PAUSE = "ACTION_PAUSE"
+        const val ACTION_RESUME = "ACTION_RESUME"
+    }
+
     private var player: MediaPlayer? = null
 
     override fun onCreate() {
         super.onCreate()
         player = MediaPlayer.create(this, R.raw.background_music)
         player!!.isLooping = true
-        player!!.setVolume(100f, 100f)
+        player!!.setVolume(40F, 40F)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        player!!.start()
+        when (intent?.action) {
+            ACTION_PAUSE -> {
+                player?.pause()
+            }
+            ACTION_RESUME -> {
+                player?.start()
+            }
+            else -> {
+                player!!.start()
+            }
+        }
         return START_STICKY
     }
 

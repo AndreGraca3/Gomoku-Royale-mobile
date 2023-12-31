@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,8 +36,6 @@ class MainScreenViewModel(
         get() = authUserFlow.asStateFlow()
 
     fun fetchAuthenticatedUser() {
-        if (authUserFlow.value !is Idle) return
-
         authUserFlow.value = loading()
         viewModelScope.launch {
             val result = runCatchingAPIFailure { userService.getAuthenticatedUser() }

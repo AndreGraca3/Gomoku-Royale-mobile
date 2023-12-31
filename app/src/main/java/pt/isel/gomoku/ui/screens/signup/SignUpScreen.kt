@@ -28,7 +28,7 @@ import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.http.model.UserIdOutputModel
 import pt.isel.gomoku.ui.components.common.AsyncAvatar
 import pt.isel.gomoku.ui.components.common.LoadingDots
-import pt.isel.gomoku.ui.components.text.GTextField
+import pt.isel.gomoku.ui.components.text.GomokuTextField
 import pt.isel.gomoku.ui.components.text.TruncatedText
 import pt.isel.gomoku.ui.components.buttons.ScaledButton
 import pt.isel.gomoku.ui.theme.Brown
@@ -82,7 +82,7 @@ fun SignUpScreen(
                         onClick = onAvatarChange
                     )
 
-                    GTextField(
+                    GomokuTextField(
                         value = name,
                         onValueChange = onNameChange,
                         leadingIcon = {
@@ -91,7 +91,7 @@ fun SignUpScreen(
                         placeholder = { Text(text = "Username") },
                     )
 
-                    GTextField(
+                    GomokuTextField(
                         value = email,
                         onValueChange = onEmailChange,
                         leadingIcon = {
@@ -100,7 +100,7 @@ fun SignUpScreen(
                         placeholder = { Text(text = "Email") },
                     )
 
-                    GTextField(
+                    GomokuTextField(
                         value = password,
                         onValueChange = onPasswordChange,
                         leadingIcon = {

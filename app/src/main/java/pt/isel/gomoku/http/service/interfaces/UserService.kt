@@ -20,9 +20,11 @@ interface UserService {
 
     suspend fun getUser(id: Int): UserInfo
 
-    suspend fun updateUser(userInput: UserUpdateInputModel): UserInfo
+    suspend fun updateUser(userInput: UserUpdateInputModel): UserDetails
 
     suspend fun deleteUser()
 
     suspend fun createToken(input: UserCredentialsInputModel)
+
+    suspend fun deleteToken()
 }

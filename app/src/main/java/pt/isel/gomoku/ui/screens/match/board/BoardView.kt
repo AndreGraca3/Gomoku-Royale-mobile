@@ -17,14 +17,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
+import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.game.board.Board
 import pt.isel.gomoku.domain.game.cell.Dot
 import pt.isel.gomoku.domain.game.match.Player
+import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.http.model.PlayOutputModel
 import pt.isel.gomoku.ui.screens.match.board.grid.GridView
 import pt.isel.gomoku.utils.playSound
 
 @Composable
-fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
+fun BoardView(
+    board: Board,
+    pendingPlay: IOState<PlayOutputModel>,
+    isMyTurn: Boolean,
+    onCellClick: (Dot) -> Unit
+) {
 
     val ctx = LocalContext.current
     var selector by remember { mutableStateOf<Dot?>(null) }
@@ -42,7 +50,7 @@ fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
             contentScale = ContentScale.FillBounds,
         )
 
-        GridView(board, selector, onCellClick = { dot ->
+        GridView(board, selector, pendingPlay, onCellClick = { dot ->
             if (board.getStoneOrNull(dot) == null) {
                 if (selector == null || dot != selector) {
                     selector = dot
@@ -61,6 +69,8 @@ fun BoardView(board: Board, onCellClick: (Dot) -> Unit) {
 fun BoardViewPreview() {
     BoardView(
         board = Board(15, emptyList(), Player.BLACK),
+        pendingPlay = idle(),
+        isMyTurn = true,
         onCellClick = {}
     )
 }

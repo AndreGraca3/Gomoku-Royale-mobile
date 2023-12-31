@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.ui.components.common.AsyncAvatar
+import pt.isel.gomoku.ui.components.common.LoadingDots
 
 @Composable
 fun RowScope.PlayerPlank(user: User?) {
@@ -41,8 +42,12 @@ fun RowScope.PlayerPlank(user: User?) {
                 .align(Alignment.Center)
         ) {
 
-            AsyncAvatar(user?.avatar, 40.dp)
+            if (user == null) {
+                LoadingDots()
+                return
+            }
 
+            AsyncAvatar(user.avatar, 40.dp)
             PlayerDetails(user)
         }
     }

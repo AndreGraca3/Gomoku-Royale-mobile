@@ -3,23 +3,35 @@ package pt.isel.gomoku.ui.screens.match
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetSuccess
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.R
+import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.MatchCreationOutputModel
 import pt.isel.gomoku.http.model.MatchState
+import pt.isel.gomoku.utils.playSound
 
 class MatchActivity : ComponentActivity() {
 
     companion object {
         const val MATCH_CREATION_EXTRA = "matchCreationExtra"
+        const val MATCH_ENDED_DELAY = 5000L
     }
 
-    private val viewModel by viewModels<MatchScreenViewModel> {
+    private val vm by viewModels<MatchScreenViewModel> {
         val app = (application as DependenciesContainer)
         MatchScreenViewModel.factory(app.userService, app.statsService, app.matchService)
     }
@@ -27,22 +39,55 @@ class MatchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.getMatch(matchCreationExtra.toMatchCreationOutputModel().id)
+        vm.getMatch(matchCreationExtra.toMatchCreationOutputModel().id)
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.events.collect { event ->
+                    when (event) {
+                        MatchEvent.PLAYED,
+                        MatchEvent.OPPONENT_PLAYED -> {
+                            playSound(listOf(R.raw.place_piece_1, R.raw.place_piece_2).random())
+                        }
+
+                        MatchEvent.DELETE_SETUP_MATCH -> {
+                            finish()
+                        }
+
+                        MatchEvent.MATCH_ENDED -> {
+                            playSound(R.raw.place_piece_winner)
+                            delay(MATCH_ENDED_DELAY)
+                            finish()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
 
         setContent {
-            val match by viewModel.match.collectAsState(initial = idle())
+            val match by vm.match.collectAsState(initial = idle())
+            val pendingPlay by vm.pendingPlay.collectAsState(initial = idle())
+            val events by vm.events.collectAsState(initial = MatchEvent.SETUP)
+
+            if (events == MatchEvent.MATCH_ENDED)
+                SweetSuccess(
+                    "${match.getOrNull()?.board?.turn} won!",
+                    contentAlignment = Alignment.TopCenter
+                )
+
             MatchScreen(
-                users = listOf(
-                    viewModel.currentUser,
-                    viewModel.opponentUser
-                ),
-                match = match,
-                onPlayRequested = { idMatch, move -> viewModel.play(idMatch, move) },
-                onCancelRequested = {
-                    viewModel.deleteSetupMatch()
-                    finish()
-                }
+                users = listOf(vm.localUser, vm.opponentUser),
+                matchIOState = match,
+                pendingPlay = pendingPlay,
+                onPlayRequested = { idMatch, move -> vm.play(idMatch, move) },
+                onBackRequested = { vm.deleteSetupMatch() },
             )
+        }
+
+        onBackPressedDispatcher.addCallback(this, true) {
+            vm.deleteSetupMatch()
         }
     }
 

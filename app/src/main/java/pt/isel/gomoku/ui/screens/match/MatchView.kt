@@ -11,17 +11,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
+import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.game.cell.Dot
 import pt.isel.gomoku.domain.game.match.Match
-import pt.isel.gomoku.domain.user.User
+import pt.isel.gomoku.http.model.PlayOutputModel
 import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.screens.match.board.BoardView
 import pt.isel.gomoku.ui.screens.match.player.PlayerPlankRow
 
 @Composable
 fun MatchView(
-    users: List<User?>,
+    users: List<UserPlayer?>,
     match: Match,
+    pendingPlay: IOState<PlayOutputModel>,
     onCellClick: (Dot) -> Unit,
     onBackRequested: () -> Unit = {},
 ) {
@@ -39,10 +41,8 @@ fun MatchView(
             AnimatedImageButton(R.drawable.settings_button, 48.dp)
         }
 
-        PlayerPlankRow(users, match.board.turn)
-
-        BoardView(match.board, onCellClick)
-        
+        PlayerPlankRow(users.map { it?.user }, users[0]?.player == match.board.turn)
+        BoardView(match.board, pendingPlay, users[0]?.player == match.board.turn, onCellClick)
         Spacer(modifier = Modifier.padding(8.dp))
     }
 }

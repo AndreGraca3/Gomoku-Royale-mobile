@@ -23,6 +23,7 @@ import pt.isel.gomoku.http.model.UserCreationInputModel
 import pt.isel.gomoku.http.model.UserIdOutputModel
 import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
+import pt.isel.gomoku.utils.convertImageToBase64
 import java.io.InputStream
 
 
@@ -57,29 +58,12 @@ class SignUpScreenViewModel(
                         name,
                         email,
                         password,
-                        avatarPath?.let { uri -> convertImageToBase64(uri) }
+                        avatarPath?.let { uri -> convertImageToBase64(contentResolver, uri) }
                     )
                 )
             }
             signUpPhaseFlow.value = loaded(result)
             Log.v("login", "result: $result")
-        }
-    }
-
-    private fun convertImageToBase64(uri: Uri): String? {
-        return try {
-            val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            val bytes: ByteArray = inputStream?.readBytes() ?: return null
-
-            // Convert the bytes to base64
-            val base64Image: String = Base64.encodeToString(bytes, Base64.DEFAULT)
-
-            inputStream.close()
-            val mimeType = contentResolver.getType(uri)
-            "data:$mimeType;base64,$base64Image"
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
         }
     }
 }

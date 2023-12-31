@@ -21,9 +21,7 @@ import pt.isel.gomoku.http.model.MatchCreationOutputModel
 import pt.isel.gomoku.http.service.interfaces.MatchService
 import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
-class PreferencesScreenViewModel(
-    private val matchService: MatchService
-) : ViewModel() {
+class PreferencesScreenViewModel(private val matchService: MatchService) : ViewModel() {
 
     companion object {
         fun factory(matchService: MatchService) = viewModelFactory {
@@ -37,8 +35,8 @@ class PreferencesScreenViewModel(
     val sizes = listOf(15, 19, null)
     val variants = listOf("FreeStyle", null)
 
-    var size by mutableStateOf<Int?>(null)
-    var variant by mutableStateOf<String?>(null)
+    var selectedSize by mutableStateOf<Int?>(15)
+    var selectedVariant by mutableStateOf<String?>("FreeStyle")
 
     val matchState: Flow<IOState<MatchCreationOutputModel>>
         get() = matchStateFlow.asStateFlow()
@@ -50,8 +48,8 @@ class PreferencesScreenViewModel(
                 matchService.createMatch(
                     MatchCreationInputModel(
                         isPrivate = isPrivate,
-                        size = size,
-                        variant = variant
+                        size = selectedSize,
+                        variant = selectedVariant
                     )
                 )
             }

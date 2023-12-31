@@ -2,18 +2,23 @@ package pt.isel.gomoku.ui.screens.preferences
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.Loaded
+import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.ui.screens.match.MatchActivity
 import pt.isel.gomoku.ui.screens.match.MatchCreationExtra
 import pt.isel.gomoku.utils.NavigateAux
+import pt.isel.gomoku.utils.overrideTransition
+import pt.isel.gomoku.utils.playSound
 
 class PreferencesActivity : ComponentActivity() {
 
@@ -21,21 +26,18 @@ class PreferencesActivity : ComponentActivity() {
         const val MATCH_PRIVACY_EXTRA = "isPrivate"
     }
 
-    private val viewModel by viewModels<PreferencesScreenViewModel> {
+    private val vm by viewModels<PreferencesScreenViewModel> {
         val app = (application as DependenciesContainer)
         PreferencesScreenViewModel.factory(app.matchService)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overrideTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top)
 
         lifecycleScope.launch {
-            viewModel.matchState.collect {
+            vm.matchState.collect {
                 if (it is Loaded && it.value.isSuccess) {
-                    Log.v(
-                        "Preferences screen",
-                        "finished loading match with result: ${it.value.getOrNull()!!}"
-                    )
                     NavigateAux.navigateTo<MatchActivity>(
                         this@PreferencesActivity,
                         MatchActivity.MATCH_CREATION_EXTRA,
@@ -46,20 +48,30 @@ class PreferencesActivity : ComponentActivity() {
         }
 
         setContent {
+            val matchState by vm.matchState.collectAsState(initial = idle())
             PreferencesScreen(
-                sizes = viewModel.sizes,
-                variants = viewModel.variants,
-                sizeSelected = viewModel.size,
-                variantSelected = viewModel.variant,
-                onSizeSelectRequested = { viewModel.size = it },
-                onVariantSelectRequested = { viewModel.variant = it },
-                onCreateMatchRequested = { viewModel.createMatch(matchPrivacyExtra.toIsPrivate()) },
+                matchState = matchState,
+                sizes = vm.sizes,
+                variants = vm.variants,
+                sizeSelected = vm.selectedSize,
+                variantSelected = vm.selectedVariant,
+                onSizeSelectRequested = {
+                    if (it == vm.selectedSize) return@PreferencesScreen
+                    this.playSound(R.raw.metal_click_weak)
+                    vm.selectedSize = it
+                },
+                onVariantSelectRequested = {
+                    if (it == vm.selectedVariant) return@PreferencesScreen
+                    this.playSound(R.raw.metal_click_weak)
+                    vm.selectedVariant = it
+                },
+                onCreateMatchRequested = { vm.createMatch(matchPrivacyExtra.isPrivate) },
             )
         }
     }
 
     /**
-     * Helper method to get the user details extra from the intent.
+     * Helper method to get the match privacy extra from the intent.
      */
     private val matchPrivacyExtra: MatchPrivacyExtra by lazy {
         val extra = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU)
@@ -72,8 +84,4 @@ class PreferencesActivity : ComponentActivity() {
 }
 
 @Parcelize
-data class MatchPrivacyExtra(
-    val isPrivate: Boolean,
-) : Parcelable
-
-fun MatchPrivacyExtra.toIsPrivate() = this.isPrivate
+data class MatchPrivacyExtra(val isPrivate: Boolean) : Parcelable

@@ -21,9 +21,9 @@ import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.ui.components.buttons.ScaledButton
-import pt.isel.gomoku.ui.components.common.Displayer
+import pt.isel.gomoku.ui.components.layouts.Displayer
 import pt.isel.gomoku.ui.components.common.LoadingDots
-import pt.isel.gomoku.ui.components.text.GTextField
+import pt.isel.gomoku.ui.components.text.GomokuTextField
 import pt.isel.gomoku.ui.components.text.TruncatedText
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.ui.theme.Green
@@ -59,7 +59,7 @@ fun LoginScreen(
                         textAlign = TextAlign.Center,
                     )
 
-                    GTextField(
+                    GomokuTextField(
                         value = email,
                         onValueChange = onEmailChange,
                         leadingIcon = {
@@ -68,7 +68,7 @@ fun LoginScreen(
                         placeholder = { Text(text = "Email") },
                     )
 
-                    GTextField(
+                    GomokuTextField(
                         value = password,
                         onValueChange = onPasswordChange,
                         leadingIcon = {

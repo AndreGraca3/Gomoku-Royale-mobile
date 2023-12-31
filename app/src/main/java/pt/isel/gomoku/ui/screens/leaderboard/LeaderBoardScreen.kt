@@ -23,6 +23,7 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 @Composable
 fun LeaderBoardScreen(
     leaderBoard: IOState<LeaderBoard>,
+    onBackRequested: () -> Unit,
     onPlayerRequested: (Int) -> Unit
 ) {
     GomokuTheme {
@@ -33,7 +34,8 @@ fun LeaderBoardScreen(
                 AnimatedImageButton(
                     id = R.drawable.left_arrow_button,
                     size = 60.dp,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    onClick = onBackRequested
                 )
             }
         ) { innerPadding ->

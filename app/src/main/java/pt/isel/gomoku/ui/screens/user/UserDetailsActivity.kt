@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.userDetails
+package pt.isel.gomoku.ui.screens.user
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -9,7 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.utils.overrideTransition
 
 class UserDetailsActivity : ComponentActivity() {
 
@@ -17,18 +19,19 @@ class UserDetailsActivity : ComponentActivity() {
         const val USER_ITEM_EXTRA = "UserItemExtra"
     }
 
-    private val viewModel by viewModels<UserDetailsScreenViewModel> {
+    private val vm by viewModels<UserDetailsScreenViewModel> {
         val app = (application as DependenciesContainer)
         UserDetailsScreenViewModel.factory(app.userService)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overrideTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top)
 
-        viewModel.fetchUser(userItemExtra.id)
+        vm.fetchUser(userItemExtra.id)
 
         setContent {
-            val userInfo by viewModel.userDetails.collectAsState(initial = idle())
+            val userInfo by vm.userDetails.collectAsState(initial = idle())
             UserDetailsScreen(userInfo = userInfo)
         }
     }
@@ -47,6 +50,4 @@ class UserDetailsActivity : ComponentActivity() {
 }
 
 @Parcelize
-data class UserItemExtra(
-    val id: Int,
-) : Parcelable
+data class UserItemExtra(val id: Int) : Parcelable

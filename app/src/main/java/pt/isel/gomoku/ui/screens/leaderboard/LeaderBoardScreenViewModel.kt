@@ -37,7 +37,6 @@ class LeaderBoardScreenViewModel(private val service: LeaderBoardService) : View
 
         topPlayersFlow.value = loading()
         viewModelScope.launch {
-            delay(2000)
             val res = runCatchingAPIFailure { service.getTopPlayers(limit) }
             topPlayersFlow.value = loaded(res)
         }

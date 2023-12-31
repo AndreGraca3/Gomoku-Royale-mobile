@@ -11,8 +11,8 @@ import androidx.compose.runtime.getValue
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.idle
-import pt.isel.gomoku.ui.screens.userDetails.UserDetailsActivity
-import pt.isel.gomoku.ui.screens.userDetails.UserItemExtra
+import pt.isel.gomoku.ui.screens.user.UserDetailsActivity
+import pt.isel.gomoku.ui.screens.user.UserItemExtra
 import pt.isel.gomoku.utils.NavigateAux
 import pt.isel.gomoku.utils.overrideTransition
 
@@ -42,6 +42,7 @@ class LeaderBoardActivity : ComponentActivity() {
             val leaderBoard by viewModel.topPlayers.collectAsState(initial = idle())
             LeaderBoardScreen(
                 leaderBoard = leaderBoard,
+                onBackRequested = { finish() },
                 onPlayerRequested = { id ->
                     NavigateAux.navigateTo<UserDetailsActivity>(
                         this,

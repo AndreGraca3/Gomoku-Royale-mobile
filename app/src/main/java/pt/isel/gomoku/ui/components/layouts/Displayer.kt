@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.components.common
+package pt.isel.gomoku.ui.components.layouts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

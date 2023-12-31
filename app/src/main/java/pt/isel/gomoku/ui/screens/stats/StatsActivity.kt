@@ -9,7 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.utils.overrideTransition
 
 class StatsActivity : ComponentActivity() {
 
@@ -24,6 +26,7 @@ class StatsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overrideTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top)
 
         viewModel.fetchUserStats(userIdExtra.toId())
 

@@ -16,17 +16,19 @@ import pt.isel.gomoku.ui.theme.Yellow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GTextField(
+fun GomokuTextField(
     value: String,
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
+    label: @Composable (() -> Unit)? = null,
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
+        label = label,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         placeholder = placeholder,

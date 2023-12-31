@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.match.board.grid
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,12 +13,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.game.board.Board
 import pt.isel.gomoku.domain.game.cell.Dot
+import pt.isel.gomoku.domain.getOrNull
+import pt.isel.gomoku.http.model.PlayOutputModel
 
 @Composable
-fun GridView(board: Board, selector: Dot?, onCellClick: (Dot) -> Unit) {
+fun GridView(
+    board: Board,
+    selector: Dot?,
+    pendingPlay: IOState<PlayOutputModel>,
+    onCellClick: (Dot) -> Unit
+) {
     val shape = RoundedCornerShape(10.dp)
+    val pendingPlayValue = pendingPlay.getOrNull()
 
     LazyVerticalGrid(columns = GridCells.Fixed(board.size),
         contentPadding = PaddingValues(10.dp),
@@ -37,7 +45,13 @@ fun GridView(board: Board, selector: Dot?, onCellClick: (Dot) -> Unit) {
                     idx % board.size
                 )
                 val stone = board.getStoneOrNull(dot)
-                Cell(stone, isSelected = selector == dot, onClick = { onCellClick(dot) })
+                Cell(
+                    stone,
+                    pendingStone =
+                    if (pendingPlayValue != null && pendingPlayValue.stone.dot == dot)
+                        pendingPlayValue.stone else null,
+                    isSelected = selector == dot,
+                    onClick = { onCellClick(dot) })
             }
         }
     )

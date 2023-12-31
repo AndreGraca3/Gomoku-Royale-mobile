@@ -1,20 +1,20 @@
 package pt.isel.gomoku.ui.screens.profile
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.provider.MediaStore
-import android.util.Base64
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
+import pt.isel.gomoku.R
+import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.UserDetails
-import java.io.ByteArrayOutputStream
+import pt.isel.gomoku.utils.overrideTransition
 
 
 class ProfileActivity : ComponentActivity() {
@@ -23,50 +23,53 @@ class ProfileActivity : ComponentActivity() {
         const val USER_DETAILS_EXTRA = "UserDetails"
     }
 
-    private val viewModel by viewModels<ProfileScreenViewModel> {
+    private val vm by viewModels<ProfileScreenViewModel> {
         val app = (application as DependenciesContainer)
-        ProfileScreenViewModel.factory(app.userService, app.tokenRepository)
+        ProfileScreenViewModel.factory(contentResolver, app.userService, app.tokenRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overrideTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top)
 
-        viewModel.name = userDetailsExtra.toUserDetails().name
-        viewModel.avatar = userDetailsExtra.toUserDetails().avatarUrl
+        vm.initializeUserDetails(userDetailsExtra.toUserDetails())
+        vm.name = userDetailsExtra.toUserDetails().name
 
         setContent {
+            val userDetails by vm.userDetails.collectAsState(initial = idle())
+            val launcher =
+                rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.GetContent(),
+                    onResult = { uri ->
+                        vm.avatarPath = uri
+                        vm.updateUserRequest()
+                    }
+                )
 
-            val launcher = rememberLauncherForActivityResult(
-                contract =
-                ActivityResultContracts.GetContent()
-            ) { uri: Uri? ->
-                if (uri != null) {
-                    val bitmap =
-                        MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-
-                    val outputStream = ByteArrayOutputStream()
-
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-
-                    viewModel.avatar = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
-                    viewModel.updateUserRequest()
-                }
-            }
             ProfileScreen(
-                userDetails = userDetailsExtra.toUserDetails(),
-                name = viewModel.name,
-                avatar = viewModel.avatar,
-                isEditing = viewModel.isEditing,
+                userDetailsState = userDetails,
+                name = vm.name,
+                email = userDetailsExtra.email,
+                createdAt = userDetailsExtra.createdAt,
                 onLogoutRequested = {
-                    viewModel.logout()
-                    finish()
+                    vm.logout(onLogout = {
+                        setResult(RESULT_OK)
+                        finish()
+                    })
                 },
-                onNameChange = { viewModel.name = it },
-                onAvatarChange = {
+                onNameChange = { vm.name = it },
+                onAvatarChange = { removeAvatar ->
+                    if (removeAvatar) {
+                        vm.avatarPath = null
+                        vm.updateUserRequest()
+                        setResult(RESULT_OK)
+                    }
                     launcher.launch("image/*")
                 },
-                onEditRequest = { viewModel.changeToEditMode() },
-                onFinishEdit = { viewModel.updateUserRequest() }
+                onUpdateRequested = {
+                    vm.updateUserRequest()
+                    setResult(RESULT_OK)
+                }
             )
         }
     }
@@ -75,10 +78,11 @@ class ProfileActivity : ComponentActivity() {
      * Helper method to get the user details extra from the intent.
      */
     private val userDetailsExtra: UserDetailsExtra by lazy {
-        val extra = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU)
-            intent.getParcelableExtra(USER_DETAILS_EXTRA, UserDetailsExtra::class.java)
-        else
-            intent.getParcelableExtra(USER_DETAILS_EXTRA)
+        val extra =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU)
+                intent.getParcelableExtra(USER_DETAILS_EXTRA, UserDetailsExtra::class.java)
+            else
+                intent.getParcelableExtra(USER_DETAILS_EXTRA)
 
         checkNotNull(extra) { "No user details extra found in intent" }
     }

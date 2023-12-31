@@ -16,19 +16,19 @@ import pt.isel.gomoku.ui.theme.woodFont
 import pt.isel.gomoku.utils.getRankIconByName
 
 @Composable
-fun PlayerDetails(user: User?) {
+fun PlayerDetails(user: User) {
     Column {
-        TruncatedText(text = user?.name ?: "unknown", fontFamily = woodFont)
+        TruncatedText(text = user.name, fontFamily = woodFont)
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ){
             Image(
-                painterResource(id = getRankIconByName(user?.rank ?: "Bronze")),
+                painterResource(id = getRankIconByName(user.rank)),
                 contentDescription = null,
                 contentScale = ContentScale.Inside
             )
-            TruncatedText(text = user?.rank ?: "Bronze", 10.sp)
+            TruncatedText(text = user.rank, 10.sp)
         }
     }
 }

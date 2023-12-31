@@ -56,7 +56,7 @@ class UserServiceImpl(
         )
 
     override suspend fun updateUser(userInput: UserUpdateInputModel) =
-        requestHandler<UserInfo>(
+        requestHandler<UserDetails>(
             request = Request.Builder().buildRequest(
                 url = usersRequestUrl,
                 input = userInput,
@@ -78,6 +78,14 @@ class UserServiceImpl(
                 url = userTokenRequestUrl,
                 input = input,
                 method = HttpMethod.PUT
+            )
+        )
+
+    override suspend fun deleteToken() =
+        requestHandler<Unit>(
+            request = Request.Builder().buildRequest(
+                url = userTokenRequestUrl,
+                method = HttpMethod.DELETE
             )
         )
 }

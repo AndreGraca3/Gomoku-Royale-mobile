@@ -1,6 +1,7 @@
 package pt.isel.gomoku.ui.components.buttons
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -11,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,6 +27,8 @@ fun ScaledButton(
     text: String,
     color: Color,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    shape: Shape = RoundedCornerShape(16.dp),
     onClick: () -> Unit
 ) {
     val ctx = LocalContext.current
@@ -38,19 +43,20 @@ fun ScaledButton(
             onClick()
             ctx.playSound(R.raw.metal_click_weak)
         },
+        shape = shape,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
+            containerColor = if (enabled) containerColor else Gray,
         ),
-        border = BorderStroke(2.dp, color),
-        modifier = modifier
-            .bounceClick(
-                onClickIn = {
-                    textColor = color
-                    containerColor = Color.Transparent
-                    ctx.playSound(R.raw.highlight_sound)
-                },
-                onCancel = onOut
-            )
+        border = BorderStroke(2.dp, if(enabled) color else Gray),
+        modifier = if (enabled) modifier.bounceClick(
+            onClickIn = {
+                textColor = color
+                containerColor = Color.Transparent
+                ctx.playSound(R.raw.highlight_sound)
+            },
+            onCancel = onOut
+        ) else modifier
     ) {
         Text(text = text, fontWeight = FontWeight.Bold, color = textColor, fontSize = 18.sp)
     }

@@ -27,24 +27,18 @@ fun MenuBody(
     onAboutRequested: () -> Unit,
     onStatsRequested: () -> Unit
 ) {
-    val ctx = LocalContext.current
 
     val playlistCards = listOf(
         Playlist(
             name = "Multiplayer",
             image = R.drawable.multiplayer_match,
             disabledImage = R.drawable.multiplayer_match_disabled,
-            onClick = {
-                onMatchRequested(false)
-            }),
+            onClick = { onMatchRequested(false) }),
         Playlist(
             name = "Private",
             image = R.drawable.private_match,
             disabledImage = R.drawable.private_match_disabled,
-            onClick = {
-                ctx.playSound(R.raw.metal_click_medium)
-                onMatchRequested(true)
-            }
+            onClick = { onMatchRequested(true) }
         ),
     )
 

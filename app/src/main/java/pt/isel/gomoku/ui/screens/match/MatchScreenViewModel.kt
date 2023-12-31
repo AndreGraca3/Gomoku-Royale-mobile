@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.match
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,13 +13,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.game.cell.Dot
 import pt.isel.gomoku.domain.game.match.Match
+import pt.isel.gomoku.domain.game.match.Player
+import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.MatchState
+import pt.isel.gomoku.http.model.PlayOutputModel
 import pt.isel.gomoku.http.service.interfaces.MatchService
 import pt.isel.gomoku.http.service.interfaces.StatsService
 import pt.isel.gomoku.http.service.interfaces.UserService
@@ -39,6 +42,8 @@ class MatchScreenViewModel(
         ) = viewModelFactory {
             initializer { MatchScreenViewModel(userService, statsService, matchService) }
         }
+
+        private const val POLLING_DELAY = 2000L
     }
 
     private val matchFlow: MutableStateFlow<IOState<Match>> = MutableStateFlow(idle())
@@ -46,32 +51,64 @@ class MatchScreenViewModel(
     val match: Flow<IOState<Match>>
         get() = matchFlow.asStateFlow()
 
-    var currentUser by mutableStateOf<User?>(null)
-    var opponentUser by mutableStateOf<User?>(null)
+    var localUser by mutableStateOf<UserPlayer?>(null)
+    var opponentUser by mutableStateOf<UserPlayer?>(null)
 
-    init {
-        viewModelScope.launch {
-            fetchCurrentUser()
-        }
-        matchFlow.value = loading()
-    }
+    private val pendingPlayFow: MutableStateFlow<IOState<PlayOutputModel>> =
+        MutableStateFlow(idle())
+
+    val pendingPlay: Flow<IOState<PlayOutputModel>>
+        get() = pendingPlayFow.asStateFlow()
+
+    private val eventsFow: MutableStateFlow<MatchEvent> =
+        MutableStateFlow(MatchEvent.SETUP)
+
+    val events: Flow<MatchEvent>
+        get() = eventsFow.asStateFlow()
 
     fun getMatch(id: String) {
+        if (matchFlow.value !is Idle) return
+
+        matchFlow.value = loading()
+        viewModelScope.launch {
+            val result = runCatchingAPIFailure {
+                matchService.getMatchById(id)
+            }
+            // matchFlow.value = loaded(result) // TODO: change this, we use loading to be able to cancel match
+            polling(id)
+        }
+    }
+
+    private fun polling(id: String) {
         viewModelScope.launch {
             while (true) {
-                Log.v("Polling", "Polling...")
-                delay(3000)
-                val matchResult = runCatchingAPIFailure {
-                    matchService.getMatchById(id)
-                }
-                val match = matchResult.getOrNull()
-                if (matchResult.isSuccess && match != null) {
-                    if (match.state != MatchState.SETUP) {
-                        Log.v("get match", "found another player...")
-                        val opponentId = if (currentUser?.id == match.blackId)
-                            match.whiteId else match.blackId
-                        fetchOpponentUser(opponentId!!)
+                delay(POLLING_DELAY)
+                val matchResult = runCatchingAPIFailure { matchService.getMatchById(id) }
+                val oldMatch = matchFlow.value.getOrNull()
+                if (matchResult.isSuccess) {
+                    val match = matchResult.getOrThrow()
+                    if (oldMatch != null && oldMatch.state == MatchState.SETUP && match.state == MatchState.ONGOING) {
+                        val currUser = fetchCurrentUser()
+                        localUser = UserPlayer(
+                            currUser,
+                            if (match.blackId == currUser.id) Player.BLACK else Player.WHITE
+                        )
+                        opponentUser = UserPlayer(
+                            fetchOpponentUser(
+                                if (localUser!!.player == Player.BLACK) match.whiteId!! else match.blackId
+                            ), localUser!!.player.opposite()
+                        )
                         matchFlow.value = loaded(matchResult)
+                    }
+                    if (oldMatch != null &&
+                        oldMatch.board.turn == opponentUser?.player
+                        && match.board.turn == localUser?.player
+                    ) {
+                        eventsFow.value = MatchEvent.OPPONENT_PLAYED
+                    }
+                    if (match.state == MatchState.FINISHED) {
+                        eventsFow.value = MatchEvent.MATCH_ENDED
+                        break
                     }
                 }
             }
@@ -79,66 +116,67 @@ class MatchScreenViewModel(
     }
 
     fun play(id: String, move: Dot) {
+        pendingPlayFow.value = loading()
         viewModelScope.launch {
             val result = runCatchingAPIFailure {
                 matchService.play(id, move)
             }
-            if (result.isFailure) {
-                Log.v("play", "result failed, for various reasons...")
+            pendingPlayFow.value = loaded(result)
+            if (result.isSuccess) {
+                eventsFow.value = MatchEvent.PLAYED
             }
         }
     }
 
     fun deleteSetupMatch() {
         viewModelScope.launch {
-            val result = runCatchingAPIFailure {
+            runCatchingAPIFailure {
                 matchService.deleteSetupMatch()
             }
-            if (result.isFailure) {
-                Log.v("deleteMatch", "result failed, for various reasons...")
-            }
+            eventsFow.value = MatchEvent.DELETE_SETUP_MATCH
         }
     }
 
-    private suspend fun fetchCurrentUser() {
+    private suspend fun fetchCurrentUser(): User {
         val userResult = runCatchingAPIFailure {
             userService.getAuthenticatedUser()
         }
-        val userDetails = userResult.getOrNull()
-        if (userResult.isSuccess && userDetails != null) {
-            val statsResult = runCatchingAPIFailure {
-                statsService.getUserStats(userDetails.id)
-            }
-            val userStats = statsResult.getOrNull()
-            if (statsResult.isSuccess && userStats != null) {
-                currentUser = User(
-                    id = userDetails.id,
-                    name = userDetails.name,
-                    avatar = userDetails.avatarUrl,
-                    rank = userStats.rank.name
-                )
-            }
+        val userDetails = userResult.getOrThrow()
+        val statsResult = runCatchingAPIFailure {
+            statsService.getUserStats(userDetails.id)
         }
+        val userStats = statsResult.getOrThrow()
+        return User(
+            id = userDetails.id,
+            name = userDetails.name,
+            avatar = userDetails.avatarUrl,
+            rank = userStats.rank.name
+        )
     }
 
-    private suspend fun fetchOpponentUser(id: Int) {
+    private suspend fun fetchOpponentUser(id: Int): User {
         val userResult = runCatchingAPIFailure {
             userService.getUser(id)
         }
-        val userDetails = userResult.getOrNull()
-        if (userResult.isSuccess && userDetails != null) {
-            val statsResult = runCatchingAPIFailure {
-                statsService.getUserStats(id)
-            }
-            val userStats = statsResult.getOrNull()
-            if (statsResult.isSuccess && userStats != null) {
-                opponentUser = User(
-                    id = userDetails.id,
-                    name = userDetails.name,
-                    avatar = userDetails.avatarUrl,
-                    rank = userStats.rank.name
-                )
-            }
+        val userInfo = userResult.getOrThrow()
+        val statsResult = runCatchingAPIFailure {
+            statsService.getUserStats(id)
         }
+        val userStats = statsResult.getOrThrow()
+        return User(
+            id = userInfo.id,
+            name = userInfo.name,
+            avatar = userInfo.avatarUrl,
+            rank = userStats.rank.name
+        )
     }
 }
+
+enum class MatchEvent {
+    SETUP, PLAYED, OPPONENT_PLAYED, MATCH_ENDED, DELETE_SETUP_MATCH
+}
+
+class UserPlayer(
+    val user: User,
+    val player: Player
+)

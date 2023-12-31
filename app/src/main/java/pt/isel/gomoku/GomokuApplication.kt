@@ -1,7 +1,6 @@
 package pt.isel.gomoku
 
 import android.app.Application
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -34,11 +33,8 @@ class GomokuApplication : Application(), DependenciesContainer {
         OkHttpClient.Builder()
             .callTimeout(10, TimeUnit.SECONDS)
             .cookieJar(object : CookieJar {
-                var authCookie: Cookie? = null
-
                 override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
                     cookies.find { it.name == "Authorization" }?.let {
-                        authCookie = it
                         runBlocking {
                             tokenRepository.updateOrRemoveLocalToken(it.value)
                         }
@@ -46,20 +42,16 @@ class GomokuApplication : Application(), DependenciesContainer {
                 }
 
                 override fun loadForRequest(url: HttpUrl): List<Cookie> {
-                    if (authCookie == null) {
-                        runBlocking {
-                            val token = tokenRepository.getLocalToken()
-                            token?.let {
-                                authCookie =
-                                    Cookie.Builder()
-                                        .name("Authorization")
-                                        .domain("gomokuroyale.com")
-                                        .value(it)
-                                        .build()
-                            }
-                        }
+                    return runBlocking {
+                        val token = tokenRepository.getLocalToken()
+                        if (token != null) listOf(
+                            Cookie.Builder()
+                                .name("Authorization")
+                                .value(token)
+                                .domain("gomokuroyale.com")
+                                .build()
+                        ) else emptyList()
                     }
-                    return listOfNotNull(authCookie)
                 }
             })
             .build()

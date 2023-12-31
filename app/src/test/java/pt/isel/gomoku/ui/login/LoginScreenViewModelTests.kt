@@ -59,12 +59,13 @@ class LoginScreenViewModelTests {
     fun createToken_is_loading_after_createToken() = runTest {
         // Arrange
         val sut = LoginScreenViewModel(userService)
+        sut.email = "email"
+        sut.password = "password"
         // Act
         val gate = SuspendingGate()
         var collectedState: IOState<Unit>? = null
         val collectJob = launch {
             sut.loginPhase.collect {
-                println("collected $it")
                 if(it is Loading) {
                     collectedState = it
                     gate.open()
@@ -90,12 +91,13 @@ class LoginScreenViewModelTests {
     fun createToken_is_loaded_after_createToken() = runTest {
         // Arrange
         val sut = LoginScreenViewModel(userService)
+        sut.email = "email"
+        sut.password = "password"
         // Act
         val gate = SuspendingGate()
         var collectedState: IOState<Unit>? = null
         val collectJob = launch {
             sut.loginPhase.collectLatest {
-                println("collected $it")
                 if (it is Loaded) {
                     collectedState = it
                     gate.open()

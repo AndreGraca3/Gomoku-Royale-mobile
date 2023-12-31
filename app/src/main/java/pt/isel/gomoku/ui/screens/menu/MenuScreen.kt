@@ -33,7 +33,11 @@ fun MenuScreen(
             containerColor = Color.Transparent,
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                MenuTopBar(userInfo?.avatarUrl, onAvatarClick)
+                MenuTopBar(
+                    userAvatar = userInfo?.avatarUrl,
+                    isLoading = userInfoState is Loading,
+                    onAvatarClick = onAvatarClick
+                )
             },
         ) { innerPadding ->
             MenuBody(

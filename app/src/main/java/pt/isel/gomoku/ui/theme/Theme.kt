@@ -24,11 +24,12 @@ private val ColorScheme = darkColorScheme(
 
 @Composable
 fun GomokuTheme(
+    background: Int = R.drawable.background,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     Image(
-        painter = painterResource(id = R.drawable.background),
+        painter = painterResource(id = background),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxSize()

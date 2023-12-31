@@ -18,11 +18,11 @@ import pt.isel.gomoku.ui.components.common.AnimatedBorderCard
 import pt.isel.gomoku.ui.components.text.TruncatedText
 
 @Composable
-fun PlayerPlankRow(users: List<User?>, turn: Player) {
+fun PlayerPlankRow(users: List<User?>, isMyTurn: Boolean) {
     val shape = RoundedCornerShape(16.dp)
 
     AnimatedBorderCard(
-        isLeft = (turn == Player.BLACK), // TODO: make player left be the one that is playing
+        isLeft = isMyTurn,
         shape = shape,
         borderLeftColor = Color.Cyan,
         borderRightColor = Color.Red,

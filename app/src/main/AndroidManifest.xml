@@ -34,13 +34,14 @@
             android:name=".ui.screens.leaderboard.LeaderBoardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.screens.userDetails.UserDetailsActivity"
+            android:name=".ui.screens.user.UserDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.stats.StatsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.preferences.PreferencesActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.about.AboutActivity"

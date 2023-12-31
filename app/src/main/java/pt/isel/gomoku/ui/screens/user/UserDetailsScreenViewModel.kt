@@ -1,4 +1,4 @@
-package pt.isel.gomoku.ui.screens.userDetails
+package pt.isel.gomoku.ui.screens.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
@@ -33,12 +34,12 @@ class UserDetailsScreenViewModel(
         get() = userDetailsFlow.asStateFlow()
 
     fun fetchUser(id: Int) {
+        if (userDetailsFlow.value !is Idle) return
+
         userDetailsFlow.value = loading()
         viewModelScope.launch {
             val result = runCatchingAPIFailure {
-                userService.getUser(
-                    id
-                )
+                userService.getUser(id)
             }
             userDetailsFlow.value = loaded(result)
         }
