@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +26,8 @@ import pt.isel.gomoku.http.model.UserDetails
 import pt.isel.gomoku.ui.theme.Brown
 import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
+
+const val ProfileScreenTag = "ProfileScreenTag"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +47,7 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
+                .testTag(ProfileScreenTag)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp),

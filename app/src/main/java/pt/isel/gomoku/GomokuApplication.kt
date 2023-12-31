@@ -1,7 +1,6 @@
 package pt.isel.gomoku
 
 import android.app.Application
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -69,8 +68,7 @@ class GomokuApplication : Application(), DependenciesContainer {
     override val leaderBoardService: LeaderBoardService
         get() = LeaderBoardServiceImpl(httpClient, gson)
 
-    override val userService: UserService
-        get() = UserServiceImpl(httpClient, gson)
+    override var userService: UserService = UserServiceImpl(httpClient, gson)
 
     override val statsService: StatsService
         get() = StatsServiceImpl(httpClient, gson)

@@ -11,6 +11,7 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.ui.components.common.LoadingDots
 
@@ -41,7 +42,8 @@ fun PlaylistPager(
                 id = if (isActive) cards[page].image else cards[page].disabledImage,
                 pagerState,
                 page,
-                onClick = cards[page].onClick
+                onClick = cards[page].onClick,
+                modifier = Modifier.testTag(cards[page].testTag)
             )
         }
     }

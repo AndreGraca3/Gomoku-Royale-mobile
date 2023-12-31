@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,8 @@ import pt.isel.gomoku.ui.components.buttons.SquareButton
 import pt.isel.gomoku.ui.theme.Brown
 import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
+
+const val PreferencesScreenTag = "PreferencesScreenTag"
 
 @Composable
 fun PreferencesScreen(
@@ -39,6 +42,7 @@ fun PreferencesScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
+                .testTag(PreferencesScreenTag)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
