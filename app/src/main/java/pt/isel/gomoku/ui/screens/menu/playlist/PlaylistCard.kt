@@ -21,7 +21,7 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlaylistCard(id: Int, pagerState: PagerState, page: Int, onClick: () -> Unit) {
+fun PlaylistCard(id: Int, pagerState: PagerState, page: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val scale by animateFloatAsState(
         targetValue = if (pagerState.currentPage == page) 1F else 0.5F,
         animationSpec = spring(stiffness = Spring.StiffnessLow), label = "MatchCardScale"
@@ -32,7 +32,7 @@ fun PlaylistCard(id: Int, pagerState: PagerState, page: Int, onClick: () -> Unit
         contentDescription = null,
         contentScale = ContentScale.Fit,
         alignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .graphicsLayer {
                 val pageOffset = (

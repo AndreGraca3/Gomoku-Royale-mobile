@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -36,6 +37,11 @@ import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.ui.theme.Yellow
 
+const val SignUpScreenTag = "SignUpScreenTag"
+const val SignUpNameInputTag = "SignUpNameInputTag"
+const val SignUpEmailInputTag = "SignUpEmailInputTag"
+const val SignUpPasswordInputTag = "SignUpPasswordInputTag"
+
 @Composable
 fun SignUpScreen(
     phaseState: IOState<UserIdOutputModel> = Idle,
@@ -52,7 +58,8 @@ fun SignUpScreen(
     GomokuTheme {
         Column(
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.testTag(SignUpScreenTag)
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -89,6 +96,7 @@ fun SignUpScreen(
                             Text(text = "👤")
                         },
                         placeholder = { Text(text = "Username") },
+                        modifier = Modifier.testTag(SignUpNameInputTag)
                     )
 
                     GomokuTextField(
@@ -98,6 +106,7 @@ fun SignUpScreen(
                             Text(text = "📧")
                         },
                         placeholder = { Text(text = "Email") },
+                        modifier = Modifier.testTag(SignUpEmailInputTag)
                     )
 
                     GomokuTextField(
@@ -108,6 +117,7 @@ fun SignUpScreen(
                         },
                         placeholder = { Text(text = "Password") },
                         isPassword = true,
+                        modifier = Modifier.testTag(SignUpPasswordInputTag)
                     )
 
                     Column(

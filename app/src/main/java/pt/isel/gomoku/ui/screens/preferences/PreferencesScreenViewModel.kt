@@ -1,6 +1,5 @@
 package pt.isel.gomoku.ui.screens.preferences
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
+import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
@@ -42,6 +42,8 @@ class PreferencesScreenViewModel(private val matchService: MatchService) : ViewM
         get() = matchStateFlow.asStateFlow()
 
     fun createMatch(isPrivate: Boolean) {
+        if (matchStateFlow.value !is Idle) return
+
         matchStateFlow.value = loading()
         viewModelScope.launch {
             val result = runCatchingAPIFailure {
@@ -54,7 +56,6 @@ class PreferencesScreenViewModel(private val matchService: MatchService) : ViewM
                 )
             }
             matchStateFlow.value = loaded(result)
-            Log.v("create match", "result: $result")
         }
     }
 }

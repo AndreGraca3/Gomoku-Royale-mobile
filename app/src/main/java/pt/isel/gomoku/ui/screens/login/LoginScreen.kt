@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,12 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.ui.theme.Green
 import pt.isel.gomoku.ui.theme.Yellow
 
+const val LoginScreenTag = "LoginScreenTag"
+const val LoginButtonTag = "LoginButtonTag"
+const val SignUpButtonTag = "SignUpButtonTag"
+const val LoginEmailInputTag = "EmailInputTag"
+const val LoginPasswordInputTag = "PasswordTag"
+
 @Composable
 fun LoginScreen(
     phaseState: IOState<Unit> = Idle,
@@ -43,7 +50,9 @@ fun LoginScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(LoginScreenTag),
         ) {
             Displayer {
                 Column(
@@ -66,6 +75,7 @@ fun LoginScreen(
                             Text(text = "📧")
                         },
                         placeholder = { Text(text = "Email") },
+                        modifier = Modifier.testTag(LoginEmailInputTag)
                     )
 
                     GomokuTextField(
@@ -76,6 +86,7 @@ fun LoginScreen(
                         },
                         placeholder = { Text(text = "Password") },
                         isPassword = true,
+                        modifier = Modifier.testTag(LoginPasswordInputTag)
                     )
 
                     Column(
@@ -104,11 +115,16 @@ fun LoginScreen(
                         }
                     }
 
-                    ScaledButton(text = "Login", color = Yellow, onClick = onLoginRequest)
+                    ScaledButton(
+                        text = "Login",
+                        color = Yellow,
+                        onClick = onLoginRequest,
+                        modifier = Modifier.testTag(LoginButtonTag)
+                    )
                     ScaledButton(
                         text = "Sign Up",
                         color = Green,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag(SignUpButtonTag),
                         onClick = onSignUpRequest
                     )
                 }

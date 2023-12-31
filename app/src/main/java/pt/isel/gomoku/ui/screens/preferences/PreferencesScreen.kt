@@ -27,6 +27,8 @@ import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.ui.theme.Green
 import pt.isel.gomoku.ui.theme.Yellow
 
+const val PreferencesScreenTag = "PreferencesScreenTag"
+
 @Composable
 fun PreferencesScreen(
     matchState: IOState<MatchCreationOutputModel>,

@@ -1,14 +1,11 @@
-package pt.isel.gomoku.ui.login
+package pt.isel.gomoku.ui.tests.login
 
-import io.mockk.coEvery
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withTimeout
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -16,10 +13,11 @@ import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.Idle
 import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.Loading
-import pt.isel.gomoku.http.service.interfaces.UserService
 import pt.isel.gomoku.ui.screens.login.LoginScreenViewModel
+import pt.isel.gomoku.ui.services.userService
 import pt.isel.gomoku.utils.MockMainDispatcherRule
 import pt.isel.gomoku.utils.SuspendingGate
+import pt.isel.gomoku.utils.awaitAndThenAssert
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginScreenViewModelTests {
@@ -27,12 +25,8 @@ class LoginScreenViewModelTests {
     @get:Rule
     val rule = MockMainDispatcherRule(testDispatcher = StandardTestDispatcher())
 
-    private val userService = mockk<UserService> {
-        coEvery { createToken(any()) } returns Unit
-    }
-
     @Test
-    fun createToken_is_initially_idle() = runTest {
+    fun initially_the_loginPhaseFlow_is_idle() = runTest {
         // Arrange
         val sut = LoginScreenViewModel(userService)
         // Act
@@ -45,77 +39,72 @@ class LoginScreenViewModelTests {
             }
         }
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        Assert.assertTrue("Expected Idle bot got $collectedState instead", collectedState is Idle)
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            Assert.assertTrue(
+                "Expected Idle but got $collectedState instead",
+                collectedState is Idle
+            )
+        }
     }
 
     @Test
     fun createToken_is_loading_after_createToken() = runTest {
         // Arrange
         val sut = LoginScreenViewModel(userService)
-        sut.email = "email"
-        sut.password = "password"
         // Act
         val gate = SuspendingGate()
         var collectedState: IOState<Unit>? = null
         val collectJob = launch {
             sut.loginPhase.collect {
-                if(it is Loading) {
+                if (it is Loading) {
                     collectedState = it
                     gate.open()
                 }
             }
         }
+        sut.email = "dummy@gmail.com"
+        sut.password = "dummyPassword"
         sut.createToken()
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        Assert.assertTrue(
-            "Expected Loading bot got $collectedState instead",
-            collectedState is Loading
-        )
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            Assert.assertTrue(
+                "Expected Loading but got $collectedState instead",
+                collectedState is Loading
+            )
+        }
     }
 
     @Test
     fun createToken_is_loaded_after_createToken() = runTest {
         // Arrange
         val sut = LoginScreenViewModel(userService)
-        sut.email = "email"
-        sut.password = "password"
         // Act
         val gate = SuspendingGate()
         var collectedState: IOState<Unit>? = null
         val collectJob = launch {
             sut.loginPhase.collectLatest {
+                println("collected $it")
                 if (it is Loaded) {
                     collectedState = it
                     gate.open()
                 }
             }
         }
+        sut.email = "dummy@gmail.com"
+        sut.password = "dummyPassword"
         sut.createToken()
 
-        // Lets wait for the flow to emit the first value
-        withTimeout(1000) {
-            gate.await()
-            collectJob.cancelAndJoin()
-        }
-
         // Assert
-        Assert.assertTrue(
-            "Expected Loaded bot got $collectedState instead",
-            collectedState is Loaded
-        )
+        gate.awaitAndThenAssert(1000) {
+            collectJob.cancelAndJoin()
+            Assert.assertTrue(
+                "Expected Loaded but got $collectedState instead",
+                collectedState is Loaded
+            )
+        }
     }
 }

@@ -4,5 +4,6 @@ data class Playlist(
     val name: String,
     val image: Int,
     val disabledImage: Int,
-    val onClick: () -> Unit
+    val onClick: () -> Unit,
+    val testTag: String
 )

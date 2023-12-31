@@ -1,12 +1,5 @@
 package pt.isel.gomoku.ui.components.common
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -24,6 +17,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -32,6 +29,10 @@ import pt.isel.gomoku.ui.theme.DarkBrown
 import pt.isel.gomoku.ui.theme.Yellow
 
 @OptIn(ExperimentalFoundationApi::class)
+const val AvatarTag = "MainScreenAvatarTag"
+val userAvatar = SemanticsPropertyKey<String?>("UserAvatar")
+var SemanticsPropertyReceiver.userAvatar by userAvatar
+
 @Composable
 fun AsyncAvatar(
     avatar: String? = null,
@@ -56,6 +57,7 @@ fun AsyncAvatar(
                 onLongPress = { onLongPress?.invoke() }
             )
         }
+        .testTag(AvatarTag)
 
     // TODO: Add a loading indicator
 

@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.IOState
@@ -30,6 +31,8 @@ import pt.isel.gomoku.ui.components.common.IOResourceLoader
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.playSound
 
+const val MatchScreenTag = "MatchScreenTag"
+
 @Composable
 fun MatchScreen(
     users: List<UserPlayer?>,
@@ -41,7 +44,7 @@ fun MatchScreen(
     GomokuTheme {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().testTag(MatchScreenTag)
         ) {
             IOResourceLoader(
                 loadingMessage = "Waiting for opponent...",

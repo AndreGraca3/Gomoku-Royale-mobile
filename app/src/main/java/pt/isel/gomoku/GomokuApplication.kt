@@ -61,8 +61,7 @@ class GomokuApplication : Application(), DependenciesContainer {
     override val leaderBoardService: LeaderBoardService
         get() = LeaderBoardServiceImpl(httpClient, gson)
 
-    override val userService: UserService
-        get() = UserServiceImpl(httpClient, gson)
+    override var userService: UserService = UserServiceImpl(httpClient, gson)
 
     override val statsService: StatsService
         get() = StatsServiceImpl(httpClient, gson)

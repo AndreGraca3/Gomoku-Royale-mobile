@@ -6,6 +6,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -17,6 +18,7 @@ import pt.isel.gomoku.ui.theme.Yellow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GomokuTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false,
@@ -42,5 +44,6 @@ fun GomokuTextField(
         shape = RoundedCornerShape(16.dp),
         visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = if(isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions.Default,
+        modifier = modifier
     )
 }

@@ -24,7 +24,7 @@ interface DependenciesContainer {
      */
     val leaderBoardService: LeaderBoardService
 
-    val userService: UserService
+    var userService: UserService
 
     val matchService: MatchService
 

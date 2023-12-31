@@ -9,10 +9,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.http.model.LeaderBoard
 import pt.isel.gomoku.ui.components.common.IOResourceLoader
+
+const val LeaderboardCardTag = "LeaderboardCardTag"
 
 @Composable
 fun LeaderBoardView(
@@ -37,7 +40,8 @@ fun LeaderBoardView(
                     position = i + 1,
                     playerName = it.name,
                     rank = it.rank,
-                    onPlayerRequested = { onPlayerRequested(it.id) }
+                    onPlayerRequested = { onPlayerRequested(it.id) },
+                    modifier = Modifier.testTag(LeaderboardCardTag)
                 )
             }
         }

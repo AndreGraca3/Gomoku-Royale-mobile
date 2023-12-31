@@ -39,7 +39,8 @@ fun LeaderBoardPosition(
     position: Int,
     playerName: String,
     rank: Rank,
-    onPlayerRequested: () -> Unit
+    onPlayerRequested: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(16.dp)
     val color = when (position) {
@@ -58,7 +59,7 @@ fun LeaderBoardPosition(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
+            modifier = modifier
                 .height(45.dp)
                 .clip(shape)
                 .background(Brown)

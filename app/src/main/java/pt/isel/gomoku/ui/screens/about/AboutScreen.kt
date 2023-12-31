@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,8 @@ import pt.isel.gomoku.ui.theme.Yellow
 import pt.isel.gomoku.utils.clickableWithoutRipple
 import pt.isel.gomoku.utils.spin
 
+const val AboutScreenTag = "AboutScreenTag"
+
 @Composable
 fun AboutScreen(
     authors: List<AuthorInfo>,
@@ -41,7 +44,7 @@ fun AboutScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().testTag(AboutScreenTag)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,6 +19,8 @@ import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.http.model.LeaderBoard
 import pt.isel.gomoku.ui.components.buttons.AnimatedImageButton
 import pt.isel.gomoku.ui.theme.GomokuTheme
+
+const val LeaderBoardScreenTag = "LeaderBoardScreenTag"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +32,9 @@ fun LeaderBoardScreen(
     GomokuTheme {
         Scaffold(
             containerColor = Color.Transparent,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(LeaderBoardScreenTag),
             topBar = {
                 AnimatedImageButton(
                     id = R.drawable.left_arrow_button,

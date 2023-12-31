@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetError
 import pt.isel.gomoku.R
@@ -29,6 +31,9 @@ import pt.isel.gomoku.ui.components.layouts.RoundedLayout
 import pt.isel.gomoku.ui.components.text.GomokuTextField
 import pt.isel.gomoku.ui.theme.GomokuTheme
 
+const val ProfileScreenTag = "ProfileScreenTag"
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     userDetailsState: IOState<UserDetails>,
