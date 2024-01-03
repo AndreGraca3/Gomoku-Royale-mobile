@@ -23,10 +23,13 @@ import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.http.model.MatchState
-import pt.isel.gomoku.http.model.PlayOutputModel
 import pt.isel.gomoku.http.service.interfaces.MatchService
 import pt.isel.gomoku.http.service.interfaces.StatsService
 import pt.isel.gomoku.http.service.interfaces.UserService
+import pt.isel.gomoku.http.service.result.APIException
+import pt.isel.gomoku.http.service.result.APIResult
+import pt.isel.gomoku.http.service.result.Failure
+import pt.isel.gomoku.http.service.result.Success
 import pt.isel.gomoku.http.service.result.runCatchingAPIFailure
 
 class MatchScreenViewModel(
@@ -54,19 +57,22 @@ class MatchScreenViewModel(
     var localUser by mutableStateOf<UserPlayer?>(null)
     var opponentUser by mutableStateOf<UserPlayer?>(null)
 
-    private val pendingPlayFow: MutableStateFlow<IOState<PlayOutputModel>> =
-        MutableStateFlow(idle())
+    private val pendingPlayFow: MutableStateFlow<Dot?> =
+        MutableStateFlow(null)
 
-    val pendingPlay: Flow<IOState<PlayOutputModel>>
+    val pendingPlay: Flow<Dot?>
         get() = pendingPlayFow.asStateFlow()
 
+    var screenState by mutableStateOf(MatchScreenState.WAITING_FOR_OPPONENT)
+        private set
+
     private val eventsFow: MutableStateFlow<MatchEvent> =
-        MutableStateFlow(MatchEvent.SETUP)
+        MutableStateFlow(MatchEvent.Setup)
 
     val events: Flow<MatchEvent>
         get() = eventsFow.asStateFlow()
 
-    fun getMatch(id: String) {
+    fun getMatchAndStartPolling(id: String) {
         if (matchFlow.value !is Idle) return
 
         matchFlow.value = loading()
@@ -74,57 +80,47 @@ class MatchScreenViewModel(
             val result = runCatchingAPIFailure {
                 matchService.getMatchById(id)
             }
-            // matchFlow.value = loaded(result) // TODO: change this, we use loading to be able to cancel match
+            matchFlow.value = loaded(result)
             polling(id)
         }
     }
 
-    private fun polling(id: String) {
-        viewModelScope.launch {
-            while (true) {
-                delay(POLLING_DELAY)
-                val matchResult = runCatchingAPIFailure { matchService.getMatchById(id) }
-                val oldMatch = matchFlow.value.getOrNull()
-                if (matchResult.isSuccess) {
-                    val match = matchResult.getOrThrow()
-                    if (oldMatch != null && oldMatch.state == MatchState.SETUP && match.state == MatchState.ONGOING) {
-                        val currUser = fetchCurrentUser()
-                        localUser = UserPlayer(
-                            currUser,
-                            if (match.blackId == currUser.id) Player.BLACK else Player.WHITE
-                        )
-                        opponentUser = UserPlayer(
-                            fetchOpponentUser(
-                                if (localUser!!.player == Player.BLACK) match.whiteId!! else match.blackId
-                            ), localUser!!.player.opposite()
-                        )
-                        matchFlow.value = loaded(matchResult)
-                    }
-                    if (oldMatch != null &&
-                        oldMatch.board.turn == opponentUser?.player
-                        && match.board.turn == localUser?.player
-                    ) {
-                        eventsFow.value = MatchEvent.OPPONENT_PLAYED
-                    }
-                    if (match.state == MatchState.FINISHED) {
-                        eventsFow.value = MatchEvent.MATCH_ENDED
-                        break
-                    }
+    private suspend fun polling(id: String) {
+        while (true) {
+            if (screenState == MatchScreenState.MATCH_ENDED) break
+            val matchResult = runCatchingAPIFailure { matchService.getMatchById(id) }
+            matchFlow.value = loaded(matchResult)
+            if (!matchResult.isSuccess) break
+            val match = matchResult.getOrThrow()
+            if (screenState == MatchScreenState.WAITING_FOR_OPPONENT) {
+                val currUser = fetchCurrentUser()
+                localUser = UserPlayer(
+                    currUser,
+                    match.getPlayerFromUserId(currUser.id)
+                )
+                val opponentId =
+                    match.getIdFromPlayer(localUser!!.player.opposite()) ?: continue
+                opponentUser = UserPlayer(
+                    fetchOpponentUser(opponentId),
+                    localUser!!.player.opposite()
+                )
+                screenState = if (match.getPlayerFromUserId(currUser.id) == match.board.turn) {
+                    MatchScreenState.MY_TURN
+                } else {
+                    MatchScreenState.OPPONENT_TURN
                 }
+                eventsFow.value = MatchEvent.OpponentJoined
             }
-        }
-    }
-
-    fun play(id: String, move: Dot) {
-        pendingPlayFow.value = loading()
-        viewModelScope.launch {
-            val result = runCatchingAPIFailure {
-                matchService.play(id, move)
+            if (screenState == MatchScreenState.OPPONENT_TURN && match.board.turn == localUser?.player) {
+                eventsFow.value = MatchEvent.Played(opponentUser!!.player)
+                screenState = MatchScreenState.MY_TURN
             }
-            pendingPlayFow.value = loaded(result)
-            if (result.isSuccess) {
-                eventsFow.value = MatchEvent.PLAYED
+            if (match.state == MatchState.FINISHED) {
+                screenState = MatchScreenState.MATCH_ENDED
+                eventsFow.value = MatchEvent.MatchEnded(match.board.turn == localUser?.player)
+                break
             }
+            delay(POLLING_DELAY)
         }
     }
 
@@ -133,7 +129,76 @@ class MatchScreenViewModel(
             runCatchingAPIFailure {
                 matchService.deleteSetupMatch()
             }
-            eventsFow.value = MatchEvent.DELETE_SETUP_MATCH
+            eventsFow.value = MatchEvent.DeleteSetupMatch
+        }
+    }
+
+    fun play(id: String, dot: Dot) {
+        val currMatch = matchFlow.value.getOrNull() ?: return
+        val local = localUser
+        pendingPlayFow.value = dot
+        viewModelScope.launch {
+            try {
+                requireNotNull(local)
+                val newMatch = currMatch.play(dot, local.player) // play locally
+
+                val result = runCatchingAPIFailure {
+                    matchService.play(id, dot)
+                }
+
+                when (result) {
+                    is Success -> {
+                        matchFlow.value = loaded(APIResult.success(newMatch))
+                        if(newMatch.state == MatchState.FINISHED) {
+                            screenState = MatchScreenState.MATCH_ENDED
+                            eventsFow.value = MatchEvent.MatchEnded(winner = true)
+                        } else {
+                            eventsFow.value = MatchEvent.Played(local.player)
+                            screenState = MatchScreenState.OPPONENT_TURN
+                        }
+                    }
+
+                    is Failure -> {
+                        throw result.exception
+                    }
+                }
+            } catch (e: Throwable) {
+                when (e) {
+                    is IllegalStateException -> {
+                        eventsFow.value = MatchEvent.Error(e.message)
+                    }
+
+                    is APIException -> {
+                        eventsFow.value = MatchEvent.Error(e.problem.detail)
+                    }
+                }
+            } finally {
+                pendingPlayFow.value = null
+            }
+        }
+    }
+
+    fun forfeit(id: String) {
+        val currMatch = matchFlow.value.getOrNull() ?: return
+        if (screenState == MatchScreenState.FORFEITING) return
+        if (screenState == MatchScreenState.MY_TURN || screenState == MatchScreenState.OPPONENT_TURN) {
+            screenState = MatchScreenState.FORFEITING
+            viewModelScope.launch {
+                val result = runCatchingAPIFailure {
+                    matchService.forfeit(id)
+                }
+                when (result) {
+                    is Success -> {
+                        matchFlow.value = loaded(APIResult.success(currMatch.forfeit(localUser!!.player)))
+                        screenState = MatchScreenState.MATCH_ENDED
+                        eventsFow.value = MatchEvent.MatchEnded(false)
+                    }
+
+                    is Failure -> {
+                        eventsFow.value = MatchEvent.Error(result.exception.problem.detail)
+                    }
+                }
+            }
         }
     }
 
@@ -172,8 +237,21 @@ class MatchScreenViewModel(
     }
 }
 
-enum class MatchEvent {
-    SETUP, PLAYED, OPPONENT_PLAYED, MATCH_ENDED, DELETE_SETUP_MATCH
+enum class MatchScreenState {
+    WAITING_FOR_OPPONENT,
+    MY_TURN,
+    OPPONENT_TURN,
+    FORFEITING,
+    MATCH_ENDED
+}
+
+sealed class MatchEvent {
+    data object Setup : MatchEvent()
+    class Played(val player: Player) : MatchEvent()
+    data object OpponentJoined : MatchEvent()
+    class MatchEnded(val winner: Boolean) : MatchEvent()
+    data object DeleteSetupMatch : MatchEvent()
+    class Error(val errorMessage: String?) : MatchEvent()
 }
 
 class UserPlayer(

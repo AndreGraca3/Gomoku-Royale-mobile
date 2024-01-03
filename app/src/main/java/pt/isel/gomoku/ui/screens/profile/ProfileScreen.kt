@@ -3,18 +3,15 @@ package pt.isel.gomoku.ui.screens.profile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetError
 import pt.isel.gomoku.R
@@ -41,7 +38,7 @@ fun ProfileScreen(
     createdAt: String,
     onLogoutRequested: () -> Unit,
     onNameChange: (String) -> Unit,
-    onAvatarChange: (Boolean) -> Unit,
+    onAvatarChange: () -> Unit,
     onUpdateRequested: () -> Unit
 ) {
     val userDetails = userDetailsState.getOrNull()
@@ -52,8 +49,7 @@ fun ProfileScreen(
                 avatar = userDetails?.avatarUrl,
                 isLoading = userDetailsState is Loading,
                 size = 200.dp,
-                onClick = { onAvatarChange(false) },
-                onLongPress = { onAvatarChange(true) }
+                onClick = onAvatarChange,
             )
 
             when (val e = userDetailsState.exceptionOrNull()) {
@@ -68,32 +64,39 @@ fun ProfileScreen(
             Column(
                 modifier = Modifier.height(30.dp)
             ) {
-                if (userDetailsState is Loading) LoadingDots(message = "Updating...")
+                if (userDetailsState is Loading) LoadingDots()
             }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.height(90.dp).padding(8.dp)
+                modifier = Modifier
+                    .height(90.dp)
+                    .padding(8.dp)
             ) {
 
                 GomokuTextField(
                     value = name,
+                    enabled = userDetailsState !is Loading,
                     onValueChange = onNameChange,
                     label = { Text("Name") },
                 )
 
                 ScaledButton(
-                    text = "✏️",
+                    text = "✔️",
                     color = Color.Green,
                     enabled = userDetailsState !is Loading,
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(8.dp),
                     onClick = onUpdateRequested,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxHeight(0.6F)
                 )
             }
 
-            Text(email)
+            GomokuTextField(
+                value = email,
+                enabled = false,
+                label = { Text("Email") },
+            )
             TimeDisplay(createdAt)
             ScaledButton(
                 text = "Logout \uD83D\uDC4B",

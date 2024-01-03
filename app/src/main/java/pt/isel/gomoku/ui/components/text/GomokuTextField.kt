@@ -20,7 +20,8 @@ import pt.isel.gomoku.ui.theme.Yellow
 fun GomokuTextField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    onValueChange: (String) -> Unit = {},
     isPassword: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -29,6 +30,7 @@ fun GomokuTextField(
 ) {
     OutlinedTextField(
         value = value,
+        enabled = enabled,
         onValueChange = onValueChange,
         label = label,
         leadingIcon = leadingIcon,

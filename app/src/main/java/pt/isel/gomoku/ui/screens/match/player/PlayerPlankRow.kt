@@ -12,7 +12,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import pt.isel.gomoku.domain.game.match.Player
 import pt.isel.gomoku.domain.user.User
 import pt.isel.gomoku.ui.components.common.AnimatedBorderCard
 import pt.isel.gomoku.ui.components.text.TruncatedText
@@ -33,15 +32,12 @@ fun PlayerPlankRow(users: List<User?>, isMyTurn: Boolean) {
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(70.dp)
                 .clip(shape)
         ) {
-            for (i in users.indices) {
-                this.PlayerPlank(users[i])
-                if (i < users.size - 1) {
-                    TruncatedText(text = "VS", fontSize = 20.sp)
-                }
-            }
+            PlayerPlank(users[0], isMyTurn)
+            TruncatedText(text = "VS", fontSize = 20.sp, modifier = Modifier.weight(0.3F))
+            PlayerPlank(users[1], !isMyTurn)
         }
     }
 }

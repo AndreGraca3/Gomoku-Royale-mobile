@@ -31,7 +31,8 @@ class GomokuApplication : Application(), DependenciesContainer {
 
     override val httpClient: OkHttpClient =
         OkHttpClient.Builder()
-            .callTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .callTimeout(20, TimeUnit.SECONDS)
             .cookieJar(object : CookieJar {
                 override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
                     cookies.find { it.name == "Authorization" }?.let {

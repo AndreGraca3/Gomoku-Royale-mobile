@@ -16,5 +16,6 @@ interface MatchService {
     suspend fun createMatch(input: MatchCreationInputModel): MatchCreationOutputModel
     suspend fun getMatchById(id: String): Match
     suspend fun play(id: String, move: Dot): PlayOutputModel
+    suspend fun forfeit(id: String)
     suspend fun deleteSetupMatch()
 }

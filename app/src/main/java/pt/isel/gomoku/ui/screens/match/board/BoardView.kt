@@ -17,19 +17,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.game.board.Board
 import pt.isel.gomoku.domain.game.cell.Dot
 import pt.isel.gomoku.domain.game.match.Player
-import pt.isel.gomoku.domain.idle
-import pt.isel.gomoku.http.model.PlayOutputModel
 import pt.isel.gomoku.ui.screens.match.board.grid.GridView
 import pt.isel.gomoku.utils.playSound
 
 @Composable
 fun BoardView(
     board: Board,
-    pendingPlay: IOState<PlayOutputModel>,
+    pendingPlayDot: Dot?,
     isMyTurn: Boolean,
     onCellClick: (Dot) -> Unit
 ) {
@@ -50,11 +47,11 @@ fun BoardView(
             contentScale = ContentScale.FillBounds,
         )
 
-        GridView(board, selector, pendingPlay, onCellClick = { dot ->
-            if (board.getStoneOrNull(dot) == null) {
+        GridView(board, selector, pendingPlayDot, onCellClick = { dot ->
+            if (board.getStoneOrNull(dot) == null && isMyTurn) {
                 if (selector == null || dot != selector) {
                     selector = dot
-                    ctx.playSound(R.raw.selector)
+                    ctx.playSound(R.raw.ui_click_2)
                 } else {
                     onCellClick(dot)
                     selector = null
@@ -69,7 +66,7 @@ fun BoardView(
 fun BoardViewPreview() {
     BoardView(
         board = Board(15, emptyList(), Player.BLACK),
-        pendingPlay = idle(),
+        pendingPlayDot = null,
         isMyTurn = true,
         onCellClick = {}
     )

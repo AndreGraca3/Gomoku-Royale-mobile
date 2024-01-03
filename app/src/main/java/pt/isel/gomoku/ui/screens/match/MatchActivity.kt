@@ -6,23 +6,31 @@ import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.lifecycle.Lifecycle
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetSuccess
+import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetInfo
+import com.talhafaki.composablesweettoast.util.SweetToastUtil.SweetWarning
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Angle
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.Spread
+import nl.dionsegijn.konfetti.core.emitter.Emitter
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
-import pt.isel.gomoku.domain.getOrNull
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.MatchCreationOutputModel
 import pt.isel.gomoku.http.model.MatchState
 import pt.isel.gomoku.utils.playSound
+import java.util.concurrent.TimeUnit
 
 class MatchActivity : ComponentActivity() {
 
@@ -39,50 +47,89 @@ class MatchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        vm.getMatch(matchCreationExtra.toMatchCreationOutputModel().id)
+        vm.getMatchAndStartPolling(matchCreationExtra.toMatchCreationOutputModel().id)
 
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.events.collect { event ->
-                    when (event) {
-                        MatchEvent.PLAYED,
-                        MatchEvent.OPPONENT_PLAYED -> {
-                            playSound(listOf(R.raw.place_piece_1, R.raw.place_piece_2).random())
-                        }
-
-                        MatchEvent.DELETE_SETUP_MATCH -> {
-                            finish()
-                        }
-
-                        MatchEvent.MATCH_ENDED -> {
-                            playSound(R.raw.place_piece_winner)
-                            delay(MATCH_ENDED_DELAY)
-                            finish()
-                        }
-
-                        else -> Unit
+            vm.events.collect { event ->
+                when (event) {
+                    is MatchEvent.OpponentJoined -> {
+                        playSound(R.raw.opponent_found)
                     }
+
+                    is MatchEvent.Played -> {
+                        playSound(listOf(R.raw.place_piece_1, R.raw.place_piece_2).random())
+                    }
+
+                    is MatchEvent.DeleteSetupMatch -> {
+                        finish()
+                    }
+
+                    is MatchEvent.MatchEnded -> {
+                        playSound(R.raw.place_piece_winner)
+                        delay(MATCH_ENDED_DELAY)
+                        finish()
+                    }
+
+                    else -> Unit
                 }
             }
         }
 
         setContent {
             val match by vm.match.collectAsState(initial = idle())
-            val pendingPlay by vm.pendingPlay.collectAsState(initial = idle())
-            val events by vm.events.collectAsState(initial = MatchEvent.SETUP)
+            val pendingPlayDot by vm.pendingPlay.collectAsState(initial = null)
+            val events by vm.events.collectAsState(initial = MatchEvent.Setup)
 
-            if (events == MatchEvent.MATCH_ENDED)
-                SweetSuccess(
-                    "${match.getOrNull()?.board?.turn} won!",
-                    contentAlignment = Alignment.TopCenter
-                )
+            when (val event = events) {
+                is MatchEvent.MatchEnded -> {
+                    if (event.winner) {
+                        KonfettiView(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .zIndex(1F),
+                            parties = listOf(
+                                Party(
+                                    speed = 0f,
+                                    maxSpeed = 15f,
+                                    damping = 0.9f,
+                                    angle = Angle.BOTTOM,
+                                    spread = Spread.ROUND,
+                                    colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+                                    emitter = Emitter(
+                                        duration = 3,
+                                        TimeUnit.SECONDS
+                                    ).perSecond(100),
+                                    position = Position.Relative(0.0, 0.0)
+                                        .between(Position.Relative(1.0, 0.0))
+                                )
+                            )
+                        )
+                    }
+                    SweetInfo(
+                        "You ${if (event.winner) "won" else "lost"}!",
+                        contentAlignment = Alignment.TopCenter
+                    )
+                }
+
+                is MatchEvent.Error -> {
+                    SweetWarning(
+                        event.errorMessage ?: "Oops! Couldn't register play",
+                        contentAlignment = Alignment.TopCenter
+                    )
+                }
+
+                else -> Unit
+            }
 
             MatchScreen(
+                screenState = vm.screenState,
                 users = listOf(vm.localUser, vm.opponentUser),
                 matchIOState = match,
-                pendingPlay = pendingPlay,
-                onPlayRequested = { idMatch, move -> vm.play(idMatch, move) },
-                onBackRequested = { vm.deleteSetupMatch() },
+                pendingPlayDot = pendingPlayDot,
+                onCancelRequested = { vm.deleteSetupMatch() },
+                onBackRequested = { finish() },
+                onForfeitRequested = { vm.forfeit(matchCreationExtra.toMatchCreationOutputModel().id) },
+                onPlayRequested = { idMatch, move -> vm.play(idMatch, move) }
             )
         }
 

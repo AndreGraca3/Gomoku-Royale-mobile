@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
-import android.util.Log
 import pt.isel.gomoku.R
+
 
 fun Context.playSound(id: Int) {
     val mediaPlayer = MediaPlayer.create(this, id)
@@ -23,12 +23,13 @@ class MusicService() : Service() {
     }
 
     private var player: MediaPlayer? = null
+    private var volume = 20
 
     override fun onCreate() {
         super.onCreate()
         player = MediaPlayer.create(this, R.raw.background_music)
         player!!.isLooping = true
-        player!!.setVolume(40F, 40F)
+        player!!.setVolume(volume.toFloat(), volume.toFloat())
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -36,11 +37,9 @@ class MusicService() : Service() {
             ACTION_PAUSE -> {
                 player?.pause()
             }
-            ACTION_RESUME -> {
-                player?.start()
-            }
+
             else -> {
-                player!!.start()
+                player?.start()
             }
         }
         return START_STICKY
@@ -53,8 +52,5 @@ class MusicService() : Service() {
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
-    }
-
-    override fun onLowMemory() {
     }
 }

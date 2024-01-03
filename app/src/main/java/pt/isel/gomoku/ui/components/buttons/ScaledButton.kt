@@ -41,7 +41,7 @@ fun ScaledButton(
     Button(
         onClick = {
             onClick()
-            ctx.playSound(R.raw.metal_click_weak)
+            ctx.playSound(R.raw.ui_click_2)
         },
         shape = shape,
         enabled = enabled,
@@ -53,7 +53,7 @@ fun ScaledButton(
             onClickIn = {
                 textColor = color
                 containerColor = Color.Transparent
-                ctx.playSound(R.raw.highlight_sound)
+                ctx.playSound(R.raw.ui_highlight)
             },
             onCancel = onOut
         ) else modifier

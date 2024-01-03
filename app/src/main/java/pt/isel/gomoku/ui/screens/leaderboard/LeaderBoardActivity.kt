@@ -1,7 +1,5 @@
 package pt.isel.gomoku.ui.screens.leaderboard
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,21 +13,13 @@ import pt.isel.gomoku.ui.screens.user.UserDetailsActivity
 import pt.isel.gomoku.ui.screens.user.UserItemExtra
 import pt.isel.gomoku.utils.NavigateAux
 import pt.isel.gomoku.utils.overrideTransition
+import pt.isel.gomoku.utils.playSound
 
 class LeaderBoardActivity : ComponentActivity() {
 
     private val viewModel by viewModels<LeaderBoardScreenViewModel> {
         val app = (application as DependenciesContainer)
         LeaderBoardScreenViewModel.factory(app.leaderBoardService)
-    }
-
-    companion object {
-        fun navigate(origin: Activity) {
-            with(origin) {
-                val intent = Intent(this, LeaderBoardActivity::class.java)
-                startActivity(intent)
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +34,7 @@ class LeaderBoardActivity : ComponentActivity() {
                 leaderBoard = leaderBoard,
                 onBackRequested = { finish() },
                 onPlayerRequested = { id ->
+                    this.playSound(R.raw.ui_click_4)
                     NavigateAux.navigateTo<UserDetailsActivity>(
                         this,
                         UserDetailsActivity.USER_ITEM_EXTRA,

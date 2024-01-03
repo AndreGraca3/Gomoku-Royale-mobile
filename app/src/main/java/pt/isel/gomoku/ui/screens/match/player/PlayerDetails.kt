@@ -28,7 +28,7 @@ fun PlayerDetails(user: User) {
                 contentDescription = null,
                 contentScale = ContentScale.Inside
             )
-            TruncatedText(text = user.rank, 10.sp)
+            TruncatedText(text = user.rank, fontSize = 10.sp)
         }
     }
 }

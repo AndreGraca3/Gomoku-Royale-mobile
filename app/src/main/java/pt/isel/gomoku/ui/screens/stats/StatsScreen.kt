@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -16,6 +15,7 @@ import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.http.model.UserStatsOutputModel
 import pt.isel.gomoku.ui.components.common.IOResourceLoader
+import pt.isel.gomoku.ui.components.common.InfoCard
 import pt.isel.gomoku.ui.components.layouts.RoundedLayout
 import pt.isel.gomoku.ui.theme.GomokuTheme
 import pt.isel.gomoku.utils.getRankIconByName
@@ -72,16 +72,12 @@ fun StatsScreen(
                     }
                 }
 
-                Row {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(getRankIconByName(it.rank.name)),
-                            contentDescription = "rank"
-                        )
-                    }
+
+                InfoCard(title = it.rank.name) {
+                    Image(
+                        painter = painterResource(getRankIconByName(it.rank.name)),
+                        contentDescription = "rank"
+                    )
                 }
             }
         }

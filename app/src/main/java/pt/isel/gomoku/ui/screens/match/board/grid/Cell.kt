@@ -29,7 +29,7 @@ fun Cell(stone: Stone?, pendingStone: Stone?, isSelected: Boolean, onClick: () -
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .aspectRatio(1F)
-            .pointerInput(stone) { detectTapGestures { onClick() } }
+            .pointerInput(onClick) { detectTapGestures { onClick() } }
     ) {
         Cross(Color(250, 216, 127, 255).copy(alpha = 0.4F))
 

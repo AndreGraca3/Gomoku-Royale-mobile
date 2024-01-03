@@ -12,7 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
 import pt.isel.gomoku.domain.getOrNull
-import pt.isel.gomoku.domain.idle
+import pt.isel.gomoku.domain.loading
 import pt.isel.gomoku.ui.screens.about.AboutActivity
 import pt.isel.gomoku.ui.screens.leaderboard.LeaderBoardActivity
 import pt.isel.gomoku.ui.screens.login.LoginActivity
@@ -38,29 +38,28 @@ class MenuActivity : ComponentActivity() {
             if (it.resultCode == RESULT_OK) vm.fetchAuthenticatedUser()
         }
 
-    private val logoutLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) vm.fetchAuthenticatedUser()
-    }
+    private val logoutLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) vm.fetchAuthenticatedUser()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen().setKeepOnScreenCondition {
-            vm.fetchAuthenticatedUser() // this isn't suspended, so it will not block the splash screen
-            false
-        }
+        vm.fetchAuthenticatedUser()
+        installSplashScreen()
 
         startMusicService()
 
         setContent {
-            val authUser by vm.authUser.collectAsState(initial = idle())
+            val authUser by vm.authUser.collectAsState(initial = loading())
 
             MenuScreen(
                 userInfoState = authUser,
                 onAvatarClick = {
-                    this.playSound(R.raw.metal_click_strong)
-                    if (authUser.getOrNull() == null)
+                    if (authUser.getOrNull() == null) {
+                        this.playSound(R.raw.ui_click_4)
                         loginLauncher.launch(Intent(this, LoginActivity::class.java))
-                    else {
+                    } else {
                         val intent = Intent(this, ProfileActivity::class.java)
                         intent.putExtra(
                             ProfileActivity.USER_DETAILS_EXTRA,
@@ -70,10 +69,11 @@ class MenuActivity : ComponentActivity() {
                     }
                 },
                 onMatchRequested = { isPrivate ->
-                    if (authUser.getOrNull() == null)
+                    if (authUser.getOrNull() == null) {
+                        this.playSound(R.raw.ui_click_4)
                         loginLauncher.launch(Intent(this, LoginActivity::class.java))
-                    else {
-                        this.playSound(R.raw.metal_click_medium)
+                    } else {
+                        this.playSound(R.raw.ui_click_3)
                         NavigateAux.navigateTo<PreferencesActivity>(
                             this,
                             PreferencesActivity.MATCH_PRIVACY_EXTRA,
@@ -103,7 +103,7 @@ class MenuActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        pauseMusicService()
+        pauseMusicService() // currently pauses music when the activity is not visible
     }
 
     private fun startMusicService() {

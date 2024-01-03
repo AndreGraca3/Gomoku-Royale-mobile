@@ -18,7 +18,7 @@ data class Problem(
             type = "https://gomokuroyale.pt/probs/internal-server-error",
             title = "Something went wrong",
             status = 500,
-            detail = "Oh no! An unexpected error occurred"
+            detail = "Something went wrong, please try again later."
         )
     }
 

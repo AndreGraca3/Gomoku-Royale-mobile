@@ -9,12 +9,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import pt.isel.gomoku.DependenciesContainer
 import pt.isel.gomoku.R
+import pt.isel.gomoku.domain.Loaded
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.http.model.UserDetails
 import pt.isel.gomoku.utils.overrideTransition
+import pt.isel.gomoku.utils.playSound
 
 
 class ProfileActivity : ComponentActivity() {
@@ -35,14 +41,25 @@ class ProfileActivity : ComponentActivity() {
         vm.initializeUserDetails(userDetailsExtra.toUserDetails())
         vm.name = userDetailsExtra.toUserDetails().name
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                vm.userDetails.collect {
+                    if (it is Loaded) this@ProfileActivity.playSound(R.raw.ui_click_1)
+                }
+            }
+        }
+
         setContent {
             val userDetails by vm.userDetails.collectAsState(initial = idle())
             val launcher =
                 rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.GetContent(),
-                    onResult = { uri ->
-                        vm.avatarPath = uri
-                        vm.updateUserRequest()
+                    onResult = { contentPath ->
+                        if(contentPath != null) {
+                            vm.avatarPath = contentPath
+                            vm.updateUser()
+                            setResult(RESULT_OK)
+                        }
                     }
                 )
 
@@ -58,16 +75,12 @@ class ProfileActivity : ComponentActivity() {
                     })
                 },
                 onNameChange = { vm.name = it },
-                onAvatarChange = { removeAvatar ->
-                    if (removeAvatar) {
-                        vm.avatarPath = null
-                        vm.updateUserRequest()
-                        setResult(RESULT_OK)
-                    }
+                onAvatarChange = {
+                    this.playSound(R.raw.ui_click_2)
                     launcher.launch("image/*")
                 },
                 onUpdateRequested = {
-                    vm.updateUserRequest()
+                    vm.updateUser()
                     setResult(RESULT_OK)
                 }
             )

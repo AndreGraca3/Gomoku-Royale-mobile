@@ -72,7 +72,7 @@ class MatchScreenViewModelTests {
                 }
             }
         }
-        sut.getMatch(match.id)
+        sut.getMatchAndStartPolling(match.id)
 
         // Assert
         gate.awaitAndThenAssert(1000) {
@@ -105,7 +105,7 @@ class MatchScreenViewModelTests {
                 }
             }
         }
-        sut.getMatch(match.id)
+        sut.getMatchAndStartPolling(match.id)
 
         // Assert
         gate.awaitAndThenAssert(1000) {
@@ -145,7 +145,7 @@ class MatchScreenViewModelTests {
                             Assert.fail("fetchAuthenticatedUser changed state twice to Loading")
                         } else {
                             secondCollectedState = it
-                            sut.getMatch(match.id)
+                            sut.getMatchAndStartPolling(match.id)
                         }
                     }
 
@@ -158,7 +158,7 @@ class MatchScreenViewModelTests {
                 }
             }
         }
-        sut.getMatch(match.id)
+        sut.getMatchAndStartPolling(match.id)
 
         // Assert
         gate.awaitAndThenAssert(1000) {

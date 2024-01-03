@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pt.isel.gomoku.domain.IOState
-import pt.isel.gomoku.domain.Idle
+import pt.isel.gomoku.domain.Loading
 import pt.isel.gomoku.domain.idle
 import pt.isel.gomoku.domain.loaded
 import pt.isel.gomoku.domain.loading
@@ -42,7 +42,7 @@ class PreferencesScreenViewModel(private val matchService: MatchService) : ViewM
         get() = matchStateFlow.asStateFlow()
 
     fun createMatch(isPrivate: Boolean) {
-        if (matchStateFlow.value !is Idle) return
+        if (matchStateFlow.value is Loading) return
 
         matchStateFlow.value = loading()
         viewModelScope.launch {

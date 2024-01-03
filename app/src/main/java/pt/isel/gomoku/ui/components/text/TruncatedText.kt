@@ -2,6 +2,7 @@ package pt.isel.gomoku.ui.components.text
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -14,6 +15,7 @@ import pt.isel.gomoku.ui.theme.mainFont
 @Composable
 fun TruncatedText(
     text: String,
+    modifier: Modifier = Modifier,
     fontSize: TextUnit = 12.sp,
     fontWeight: FontWeight = FontWeight.Normal,
     color: Color = Color.White,
@@ -29,5 +31,6 @@ fun TruncatedText(
         text = text,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
+        modifier = modifier
     )
 }

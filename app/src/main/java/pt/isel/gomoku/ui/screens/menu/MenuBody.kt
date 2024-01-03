@@ -8,14 +8,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import pt.isel.gomoku.R
 import pt.isel.gomoku.ui.screens.menu.actions.MenuActions
 import pt.isel.gomoku.ui.screens.menu.logo.HeartBeatLogo
 import pt.isel.gomoku.ui.screens.menu.playlist.Playlist
 import pt.isel.gomoku.ui.screens.menu.playlist.PlaylistPager
-import pt.isel.gomoku.utils.playSound
 
 const val PlayCardsTag = "PlayCards"
 const val MultiplayerCardTag = "MultiplayerCardTag"
@@ -32,26 +30,19 @@ fun MenuBody(
     onAboutRequested: () -> Unit,
     onStatsRequested: () -> Unit
 ) {
-    val ctx = LocalContext.current
-
     val playlistCards = listOf(
         Playlist(
             name = "Multiplayer",
             image = R.drawable.multiplayer_match,
             disabledImage = R.drawable.multiplayer_match_disabled,
-            onClick = {
-                onMatchRequested(false)
-            },
+            onClick = { onMatchRequested(false) },
             testTag = MultiplayerCardTag
         ),
         Playlist(
             name = "Private",
             image = R.drawable.private_match,
             disabledImage = R.drawable.private_match_disabled,
-            onClick = {
-                ctx.playSound(R.raw.metal_click_medium)
-                onMatchRequested(true)
-            },
+            onClick = { onMatchRequested(true) },
             testTag = PrivateCardTag
         ),
     )

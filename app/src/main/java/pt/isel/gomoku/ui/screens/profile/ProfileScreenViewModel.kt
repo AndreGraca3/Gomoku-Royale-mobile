@@ -55,7 +55,7 @@ class ProfileScreenViewModel(
         userDetailsFlow.value = loaded(APIResult.success(userDetails))
     }
 
-    fun updateUserRequest() {
+    fun updateUser() {
         userDetailsFlow.value = loading()
 
         viewModelScope.launch {
@@ -73,7 +73,9 @@ class ProfileScreenViewModel(
 
     fun logout(onLogout: () -> Unit) {
         viewModelScope.launch {
-            userService.deleteToken()
+            runCatchingAPIFailure {
+                userService.deleteToken()
+            }
             tokenRepository.updateOrRemoveLocalToken(null)
             onLogout()
         }

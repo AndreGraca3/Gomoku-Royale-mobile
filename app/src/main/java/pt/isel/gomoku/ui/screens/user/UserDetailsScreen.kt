@@ -2,9 +2,7 @@ package pt.isel.gomoku.ui.screens.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +32,6 @@ fun UserDetailsScreen(userInfo: IOState<UserInfo>) {
                         Image(
                             painter = painterResource(id = getRankIconByName(it.rank.name)),
                             contentDescription = null,
-                            modifier = Modifier.fillMaxSize(0.8F)
                         )
                     }
                 }

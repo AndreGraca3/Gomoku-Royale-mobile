@@ -57,12 +57,12 @@ class PreferencesActivity : ComponentActivity() {
                 variantSelected = vm.selectedVariant,
                 onSizeSelectRequested = {
                     if (it == vm.selectedSize) return@PreferencesScreen
-                    this.playSound(R.raw.metal_click_weak)
+                    this.playSound(R.raw.ui_click_2)
                     vm.selectedSize = it
                 },
                 onVariantSelectRequested = {
                     if (it == vm.selectedVariant) return@PreferencesScreen
-                    this.playSound(R.raw.metal_click_weak)
+                    this.playSound(R.raw.ui_click_2)
                     vm.selectedVariant = it
                 },
                 onCreateMatchRequested = { vm.createMatch(matchPrivacyExtra.isPrivate) },

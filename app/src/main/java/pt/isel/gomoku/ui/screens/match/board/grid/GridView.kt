@@ -13,21 +13,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import pt.isel.gomoku.domain.IOState
 import pt.isel.gomoku.domain.game.board.Board
 import pt.isel.gomoku.domain.game.cell.Dot
-import pt.isel.gomoku.domain.getOrNull
-import pt.isel.gomoku.http.model.PlayOutputModel
+import pt.isel.gomoku.domain.game.cell.Stone
+import pt.isel.gomoku.domain.game.match.Player
 
 @Composable
 fun GridView(
     board: Board,
     selector: Dot?,
-    pendingPlay: IOState<PlayOutputModel>,
+    pendingPlayDot: Dot?,
     onCellClick: (Dot) -> Unit
 ) {
     val shape = RoundedCornerShape(10.dp)
-    val pendingPlayValue = pendingPlay.getOrNull()
 
     LazyVerticalGrid(columns = GridCells.Fixed(board.size),
         contentPadding = PaddingValues(10.dp),
@@ -44,12 +42,19 @@ fun GridView(
                     idx / board.size,
                     idx % board.size
                 )
-                val stone = board.getStoneOrNull(dot)
+
+                val currStoneInDot = board.getStoneOrNull(dot)
+
+                val pendingStone = pendingPlayDot?.let {
+                    if(it != dot) return@let null
+                    if (board.turn == Player.BLACK) Stone(
+                        Player.BLACK,
+                        it
+                    ) else Stone(Player.WHITE, it)
+                }
                 Cell(
-                    stone,
-                    pendingStone =
-                    if (pendingPlayValue != null && pendingPlayValue.stone.dot == dot)
-                        pendingPlayValue.stone else null,
+                    currStoneInDot,
+                    pendingStone = pendingStone,
                     isSelected = selector == dot,
                     onClick = { onCellClick(dot) })
             }
